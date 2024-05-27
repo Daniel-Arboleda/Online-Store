@@ -1,0 +1,273 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxdrop</title>
+
+    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
+
+    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+    
+     
+      
+
+    
+    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
+    <script>
+        const loginURL = "{% url 'login_form' %}";
+        const openURL = "{% url 'open_account' %}";
+    </script>
+
+</head>
+
+
+
+<body>
+
+
+    <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
+        <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
+           <!-- Header con menú basado en iconos -->
+           <header>
+                <nav>
+                    <ul>
+                        <!-- Título de la página -->
+                        <li class="title"><a href="{% url 'home' %}">Luxdrop</a></li>
+                        {% comment %} <li><a href="#"><i class="fas fa-home"></i></a></li> {% endcomment %}
+                        <li class="dropdown search-dropdown">
+                            <a href="#"><i class="fas fa-search"></i></a>
+                            <div class="dropdown-content search-bar">
+                                <input type="text" placeholder="Buscar..." id="searchInput">
+                                <button type="submit"><i class="fas fa-search"></i></button>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#"><i class="fas fa-box"></i></a>
+                            <div class="dropdown-content">
+                                <a href="{% url 'drop' %}">Ruleta</a>
+                                <a href="#">Rasca & Gana</a>
+                                <a href="#">Reacción</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{% url 'shop' %}"><i class="fas fa-store"></i></a>
+                            <div class="dropdown-content">
+                                <a href="#">Vivienda</a>
+                                <a href="#">Vehiculos</a>
+                                <a href="#">Tecnología</a>
+                                <a href="#">Ropa</a>
+                                <a href="#">Accesorios</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>     
+                        </li>
+                        <li><a href="#"><i class="fas fa-envelope"></i></a></li>
+                        <li><a id="delivery-icon" href="#"><i class="fas fa-truck"></i></a></li>
+                        <li class="dropdown">
+                            <a href="{% url 'user' %}"><i class="fas fa-user"></i></a>
+                            <div class="dropdown-content">
+                                <a href="#">Opción 1</a>
+                                <a href="#">Opción 2</a>
+                                <a href="#">Opción 3</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- Recuadro de saldo y botón de añadir saldo en una estructura propia -->
+                <div class="saldo-container">
+                    <div class="saldo-box">
+                        <p>$ {{ saldo }}</p>
+                    </div>
+                    <button id="openModalButton" data-url="{% url 'transfer' %}"><i class="fas fa-plus"></i></button>
+                </div>
+                <!-- Navegación secundaria para íconos adicionales -->
+                {% comment %} <nav>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-user-circle"></i> Perfil</a></li>
+                        <li><a href="#"><i class="fas fa-piggy-bank"></i> Reservas</a></li>
+                    </ul>
+                </nav> {% endcomment %}
+            </header>
+            <!-- Seccion para el historial de usuario -->
+            <div class="purchases-container">
+                <h1>Historial de Compras</h1>
+                <table class="purchases-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Total</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Suponemos que los datos se llenan dinámicamente con Django -->
+                        {% for purchase in purchases %}
+                        <tr>
+                            <td>{{ purchase.date }}</td>
+                            <td>{{ purchase.product_name }}</td>
+                            <td>{{ purchase.quantity }}</td>
+                            <td>${{ purchase.total_price | floatformat:2 }}</td>
+                            <td>{{ purchase.status }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6">No hay compras registradas.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Sección del Footer o pie de pagina -->
+            <footer>
+                <div class="footer-container">
+                    <!-- Sección Trustpilot -->
+                    {% comment %} <div class="trustpilot-section">
+                        <img src="trustpilot-icon.png" alt="Trustpilot">
+                        <p>4.5</p>
+                        <p>TrustScore | 1000+ Reviews</p>
+                    </div> {% endcomment %}
+
+                    <div class="trustpilot-section">
+                        <div class="trustpilot-logo">
+                            <img src="{% static 'img/trustpilot.svg' %}" alt="Trustpilot Logo">
+                            <h2 class="trustpilot-name">Trustpilot</h2>
+                        </div>
+                        <div class="trustpilot-info">
+                            <p class="trustscore">Trustscore: 9.5</p>
+                            <div class="reviews-info">
+                                <span class="rating">4.7</span> / 5 <!-- Puntaje de la página -->
+                                <span class="separator">|</span> <!-- Separador -->
+                                <span class="reviews-count">1000 reviews</span> <!-- Cantidad de reviews -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección Redes Sociales -->
+                    <div class="social-media-section">
+                        <!-- Aquí van los iconos de redes sociales -->
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    </div>
+            
+                    <!-- Sección Métodos de Pago -->
+                    <div class="payment-methods-section">
+                        <!-- Aquí van los iconos de métodos de pago -->
+
+                        <!-- Enlace al método de pago 1 -->
+                        <a href="#link_metodo_pago_1">
+                            <img src="{% static 'img/paypal-logo.png' %}" alt="PayPal">
+                        </a>
+
+                        <!-- Enlace al método de pago 2 -->
+                        <a href="#link_metodo_pago_2">
+                            <img src="{% static 'img/MasterCard.png' %}" alt="Tarjeta de Crédito">
+                        </a>
+
+                        <!-- Enlace al método de pago 3 -->
+                        <a href="#link_metodo_pago_2">
+                            <img src="{% static 'img/visa-logo.png' %}" alt="Tarjeta de Crédito">
+                        </a>
+
+                        <!-- Enlace al método de pago 4 -->
+                        <a href="#link_metodo_pago_2">
+                            <img src="{% static 'img/nubank-logo.png' %}" alt="Tarjeta de Crédito">
+                        </a>
+
+                        <!-- Enlace al método de pago 5 -->
+                        <a href="#link_metodo_pago_2">
+                            <img src="{% static 'img/Logo-Nequi.png' %}" alt="Tarjeta de Crédito">
+                        </a>
+
+                        <!-- Agrega más enlaces para otros métodos de pago si es necesario -->
+                    </div>
+            
+                    <!-- Sección Patrocinadores -->
+                    <div class="sponsors-section">
+                        <!-- Aquí van los logos de los patrocinadores -->
+                        <a href="enlace-1.html"><img src="logo-1.png" alt="Logo 1"></a>
+                        <a href="enlace-2.html"><img src="logo-2.png" alt="Logo 2"></a>
+                        <a href="enlace-3.html"><img src="logo-3.png" alt="Logo 3"></a>
+                        <h2>Socio comercial</h2>
+                    </div>
+            
+                    <!-- Sección Enlaces -->
+                    <div class="links-section">
+                        <!-- Aquí van los enlaces de contacto, blog, preguntas frecuentes, etc. -->
+                        <a href="#">CONTACTO</a>
+                        <a href="#">BLOG</a>
+                        <a href="#">PREGUNTAS MÁS FRECUENTES</a>
+                        <a href="#">TÉRMINOS DE SERVICIO</a>
+                        <a href="#">DECLARACIÓN DE PRIVACIDAD</a>
+                        <a href="#">PROBABLEMENTE JUSTO</a>
+                        <a href="#">POLÍTICA DE COOKIES</a>
+                        <a href="#">POLÍTICA ALD</a>
+                    </div>
+            
+                    <!-- Sección Información de la Empresa -->
+                    <div class="company-info-section">
+                        <p>LuxDrop es una marca de XXX XXXX Limited, número de registro: HE xxxx, con domicilio social en xxxx, Maria House, Nicosia, xxxChipre.</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        {% comment %} <!-- División para los productos principales franja vertical derecha-->
+        <div class="sidebar-derecha">
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 1</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 2</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 3</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 4</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 5</p>
+                <p class="precio">$10.00</p>
+            </div>
+        </div> {% endcomment %}
+            
+        <!-- Botón flotante para cambiar el color del tema-->
+        <div class="floating-button" id="theme-toggle">
+            <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
+        </div>
+        <!-- Ventana emergente listado de paises compatibles -->  
+        <!-- Código modularizado para ahorrar espacio, buena práctica de desarrollo y brinda una UX - Experiencia de usuario consistente en toda la página -->
+        {% include 'modal_lugares.html' %}
+        <!-- Scripts -->
+        <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
+        <script src="{% static '../static/js/politics.js' %}"></script>
+        <script src="{% static '../static/js/modal-transfer.js' %}"></script>
+</body>
+</html>

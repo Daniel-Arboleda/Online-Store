@@ -1,0 +1,86 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxdrop</title>
+
+    <link rel="shorcut icon" href="{% static '../static/img/Logo-LuckyCart.png' %}"> 
+
+    <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <script>
+        const openURL = "{% url 'open_account' %}";
+    </script>
+</head>
+
+<body>
+
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+ 
+        </div>
+    </div>
+
+    <div class="formulario"> 
+
+        <h2>Iniciar sesión</h2>
+
+        <!-- Botones para iniciar sesión con Steam, Google y Facebook -->
+            <div class="social-login-buttons">
+                <button type="button" onclick="loginWithSteam()"><i class="fab fa-steam"></i> Iniciar sesión con Steam</button>
+
+                <button type="button" onclick="loginWithGoogle()"><i class="fab fa-google"></i> Iniciar sesión con Google</button>
+                
+                <button type="button" onclick="loginWithFacebook()"><i class="fab fa-facebook" ></i> Iniciar sesión con Facebook</button>
+            </div>
+
+        <form method="post" id="login-form" class="login-form">
+             <!-- Token de seguridad para qeu el formulario que se crea en Django sea valido -->           
+            {% csrf_token %}
+            <!-- Campos de inicio de sesión -->
+            <div class="form-group">
+                <label for="email">Correo Electronico*</label>
+                <input type="email" id="email" name="email" placeholder="Correo electronico*" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña*</label>
+                <input type="password" id="password" name="password" placeholder="Contraseña*" required autocomplete="current-password">
+            </div>
+
+            <div class="open_account_link">
+                <!-- Enlace "¿Recordar contraseña?" -->
+                <a href="#" class="forgot-steps">¿Recordar contraseña?</a>
+            </div>
+
+            <!-- Botón de enviar inicio de sesion -->
+            <form id="login-form" action="/ruta_del_servidor_para_validar" method="post">
+                <div class="open_account_link"> 
+                    <button type="submit" id="btn-login">Iniciar sesión</button>
+                    <a href="{% url 'home' %}" class="enlace-login" id="home-link" style="display:none"></a>
+                </div>
+            </form>
+
+            <!-- Enlace "¿Recordar contraseña?" -->
+            <div class="open_account_link"> 
+                <a href="{% url 'open_account' %}" class="enlace-crear-cuenta" id="open_account" >Crear cuenta</a>
+            </div>
+
+        </form>
+    </div>
+
+  
+
+
+    <!-- Scripts -->
+    <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
+    <script src="{% static '../static/js/login.js' %}"></script>
+</body>
+</html>

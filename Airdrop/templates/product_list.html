@@ -1,0 +1,46 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Header con menú basado en iconos -->
+    {% include 'header.html' %}
+
+    <section class="orm-prod-table">
+        <h1 class="title-orm-table">Stock Productos</h1>
+        <table class="prod-table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Cantidad</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>{{ product.categories }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>{{ product.state }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/toggleVisibility.js' %}"></script>
+    <script src="{% static 'js/modal-transfer.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+</body>
+</html>

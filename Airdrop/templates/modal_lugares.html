@@ -1,0 +1,44 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxdrop</title>
+    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
+    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">  
+    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
+    <script>
+        const loginURL = "{% url 'login_form' %}";
+        const openURL = "{% url 'open_account' %}";
+    </script>
+</head>
+
+<body>
+    <!-- Ventana emergente listado de paises compatibles -->
+    <div id="modal-lugares" class="modal-lugares">
+        <div class="modal-content-lugares">
+            <span class="close">&times;</span>
+            <h2>PAÍSES DE ENVÍO DISPONIBLES</h2>
+            <p>Consulte la lista de países a continuación donde podemos enviar artículos físicos. Si su país no figura en la lista, puede cambiar artículos por saldo al realizar el retiro.</p>
+            <br>
+            <label for="country-textbox">Paises:</label>
+            <br>
+            <textarea id="myTextarea" rows="6" cols="50" readonly >
+            - Colombia
+            - México
+            - Chile
+            </textarea>
+            <br>     
+            <input type="checkbox" id="checkButton-lugares">
+            <label for="checkButton-lugares">No mostrar de nuevo</label>
+            <br>
+            <button id="confirmButton-lugares" data-url="{% url 'delivery'%}">Entiendo y deseo continuar</button>
+        </div>
+    </div> 
+    <script src="{% static '../static/js/politics.js' %}"></script>
+</body>

@@ -1,0 +1,148 @@
+/* styles-ruleta-4.css */
+
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+.ruleta {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 5px solid #333;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%); /* Centra horizontalmente */
+    /* Elimina la animación de giro inicial */
+    animation: giro 5s infinite linear;
+    cursor: pointer;
+    margin: 100px auto; /* Añadido */
+    margin-bottom: 50px;
+    z-index: 00; /* Asegura que la ruleta esté por debajo del menú */
+}
+
+.ruleta-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    transform-origin: center;
+    /* margin: 0 auto; */
+    
+}
+
+.opcion {
+    width: 50px;
+    height: 50px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    border-radius: 50%;
+    position: absolute;
+    top: calc(50% - 25px); /* Ubica las opciones a lo largo del borde */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* transform-origin: center; */
+    transition: transform 5s;
+}
+
+.opcion:nth-child(1) {
+    transform: translate(-50%, -50%) rotate(0deg) translate(120px) rotate(0deg);
+}
+.opcion:nth-child(2) {
+    transform: translate(-50%, -50%) rotate(24deg) translate(120px) rotate(-24deg);
+}
+.opcion:nth-child(3) {
+    transform: translate(-50%, -50%) rotate(48deg) translate(120px) rotate(-48deg);
+}
+.opcion:nth-child(4) {
+    transform: translate(-50%, -50%) rotate(72deg) translate(120px) rotate(-72deg);
+}
+.opcion:nth-child(5) {
+    transform: translate(-50%, -50%) rotate(96deg) translate(120px) rotate(-96deg);
+}
+.opcion:nth-child(6) {
+    transform: translate(-50%, -50%) rotate(120deg) translate(120px) rotate(-120deg);
+}
+.opcion:nth-child(7) {
+    transform: translate(-50%, -50%) rotate(144deg) translate(120px) rotate(-144deg);
+}
+.opcion:nth-child(8) {
+    transform: translate(-50%, -50%) rotate(168deg) translate(120px) rotate(-168deg);
+}
+.opcion:nth-child(9) {
+    transform: translate(-50%, -50%) rotate(192deg) translate(120px) rotate(-192deg);
+}
+.opcion:nth-child(10) {
+    transform: translate(-50%, -50%) rotate(216deg) translate(120px) rotate(-216deg);
+}
+.opcion:nth-child(11) {
+    transform: translate(-50%, -50%) rotate(240deg) translate(120px) rotate(-240deg);
+}
+.opcion:nth-child(12) {
+    transform: translate(-50%, -50%) rotate(264deg) translate(120px) rotate(-264deg);
+}
+.opcion:nth-child(13) {
+    transform: translate(-50%, -50%) rotate(288deg) translate(120px) rotate(-288deg);
+}
+.opcion:nth-child(14) {
+    transform: translate(-50%, -50%) rotate(312deg) translate(120px) rotate(-312deg);
+}
+.opcion:nth-child(15) {
+    transform: translate(-50%, -50%) rotate(336deg) translate(120px) rotate(-336deg);
+}
+
+
+
+
+@keyframes giro {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* .element {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+} */
+
+
+/* .fa-rotate-90 {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+}
+
+.fa-rotate-180 {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+}
+
+.fa-rotate-270 {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+
+.fa-flip-horizontal {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);
+}
+
+.fa-flip-both,
+.fa-flip-horizontal.fa-flip-vertical,
+.fa-flip-vertical {
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1);
+} */

@@ -1,0 +1,142 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxdrop</title>
+    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
+    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static '../static/css/style.css' %}">
+</head>
+
+
+<body>
+ 
+           <!-- Header con menú basado en iconos -->
+           {% include 'header.html' %}
+
+
+            {% if message %}
+                <p style="color: green;">{{ message }}</p>
+            {% endif %}
+            
+            {% if errors %}
+                <ul style="color: red;">
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="orm-prod-formulario">
+                <h1>ORM Productos</h1>
+                <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'create_product' %}">
+                    {% csrf_token %}
+                    <div class="orm-prod-form-group">
+                        <label for="code">Código Producto*</label>
+                        <input type="text" id="code" name="code" placeholder="Código producto*" required>
+                    </div>
+                    <div class="orm-prod-form-group">
+                        <label for="name_prod">Nombre Producto*</label>
+                        <input type="text" id="name_prod" name="name" placeholder="Nombre producto*" required>
+                    </div>
+                    <div class="orm-prod-form-group">
+                        <label for="descrition">Descripción Producto*</label>
+                        <input type="text" id="descrition" name="description" placeholder="Descripción*" required>
+                    </div>
+                    <div class="orm-prod-form-group">
+                        <label for="price">Precio*</label>
+                        <input type="text" id="price" name="price" placeholder="Precio*" required>
+                    </div>
+                    <div class="orm-prod-form-group">
+                        <label for="stock">Stock*</label>
+                        <input type="text" id="stock" name="stock" placeholder="Stock*" required>
+                    </div>
+                    <div class="orm-prod-form-group">
+                        <label for="categories">Categoría*</label>
+                        <input type="text" id="categories" name="categories" placeholder="Categoría*" required>
+                    </div>
+                    <div class="orm-prod-form-group">
+                        <label for="brand">Marca*</label>
+                        <input type="text" id="brand" name="brand" placeholder="Marca*" required>
+                    </div>
+                    <div class="orm-prod-form-group">
+                        <label for="state">Estado*</label>
+                        <select id="state" name="state" required>
+                            <option value="available">Disponible</option>
+                            <option value="out_of_stock" readonly>Agotado</option>
+                            <option value="coming_soon">Próximamente Disponible</option>
+                            <option value="reserved">Reservado</option>
+                            <option value="discontinued">Descontinuado</option>
+                            <option value="in_transit">En Tránsito</option>
+                            <option value="pending">Pendiente</option>
+                            <option value="returned">Devuelto</option>
+                            <option value="under_repair">En Reparación</option>
+                            <option value="not_for_sale">No Disponible para Venta</option>
+                            <option value="being_retired">En Proceso de Retiro</option>
+                        </select>
+                    </div>
+                    <div class="orm-prod-form-group">
+                        <label for="image">Imagen*</label>
+                        <input type="file" id="image" name="image" required>
+                    </div>
+                    <div class="open_account_link">
+                        <button type="submit" id="btn-orm-prod-form">Enviar</button>
+                        {% comment %} <a href="#" class="enlace-login" id="home-link" style="display:none"></a> {% endcomment %}
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tabla de productos -->
+            <main class="delivery-table">
+                <h1>Stock Productos</h1>
+                <table class="deliveries-table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Categoría</th>
+                            <th>Producto</th>
+                            <th>Marca</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Estado</th>
+                            <th>Descripción</th>
+                            <th>Imagen</th>
+                        </tr>
+                    </thead>
+                    <br>
+                    <tbody>
+                        <!-- Las filas se llenarán dinámicamente con datos del servidor -->
+                        <tr>
+                            <td>2024-01-01</td>
+                            <td>2024-01-01</td>
+                            <td>Smartphone XYZ</td>
+                            <td>Tecnología</td>
+                            <td>1</td>
+                            <td>Entregado</td>
+                            <td>Entregado</td>
+                            <td>Entregado</td>
+                            <td>Entregado</td>
+                            <td>Entregado</td>
+                        </tr>
+                        <!-- Repetir el bloque para más entregas -->
+                    </tbody>
+                </table>
+            </main>
+
+
+    <!-- Botón flotante para cambiar el color del tema -->
+    <div class="floating-button" id="theme-toggle">
+        <i class="fas fa-adjust"></i>
+    </div>
+    <!-- Ventana emergente listado de paises compatibles -->
+    {% include 'modal_lugares.html' %}
+    <!-- Scripts -->
+    <script src="{% static 'js/toggleVisibility.js' %}"></script>
+    <script src="{% static 'js/modal-transfer.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+</body>
+</html>

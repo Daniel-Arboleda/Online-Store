@@ -1,0 +1,2074 @@
+/* styles.css */
+
+/* Reset de estilos - Aplicado globalmente */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;  /* Establece la fuente para todo el documento */
+    padding-top: 60px;  /* Asume que la altura del header es 60px y lo compensa */
+    background-color: transparent;
+}
+
+body:not(.dark_theme) {
+    background-color: transparent; /* Fondo transparente */
+}
+
+/* Asegúrate de que otros componentes también tengan el fondo transparente si es necesario */
+.content:not(.dark_theme), .footer:not(.dark_theme) {
+    background-color: transparent;
+}
+
+/* Contenedor principal que incluye el sidebar y el contenido principal */
+.page-container {
+    display: flex;
+    flex-direction: row-reverse; /* Cambia la dirección si es necesario para colocar sidebar a la derecha */
+    width: 100%;
+    min-height: 100vh;
+}
+
+.page-wrapper {
+    display: flex;
+    min-height: 100vh;  /* Asegura que el contenedor padre tome al menos la altura de la pantalla */
+    width: 100%;
+}
+
+.sidebar-derecha {
+    flex: 0 0 150px; /* No crece, no se encoge, base de 150px de ancho */
+    width: 150px;  /* O el ancho que desees para el sidebar */
+    position: fixed;
+    top: 50px;
+    right: 0; /* Cambiado de 'left: 0' a 'right: 0' para alinearlo a la derecha */
+    height: 100vh;
+    overflow-y: auto;  /* Para scroll en sidebar si es necesario */
+}
+
+/* Asegurarse de que main-content no solape el sidebar y se posicione correctamente... Este es el contenedor PADRE*/
+.main-content {
+    
+    
+    flex-grow: 1; /* Toma el espacio restante después del sidebar */
+    padding-top: 60px; /* Ajuste para el header fijo */
+    padding-right: 150px; /* Espacio para el sidebar */
+    box-sizing: border-box; /* Incluye padding en el cálculo del ancho */
+}
+
+/* ----------------------------------------------------------- */
+
+/* Estilos para el banner de enunciado */
+.banner {
+    /* background-color: #333;
+    color: #fff; */
+    text-align: center;
+    padding: 20px;
+    /* Añadimos estilos para centrado vertical y horizontal */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 10px);
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    box-sizing: border-box; /* Incluye el padding en el cálculo del ancho y alto */
+
+}
+
+.banner h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.banner p {
+    font-size: 18px;
+}
+
+
+/* ----------------------------------------------------------- */
+
+
+/* Estilos generales */
+
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo del responsive */
+
+/* Estilos para pantallas pequeñas */
+@media screen and (max-width: 768px) {
+
+    .page-wrapper {
+        flex-direction: column;
+    }
+
+    .sidebar-derecha {
+        /* position: relative; 
+        width: 100%; 
+        height: auto;
+        top: 0;  */
+        display: none;
+
+    }
+
+    .main-content {
+        width: 100%;
+        padding-right: 0; /* Elimina el padding derecho en móviles */
+    }
+
+    .featured-boxes {
+        width: 100%; /* Ocupa todo el ancho en móviles */
+    }
+
+    header {
+         height: 50px;  /*Un ejemplo si el menú es más pequeño en dispositivos móviles */
+    }
+
+    nav {
+        display: flex; /* Usa flexbox en la navegación */
+        justify-content: space-between; /* Separa los elementos a ambos extremos */
+        align-items: center; /* Alinea los elementos verticalmente */
+        width: 100%; /* Asegura que la navegación ocupe todo el ancho disponible */
+    }
+
+    .menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;  /* Asegura que no haya padding extra que pueda afectar la visualización */
+        align-items: center; /* Centra el contenido del botón verticalmente */
+        margin-left: auto; /* Empuja el botón hacia la derecha */
+
+    }
+
+    .menu-toggle img{
+        
+        width: 30px; /* Ajusta el tamaño de la imagen */
+        height: auto; /* Mantiene la proporción de la imagen */
+    }
+
+    nav ul li a i {
+        font-size: 20px;  /* Asegura que todos los íconos tengan el mismo tamaño */
+        color: #333;      /* Color de los íconos */
+        margin-right: 10px; /* Espacio entre íconos */
+    }
+    
+    nav ul li a:hover {
+        color: #555;      /* Cambia el color al pasar el mouse */
+        text-decoration: none;  /* Elimina el subrayado del enlace al pasar el mouse */
+    }
+    
+
+    nav ul li a i.fas{
+        display: none;
+        text-align: center;
+    }
+
+    .boton-login{
+        display: flex; /* Hace que los enlaces ocupen todo el espacio horizontal de su contenedor <li> */
+        position: relative;
+        right: 300px;
+        top: 0;
+        white-space: nowrap; /* Impide que el texto se envuelva en nuevas líneas */
+        
+    }
+    .boton-crear-cuenta{
+        display: flex; /* Hace que los enlaces ocupen todo el espacio horizontal de su contenedor <li> */
+        position: relative;
+        right: 350px;
+        top: 0;
+        white-space: nowrap; /* Impide que el texto se envuelva en nuevas líneas */
+        
+    }
+    
+
+    body {
+        padding-top: 50px;  /* Ajusta para que coincida con la altura del menú en móviles*/
+    }
+    /* Ajusta el tamaño de los iconos del menú */
+    nav ul li a i {
+        font-size: 24px;
+    }
+    /* Ajusta el tamaño del texto en la ruleta de sorteos */
+    .ruleta h2 {
+        font-size: 1.5rem;
+    }
+    /* Ajusta el tamaño del texto en la sección de productos rifados */
+    .productos h2 {
+        font-size: 1.5rem;
+    }
+    .payment-methods-section {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Organiza en 2 columnas */
+        grid-template-rows: repeat(2, auto); /* Dos filas que se ajustan al contenido */
+        gap: 10px;  /* Espacio entre las imágenes */
+        justify-content: center;
+        align-items: center; /* Centra los ítems verticalmente */
+    }
+
+    .payment-methods-section a {
+        display: flex;  /* Centra el contenido de los enlaces */
+        justify-content: center;
+        align-items: center;
+        width: 100%;  /* Asegura que los enlaces ocupen todo el espacio de la columna */
+    }
+
+    .payment-methods-section img {
+        width: 60px;  /* Ajusta el ancho de la imagen al 100% del contenedor de la columna */
+        height: auto; /* Mantiene la proporción de la imagen */
+        
+        
+    }
+
+
+}
+
+
+/* --------------------------------------------------------- */
+
+/* styles-menu.css */
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos generales */
+
+
+header {
+    /* background-color: #333; */
+    background-color: #285363;
+    padding: 10px;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Asegura que el menú esté por encima de la ruleta */
+    width: 100%;
+    height: 50px;
+    padding: 0;
+    display: flex;
+    justify-content: space-between; /* Alinea los elementos al inicio y al final */
+    align-items: center; /* Centra verticalmente los elementos */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Opcional, para mejorar la visibilidad sobre el contenido que pasa por debajo */
+
+}
+
+.menu-toggle{
+    display: none;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0; /* Añadido para eliminar el margen predeterminado */
+    padding: 0; /* Añadido para eliminar el relleno predeterminado */
+}
+
+nav ul li {
+    margin-left: 20px; /* Alinear al final a la derecha */
+    margin-right: 20px; /* Espacio entre cada ícono */
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 15px;
+}
+
+/* Estilos para los íconos */
+nav ul li i {
+  
+    margin-right: 5px;
+    margin-left: auto;
+   
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.title {
+    display: inline-flex;
+    margin-right: auto; /* Espacio entre el título y los otros elementos */
+    /* margin-right: 20px; Espacio entre el título y los otros elementos */
+    /* float: left; */
+}
+
+/* Estilo para el menú desplegable de búsqueda */
+.search-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.search-bar {
+    display: none;
+    position: absolute;
+    top: 100%; /* Posiciona justo debajo del ícono de búsqueda */
+    left: 0;
+    right: 0; /* Asegura que la barra de búsqueda ocupe el espacio necesario */
+    background-color: #f9f9f9;
+    padding: 8px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.search-bar input[type="text"] {
+    border: none;
+    padding: 8px;
+    width: calc(100% - 50px); /* Ajusta el ancho para dejar espacio para el botón de búsqueda */
+}
+
+.search-bar button {
+    padding: 8px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.search-dropdown:hover .search-bar {
+    display: block;
+}
+
+
+/* Estilo para el menú desplegable */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    /* background-color: #f9f9f9; */
+    background-color: #3396FF;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top: 36px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1;}
+
+/* Muestra el menú desplegable cuando se sitúa el cursor sobre el icono de la caja */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+
+.boton-login{
+    white-space: nowrap; /* Impide que el texto se envuelva en nuevas líneas */
+}
+
+.boton-crear-cuenta{
+    white-space: nowrap; /* Impide que el texto se envuelva en nuevas líneas */
+}
+
+
+/* --------------------------------------------------------- */
+
+/* Estilos del menu de home de los usuarios logeados */
+
+/* CSS */
+
+/* Estilos para el contenedor del saldo y el botón */
+.saldo-container {
+    display: flex; /* Utiliza flexbox */
+    align-items: center; /* Alinea los elementos verticalmente al centro */
+    justify-content: flex-start; /* Alinea los elementos al inicio del contenedor */
+    width: 100%; /* Ocupa el ancho completo del contenedor padre */
+    flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
+}
+
+/* Estilos CSS para el recuadro de saldo */
+.saldo-box {
+    background-color: white; /* Fondo blanco */
+    padding: 10px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra */
+    flex-shrink: 0; /* Evita que el recuadro de saldo se encoja */
+}
+
+.saldo-box p {
+    margin: 0; /* Elimina el margen del párrafo */
+}
+
+/* Estilos para el botón de agregar saldo */
+.saldo-container button {
+    background-color: transparent; /* Botón transparente */
+    border: none; /* Elimina el borde */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    margin-left: 10px; /* Espaciado entre el recuadro de saldo y el botón */
+    flex-shrink: 0; /* Evita que el botón se encoja */
+}
+
+.saldo-container button i {
+    color: #007bff; /* Color del icono */
+}
+
+
+
+/* ---------------------------------------------------------- */
+
+
+/* custom-styles.css */
+
+
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos para la sección de garantías de servicio */
+.horizontal-strip {
+    /* background-color: #f9f9f9; */
+    background-color: transparent;
+    padding: 50px 0;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.strip-item {
+    text-align: center;
+    padding: 20px;
+    max-width: 300px;
+}
+
+/* Añade una clase específica para las imágenes de los productos */
+.product-image {
+    width: 170px; /* Establece un ancho fijo para todas las imágenes */
+    height: 170px; /* Establece una altura fija para todas las imágenes */
+    object-fit: cover; /* Ajusta la imagen para cubrir el tamaño definido */
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+
+.strip-item h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.strip-item p {
+    font-size: 1em;
+    color: #666;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------- */
+
+/* Estilos para la sección de cajas destacadas */
+
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.featured-boxes {
+    /* background-color: #f9f9f9; */
+    background-color: transparent;
+    width: 100%; /* Ocupa todo el ancho de main-content */
+    margin-left: auto; /* Asegura que se alinee a la izquierda */
+    margin-right: auto; /* Centra contenido si es necesario */
+    padding: 20px;
+    margin: 20px; 
+    width: calc(100% - 50px); /* Resta el ancho del sidebar */
+
+   
+}
+
+.container-destacados {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    align-items: center;
+    text-align: center;
+    
+}
+
+.container-title {
+    text-align: center;
+    margin-bottom: 50px; /* Espacio de 50px entre el subtítulo y los contenedores de productos */
+}
+
+
+.view-all-link {
+    display: inline-block;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 30px;
+    
+}
+
+.product {
+    background-color: transparent;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    margin: 20px;
+    
+    
+    
+}
+
+.product:hover {
+    transform: translateY(-5px);
+}
+
+.product img {
+    /* max-width: 100%; */
+    border-radius: 5px;
+    width: 250px;
+    height: 250px;
+}
+
+.product h3 {
+    font-size: 18px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+   
+}
+
+.product p {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.price {
+    color: #007bff;
+    font-size: 20px;
+    font-weight: bold;
+   
+}
+
+/* ---------------------------------------------------------- */
+
+/* styles-productos.css */
+
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.productos {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 columnas */
+    grid-gap: 20px; /* Espacio entre las casillas */
+    padding: 20px;
+    margin-top: 100px; /* Margen superior para dejar espacio debajo de la ruleta */
+    position: relative;
+    top: 500px;
+    
+
+}
+
+.productos h2 {
+    grid-column: 1 / -1; /* Ocupa todas las columnas */
+    text-align: center;
+    font-weight: 700;
+    font-size: 30px;
+}
+
+.producto {
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: center;
+
+}
+
+.probabilidad {
+    position: relative;
+    /* top: 10px;
+    left: 10px; */
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
+    /* padding: 5px 10px; */
+    /* border-radius: 5px; */
+    font-size: 14px; /* Tamaño de fuente */
+    text-align: center;
+}
+
+
+.producto img {
+    width: 100%; /* Ajusta el ancho de la imagen al 100% del contenedor */
+    height: auto; /* Altura automática para mantener la proporción */
+    max-width: 100%; /* Asegura que la imagen no exceda el ancho del contenedor */
+    display: block;
+    margin: 0 auto 10px; /* Centra horizontalmente la imagen y agrega espacio debajo */
+}
+
+.nombre {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.precio {
+    color: green;
+    font-style: italic;
+}
+
+
+/* --------------------------------------------------------- */
+
+/* Stilos de la franja vertical derecha para visualizar los productos Hot sale */
+
+/* Estilos.css */
+
+
+.contenido {
+    width: calc(100% - 150px); /* Ocupa todo el ancho menos 150px de la sidebar */
+    float: left; /* Permite que el contenido principal flote a la izquierda */
+    height: 100%; /* Altura completa para visualización demostrativa */
+    background: #eee; /* Color de fondo para contraste */
+}
+
+.sidebar-derecha {
+    position: fixed; /* Fija la sidebar en la posición */
+    top: 60px; /* Alinea la parte superior con la vista */
+    right: 0; /* Alinea a la derecha de la vista */
+    width: 150px; /* Ancho de la sidebar */
+    height: calc(100vh - 60px); /* Resta la altura del header */
+    overflow-y: auto; /* Permite desplazamiento vertical */
+    background-color: #f4f4f4; /* Color de fondo */
+    box-shadow: -2px 0 5px rgba(0,0,0,0.5); /* Sombra para efecto de profundidad */
+}
+
+.producto {
+    margin: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ddd; /* Borde para los productos */
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.1); /* Sombra suave para los productos */
+}
+
+
+/* ---------------------------------------------------------- */
+
+/* Estilos para la ventana emergente de cookies y privacidad */
+
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* .modal-content {
+
+} */
+
+.modal-buttons {
+    text-align: center; /* Alinear botones al centro */
+    margin-top: 10px; /* Espacio superior */
+}
+
+/* Otros estilos */
+
+
+
+#cookie-modal {
+    display: none;
+    position: fixed;
+    bottom: 0; /* Alinear al fondo de la pantalla */
+    margin: auto; /* Centrar horizontalmente */
+
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo oscurecido */
+}
+
+#cookie-modal .modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    text-align: center;
+}
+
+#cookie-modal h2 {
+    margin-bottom: 20px;
+}
+
+#cookie-modal p {
+    margin-bottom: 20px;
+}
+
+#cookie-modal .button-group {
+    display: flex;
+    justify-content: center;
+}
+
+#cookie-modal button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    background-color: #007bff; /* Color azul */
+    color: #fff; /* Texto blanco */
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#cookie-modal button:hover {
+    background-color: #0056b3; /* Color azul oscuro al pasar el mouse */
+}
+
+#cookie-modal .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#cookie-modal .close:hover,
+#cookie-modal .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+/* ---------------------------------------------------------- */
+
+/* style-login.css */
+
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos para la ventana emergente de inicio de sesión */
+
+.modal {
+    display: none; /* Ocultar inicialmente */
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Fondo oscurecido */
+  }
+  
+.modal-content {
+    background-color: #fefefe;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-height: calc(100vh - 100px); /* Altura máxima de la ventana emergente */
+    overflow-y: auto; /* Permitir desplazamiento vertical si el contenido excede la altura máxima */
+}
+
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+
+/* --------------------------------------------------------------- */
+
+/* Estilos para el formulario de inicio de sesión */
+
+.formulario{
+    display: block;
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-40%, -40%);
+    max-height: calc(100vh - 50px); /* Altura máxima del formulario, restando la altura del encabezado */
+    
+    
+
+}
+
+.formulario h2{
+    text-align: center;
+}
+
+.social-login-buttons{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    /* margin: 20px; */
+    /* padding: 20px; */
+}
+
+.social-login-buttons button {
+    margin-bottom: 10px; /* Agregar margen inferior de 20px */
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ------------------------------------------------------------------- */
+
+/* Estilos para los campos de inicio de sesión */
+
+.form-page .form-container {
+    background: transparent;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 300px;
+    margin: auto; /* Añade margen automático para centrar el formulario */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    position: relative;
+    font-weight: bold;
+    margin-bottom: 5px;
+    align-items: center;
+    margin: 20px;
+    padding: 0;
+    text-align: center;
+
+}
+
+.form-group input {
+    display: inline-block;
+    position: relative;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    
+}
+
+/* Estilos para el botón de inicio de sesión */
+.login-form button {
+    padding: 10px;
+    margin: 20px;
+    font-size: 16px;
+    background-color: #007bff; /* Color azul */
+    color: #fff; /* Texto blanco */
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+    
+}
+
+.login-form button:hover {
+    background-color: #0056b3; /* Color azul oscuro al pasar el mouse */
+}
+
+.forgot-steps{
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+
+}
+
+.open-account-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.open-account-form button {
+    margin-top: 10px; /* Agregar margen superior de 20px */
+}
+
+.open_account_link{
+    align-items: center;
+    text-align: center;
+    
+}
+
+.open_account_link a{
+    text-decoration: none;
+
+}
+
+/* Estilos para los cuadros de verificación y sus etiquetas */
+.form-group-terms {
+    margin-bottom: 15px; /* Espacio entre grupos de elementos */
+    display: flex; /* Usar flexbox para alinear elementos */
+    flex-direction: column;
+    /* align-items: center;  */
+    padding: 20px;
+}
+
+/* Estilos para los cuadros de verificación y sus etiquetas */
+.form-group-terms .terms_1,
+.form-group-terms .terms_2 {
+    margin-bottom: 15px; /* Espacio entre grupos de elementos */
+}
+
+.form-group-terms input[type="checkbox"] {
+    margin-right: 10px; /* Eliminar el margen derecho */
+    margin-bottom: 10px; /* Añadir un margen inferior */
+}
+
+.form-group label {
+    margin: 0; /* Eliminar márgenes por defecto */
+    
+}
+
+
+/* ---------------------------------------------------------- */
+/* Stlilo de la pagina User */
+
+/* Estilos.css */
+
+
+.contenido {
+    width: calc(100% - 150px);
+    float: left;
+    /* background: #eee; */
+    background-color: transparent;
+    padding: 20px;
+}
+
+.perfil {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.foto-perfil {
+    width: 50px; /* Ajusta según necesidad */
+    height: 50px; /* Ajusta según necesidad */
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.info-perfil h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.barra-experiencia span {
+    display: block;
+    height: 20px;
+    background-color: green;
+    width: 70%; /* Ejemplo de porcentaje de progreso */
+    color: white;
+    text-align: center;
+}
+
+.contenedor-botones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around; /* Ajusta la distribución de los botones */
+    padding: 5px;
+}
+
+.contenedor-botones button {
+    flex: 1 1 18%; /* Ajusta para que quepan 5 botones por fila */
+    margin: 5px;
+    padding: 10px 5px; /* Reduce el padding para hacer los botones más pequeños */
+    font-size: 0.8rem; /* Reduce el tamaño de la fuente, ajusta según necesidad */
+    cursor: pointer;
+    background-color: #f0f0f0; /* Ejemplo de color de fondo */
+    border: 1px solid #ccc; /* Borde para los botones */
+    border-radius: 5px; /* Esquinas redondeadas */
+}
+
+/* Estilo opcional para mejorar la visibilidad al pasar el ratón */
+.contenedor-botones button:hover {
+    background-color: #e9e9e9;
+}
+
+.estado h2 {
+    margin: 0;
+}
+
+.contenido-desplegable {
+    display: none;
+    padding: 10px;
+    background-color: #f9f9f9; /* Ligeramente diferente para visualizar mejor el contenido */
+    margin-top: 5px;
+}
+
+.encabezado-desplegable {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #eee;
+    border: 1px solid #ddd;
+}
+
+.encabezado-desplegable:hover {
+    background-color: #e0e0e0;
+}
+
+
+.soporte p {
+    font-style: italic;
+}
+
+.sidebar-derecha {
+    position: fixed;
+    top: 50px;
+    right: 0;
+    width: 150px;
+    /* height: 100%; */
+    height: calc(100vh - 60px);  /* Ajusta la altura para restar la del menú*/
+    overflow-y: auto;
+    background-color: #f4f4f4;
+}
+
+
+/* ------------------------------------------------------------ */
+
+/* Estilos para la sección parceros de redes sociales */
+
+
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos para la sección de redes sociales */
+.social-section {
+    /* background-color: #f9f9f9; */
+    background-color: transparent;
+    padding: 50px 0; /* Espaciado interno superior e inferior */
+    display: flex;
+    flex-direction: column;
+    text-align: center; /* Centrar el contenido */
+}
+
+/* Estilos para el contenedor */
+.container-parceros {
+    max-width: 1200px; /* Ancho máximo del contenedor */
+    margin: 0 auto; /* Centrar el contenedor */
+}
+
+/* Estilos para el contenido */
+.social-content {
+    max-width: 800px; /* Ancho máximo del contenido */
+    margin: 0 auto; /* Centrar el contenido */
+    margin-bottom: 30px; /* Espaciado inferior */
+    display: flex; /* Utilizar flexbox para alinear los elementos */
+    flex-direction: column; /* Alinear elementos en columna */
+    align-items: center; /* Centrar elementos horizontalmente */
+}
+
+/* Estilos para el título */
+.social-content h2 {
+    font-size: 28px; /* Tamaño de fuente del título */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+/* Estilos para el párrafo */
+.social-content p {
+    font-size: 16px; /* Tamaño de fuente del párrafo */
+    margin-bottom: 30px; /* Espaciado inferior */
+}
+
+/* Estilos para los iconos de redes sociales */
+.social-icons {
+    display: flex; /* Mostrar los iconos en línea */
+    justify-content: center; /* Centrar los iconos horizontalmente */
+    flex-wrap: wrap; /* Permitir el ajuste de los iconos a múltiples líneas */
+    margin-top: 20px; /* Espaciado superior */
+}
+
+.social-icon {
+    font-size: 24px; /* Tamaño de fuente de los iconos */
+    margin: 0 10px; /* Espaciado horizontal entre los iconos */
+    color: #333; /* Color de los iconos */
+    transition: color 0.3s ease; /* Transición de color */
+}
+
+.social-icon:hover {
+    color: #007bff; /* Cambio de color al pasar el mouse */
+}
+
+
+
+
+/* ------------------------------------------------------------ */
+
+/* Estilos generales del pie de página */
+
+
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+footer {
+    clear: both;
+    /* background-color: #f0f0f0; */
+    background-color: transparent;
+    padding: 50px 0;
+    text-align: center;
+}
+
+/* Contenedor principal del footer */
+.footer-container {
+    padding: 20px;
+    max-width: 1200px; /* Ancho máximo del contenedor */
+    margin: 0 auto; /* Centrar el contenedor */
+    display: flex; /* Utilizar flexbox para organizar el contenido */
+    flex-direction: column; /* Organizar el contenido en columna */
+    align-items: center; /* Centrar el contenido horizontalmente */
+}
+
+/* Estilos para cada sección del pie de página */
+.trustpilot-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.trustpilot-logo img {
+    width: 100px; /* Ajustar según el tamaño del logo */
+}
+
+.trustpilot-info {
+    margin-left: 20px; /* Espacio entre el logo y la información */
+}
+
+.trustpilot-info .trustscore {
+    font-size: 18px; /* Tamaño del trustscore */
+    margin-bottom: 5px; /* Espacio inferior */
+}
+
+.trustpilot-info .reviews-info {
+    font-size: 16px; /* Tamaño de la información de reviews */
+}
+
+.trustpilot-info .reviews-info .separator {
+    margin: 0 10px; /* Espacio entre la barra y el texto */
+}
+
+
+
+
+.social-media-section {
+    text-align: center; /* Centrar los iconos horizontalmente */
+    margin-top: 20px; /* Espacio superior */
+}
+
+.social-media-section .social-icon {
+    color: #333; /* Color de los iconos */
+    font-size: 24px; /* Tamaño de los iconos */
+    margin: 0 10px; /* Espacio entre los iconos */
+    text-decoration: none; /* Quitar subrayado */
+}
+
+.social-media-section .social-icon:hover {
+    color: #007bff; /* Cambiar color al pasar el mouse */
+}
+
+/* Estilo para la sección de métodos de pago */
+.payment-methods-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px; /* Ajusta el margen superior según sea necesario */
+}
+
+/* Estilo para los enlaces de métodos de pago */
+.payment-methods-section a {
+    margin: 0 10px; /* Espacio entre los enlaces */
+    text-decoration: none; /* Eliminar subrayado */
+}
+
+/* Estilo para las imágenes de métodos de pago */
+.payment-methods-section img {
+    width: 100px; /* Ancho de la imagen */
+    height: auto; /* Altura ajustable según el ancho */
+    transition: transform 0.3s ease; /* Efecto de transición al pasar el mouse */
+}
+
+/* Estilo al pasar el mouse sobre las imágenes */
+.payment-methods-section img:hover {
+    transform: scale(1.1); /* Escala la imagen al 110% al pasar el mouse */
+}
+
+
+
+.sponsors-section{
+    text-align: center;
+    align-items: center;
+    padding: 20px;
+}
+
+
+.links-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en líneas adicionales */
+    text-align: center; /* Centra el texto */
+
+}
+
+.links-section a {
+    text-decoration: none; /* Quitar subrayado */
+    margin: 0 10px; /* Agregar espacio entre enlaces */
+    color: #333; /* Color de los enlaces */
+    white-space: nowrap;
+}
+
+.links-section a:not(:last-child):after {
+    content: "·"; /* Agregar punto centrado entre enlaces, excepto al último */
+    margin-left: 30px; /* Mover el punto hacia la izquierda */
+    font-size: 30px; /* Tamaño del punto más grande */
+    
+}
+
+
+.footer-section {
+    margin-bottom: 30px; /* Espaciado inferior entre secciones */
+}
+
+.company-info-section {
+    flex: 1 1 20%; /* Distribución equitativa de espacio entre las secciones */
+    margin-bottom: 30px;
+    text-align: center; /* Centra el contenido dentro de cada sección */
+}
+
+.trustpilot-section img {
+    width: 50px; /* Tamaño del icono de Trustpilot */
+}
+
+/* Agrega estilos adicionales según sea necesario para los iconos de redes sociales, métodos de pago, logos de patrocinadores, etc. */
+
+
+.sponsors-section a {
+    margin: 0 10px; /* Espacio entre los logos */
+}
+
+
+
+/* --------------------------------------------------------- */
+
+
+/* floating-button.css */
+
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+/* Estilo para cambiar al tema oscuro con el botón flotante de cambiar tema */
+body.dark_theme {
+    background-color: #333;
+    color: #fff;
+}
+
+body.dark_theme .content {
+    background-color: #666;
+}
+
+body.dark_theme a {
+    color: #ddd;
+}
+
+
+/* body.dark_theme .container, */
+/* body.dark_theme nav, */
+body.dark_theme .sidebar-derecha{
+    background-color: #444;
+    
+}
+body.dark_theme .sidebar-derecha .producto{
+    background-color: #0056b3;
+    color: white;
+}
+
+body.dark_theme footer {
+    background-color: #444; /* Un poco más claro que el fondo para algún contraste */
+    color: #fff;
+}
+
+/* Asegúrate de ajustar los colores de otros elementos específicos según sea necesario */
+
+.floating-button {
+    position: fixed;
+    top: 50%;
+    right: 20px; /* Ajusta el espacio desde el borde derecho */
+    transform: translateY(-50%);
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 3000;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.floating-button:hover {
+    background-color: #0056b3; /* Un azul más oscuro para el hover */
+}
+
+.floating-button i {
+    font-size: 24px;
+}
+
+
+
+/* ------------------------------------------------------------ */
+
+/* Politicas de lugares permitidos por la aplicacion */
+
+
+/* Estilos para la ventana emergente */
+.modal-lugares {
+    display: none; /* Oculta el modal por defecto */
+    position: fixed; /* Posición fija en la ventana del navegador */
+    z-index: 1000; /* Z-index alto para estar encima de otros elementos */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ocupa todo el ancho */
+    height: 100%; /* Ocupa todo el alto */
+    overflow: auto; /* Permite hacer scroll si el contenido es muy grande */
+    background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente */
+    padding: 20px;
+    
+}
+
+.modal-content-lugares {
+    background-color: #fefefe;
+    margin: 15% auto; /* Centra vertical y horizontalmente */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ancho del contenido */
+}
+
+.modal-content-lugares p{
+    text-align: center;
+
+}
+
+.modal-content-lugares h2{
+    text-align: center;
+    padding: 20px;
+}
+
+#myTextarea {
+    text-align: left; /* Alinea el contenido a la izquierda */
+    justify-content: flex-start;
+    padding: 20px;
+    width: 100%; /* Ajusta el ancho al 100% */
+}
+
+.modal-content-lugares li{
+    list-style-type: none;
+
+}
+
+.modal-content-lugares button{
+    background-color: skyblue;
+    border: none;
+    border-radius: 25px;
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+
+/* ----------------------------------------------------------------------------------- */
+/* Style para personal-information */
+
+.form-container {
+    background: transparent;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 300px;
+    text-align: center;
+    
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.boton-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #007bff; /* Color azul */
+    color: #fff; /* Texto blanco */
+    text-align: center;
+    text-decoration: none; /* Elimina el subrayado */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.boton-link:hover {
+    background-color: #0056b3; /* Color azul oscuro al pasar el mouse */
+}
+
+
+
+
+
+/* -------------------------------------------------------------------------------------- */
+
+/* Style para el carrito de compras */
+
+
+.shopping-cart {
+    background: transparent;
+    padding: 20px;
+    margin: 0 auto;
+    width: 80%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+
+
+
+
+.item-image {
+    width: 120px;
+    height: 120px;
+    margin-right: 20px;
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Alinea los elementos hijos (incluido el botón) verticalmente al centro */
+    width: 80%;
+}
+.item-title {
+    margin: 0;
+    text-align: center;
+}
+
+.item-description {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.quantity-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.quantity-btn {
+    /* background: #f0f0f0; */
+    background: #3396FF;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    width: 80px;
+    
+}
+
+.item-quantity {
+    width: 80px;
+    text-align: center;
+    margin: 5px 0; /* Espacio antes y después del input */
+}
+
+
+.item-price {
+    font-size: 1.2em;
+    color: #333;
+    text-align: center;
+}
+
+.remove-item {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 120px;
+    display: block;
+    margin-top: 10px auto;
+    width: 80%;
+}
+
+.cart-summary {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.total-price {
+    color: #E12D39;
+    font-size: 1.5em;
+}
+
+.checkout-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+
+
+/* --------------------------------------------------------------------------------------- */
+
+/* Estyle para la pagina de la tienda en linea */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.product-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+    background: transparent;
+}
+
+.product-gallery h1{
+    padding: 10px;
+    font-size: 30px;
+
+}
+
+
+
+.products h1{
+    text-align: center;
+    margin: 10px;
+    font-size: 30px;
+}
+
+.product-store{
+    text-align: center;
+    border-radius: 50px;
+    border-style: solid;
+    padding: 30px;
+    margin: 20px;
+}
+
+.product-store img{
+    width: 400px;
+    height: 100%;
+    border-radius: 50px;
+}
+
+.quantity-selector{
+    text-align: center;
+    justify-content: center;
+}
+
+.quantity-selector button{
+    width: 50px;
+    margin: 10px;
+    font-weight: 700;
+    font-size: 20px;
+
+}
+
+.quantity-selector input{
+    width: 100px;
+    text-align: center;
+    font-size: 20px;
+
+}
+
+.product-store .addtocart{
+    width: 200px;
+    font-weight: 700;
+    font-size: 20px;
+    
+}
+
+.cart-btn{
+    width: 80px;
+    font-weight: 700;
+    font-size: 20px;
+
+}
+
+
+
+
+
+/* ---------------------------------------------------------------------------------------- */
+
+/* Styles para la pagina de Delivery o Entregas */
+
+.delivery-table{
+    width: auto; /* Ajustar según necesidad o mantenerlo flexible */
+    max-width: 300px; /* Ancho máximo si necesario */
+    margin: auto; /* Añade margen automático para centrar si no se usa flexbox */
+}
+
+.deliveries-table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    
+}
+
+.deliveries-table th, .deliveries-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.deliveries-table th {
+    background-color: #333;
+    color: white;
+}
+
+
+/* ------------------------------------------------------------------- */
+
+/* Styles para la pagina de transacciones del usuario */
+
+/* Archivo styles.css o donde manejes tus estilos específicos */
+
+.transactions-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.transactions-table th, .transactions-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.transactions-table th {
+    background-color: #f4f4f4;
+}
+
+.transactions-table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.transactions-table tbody tr:hover {
+    background-color: #eef1f4;
+}
+
+
+
+
+/* ------------------------------------------------------------------ */
+
+/* Stylr para la pagina de historial del usuario */
+
+/* styles.css o el archivo CSS que corresponda */
+
+/* Archivo styles.css o donde manejes tus estilos específicos */
+.purchases-container {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto; /* Centra el contenedor en la página */
+}
+
+.purchases-container h1{
+    text-align: center;
+}
+
+.purchases-table {
+    width: 100%;
+    border-collapse: collapse; /* Elimina el espacio entre bordes de celdas */
+    margin-top: 20px; /* Espacio superior */
+}
+
+.purchases-table th,
+.purchases-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.purchases-table th {
+    background-color: #004f72; /* Color oscuro para los encabezados */
+    color: white;
+}
+
+.purchases-table tbody tr:nth-child(odd) {
+    background-color: #f3f3f3; /* Color claro para filas alternas */
+}
+
+.purchases-table tbody tr:hover {
+    background-color: #e1f5fe; /* Color cuando el cursor pasa sobre la fila */
+}
+
+
+/* ----------------------------------------------------------------------------- */
+
+/* Style para el formulario de transferencias o recargas de saldo del usuario a su monedero, cuenta o billetera */
+
+.payment-container {
+    width: 300px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.payment-tittle{
+    margin: 20px;
+    text-align: center;
+    
+}
+
+.payment-container p{
+    text-align: center;
+}
+
+
+.accordion-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px; /* Espacio entre botones */
+}
+
+.accordion-button i {
+    margin-right: 10px;
+}
+
+.accordion-content {
+    display: none; 
+    padding: 10px;
+    background-color: #e9e9e9;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Style para el selector de banco del paypal */
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+select:focus {
+    border-color: #666;
+}
+
+
+/* .payment-method-btn {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px; 
+    border: none;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-method-btn i {
+    margin-right: 10px;
+}
+
+.payment-method-btn.active {
+    background-color: #4CAF50;
+    color: white;
+} */
+
+.transfer-form-group {
+    margin-bottom: 20px;
+}
+
+.transfer-form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.transfer-form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.transfer-form-group-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: blue;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.transfer-form-group-btn:hover {
+    background-color: darkblue;
+}
+
+
+/* ----------------------------------------------------------------------------- */
+/* Style para el formulario de opciones y métodos de transacciones generadas por el usuario para recargar saldo a su cuenta */
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.transfer-form-container {
+    width: 80%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+select {
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.transfer-form-btn {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.transfer-form-btn:hover {
+    background-color: #0056b3;
+}
+
+.accordion-toggle{
+    margin: 5px;
+}
+
+
+.cancel-btn {
+    
+    margin-top: 10px;
+    background-color: #f44336; /* Rojo para cancelar */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    background-color: #d32f2f; /* Rojo más oscuro al pasar el mouse */
+}
+
+
+
+/* ------------------------------------------------------------------------------- */
+/* Style para la ventana emergente que indica la confirmación para la redirección a la pasarela de pago y finalizar la transacción */
+
+/* Estilo de la ventana modal */
+.modal-transfer {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Fijo en toda la pantalla */
+    z-index: 1; /* Encima de todo */
+    left: 0;
+    top: 0;
+    width: 100%; /* Ancho completo */
+    height: 100%; /* Alto completo */
+    overflow: auto; /* Habilita scroll si es necesario */
+    background-color: rgb(0,0,0); /* Color de fondo */
+    background-color: rgba(0,0,0,0.4); /* Negro con opacidad */
+}
+
+.modal-content-transfer {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% desde la parte superior y centrado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Puede ser más o menos, dependiendo de la necesidad */
+    text-align: center;
+    width: 400px;
+    height: auto;
+}
+
+.close-transfer {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-transfer:hover,
+.close-transfer:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-transfer-btn {
+    padding: 10px;
+    margin-top: 10px;
+    width: 100px;
+}
+
+.fa-exclamation-circle-transfer {
+    color: #f44336; /* Rojo para alerta */
+    font-size: 2em; /* Icono grande */
+}

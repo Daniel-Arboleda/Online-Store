@@ -1,0 +1,46 @@
+/* styles-ruleta-2.css */
+
+/* Estilos para la sección de la ruleta de sorteos */
+.ruleta {
+    text-align: center; /* Alinea el contenido al centro */
+}
+
+/* Estilos para el título de la sección */
+.ruleta h2 {
+    margin-bottom: 20px; /* Espacio entre el título y la ruleta */
+}
+
+/* Estilos para el contenedor de la ruleta */
+.ruleta-container {
+    display: flex;
+    justify-content: center; /* Centra los elementos horizontalmente */
+    perspective: 1000px; /* Perspectiva para la transformación 3D */
+}
+
+/* Estilos para los elementos de la ruleta */
+.sorteo {
+    width: 100px; /* Ancho del elemento de la ruleta */
+    height: 100px; /* Altura del elemento de la ruleta */
+    background-color: #ccc; /* Color de fondo */
+    border-radius: 50%; /* Forma de círculo */
+    margin: 0 10px; /* Espacio entre cada elemento */
+    line-height: 100px; /* Centra el texto verticalmente */
+    font-size: 18px; /* Tamaño del texto */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el elemento */
+    transition: transform 0.3s ease; /* Transición suave al hacer hover */
+}
+
+/* Estilos para la animación de giro al hacer hover */
+.sorteo:hover {
+    animation: giro 1s linear infinite; /* Animación de giro infinita */
+}
+
+/* Definición de la animación de giro */
+@keyframes giro {
+    from {
+        transform: rotateY(0deg); /* Gira desde 0 grados en el eje Y */
+    }
+    to {
+        transform: rotateY(360deg); /* Gira hasta 360 grados en el eje Y */
+    }
+}

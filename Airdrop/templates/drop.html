@@ -1,0 +1,320 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxdrop</title>
+
+    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
+
+    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
+    <script>
+        const loginURL = "{% url 'login_form' %}";
+        const openURL = "{% url 'open_account' %}";
+    </script>
+
+</head>
+
+
+
+<body>
+
+
+    <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
+        <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
+           <!-- Header con menú basado en iconos -->
+           <header>
+                <nav>
+                    <ul>
+                        <!-- Título de la página -->
+                        <li class="title"><a href="{% url 'home' %}">Luxdrop</a></li>
+                        {% comment %} <li><a href="#"><i class="fas fa-home"></i></a></li> {% endcomment %}
+                        <li class="dropdown search-dropdown">
+                            <a href="#"><i class="fas fa-search"></i></a>
+                            <div class="dropdown-content search-bar">
+                                <input type="text" placeholder="Buscar..." id="searchInput">
+                                <button type="submit"><i class="fas fa-search"></i></button>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#"><i class="fas fa-box"></i></a>
+                            <div class="dropdown-content">
+                                <a href="{% url 'drop' %}">Ruleta</a>
+                                <a href="#">Rasca & Gana</a>
+                                <a href="#">Reacción</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{% url 'shop' %}"><i class="fas fa-store"></i></a>
+                            <div class="dropdown-content">
+                                <a href="#">Vivienda</a>
+                                <a href="#">Vehiculos</a>
+                                <a href="#">Tecnología</a>
+                                <a href="#">Ropa</a>
+                                <a href="#">Accesorios</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>     
+                        </li>
+                        <li><a href="#"><i class="fas fa-envelope"></i></a></li>
+                        <li><a id="delivery-icon" href="#"><i class="fas fa-truck"></i></a></li>
+                        <li class="dropdown">
+                            <a href="{% url 'user' %}"><i class="fas fa-user"></i></a>
+                            <div class="dropdown-content">
+                                <a href="#">Opción 1</a>
+                                <a href="#">Opción 2</a>
+                                <a href="#">Opción 3</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- Recuadro de saldo y botón de añadir saldo en una estructura propia -->
+                <div class="saldo-container">
+                    <div class="saldo-box">
+                        <p>$ {{ saldo }}</p>
+                    </div>
+                    <button id="openModalButton" data-url="{% url 'transfer' %}"><i class="fas fa-plus"></i></button>
+                </div>
+                <!-- Navegación secundaria para íconos adicionales -->
+                {% comment %} <nav>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-user-circle"></i> Perfil</a></li>
+                        <li><a href="#"><i class="fas fa-piggy-bank"></i> Reservas</a></li>
+                    </ul>
+                </nav> {% endcomment %}
+            </header>
+
+            <!-- Sección de la ruleta de la suerte -->
+            <section class="ruleta">
+
+                <!-- HTML: Definición de la línea vertical y el lugar donde mostrar su posición -->
+                <div id="linea-vertical" class="linea-vertical" onclick="newLeft" newLeft="mousemove" data-position="100px" style="position: absolute; left: 100px; top: 0; bottom: 0; width: 10px; background-color: red;"></div>
+
+                <p>Posición de la línea vertical: <span id="linePosition">0</span> px</p>
+
+
+                <div class="tittle-ruleta">
+                <h2>Ruleta de la Suerte</h2>
+                </div>
+                <!-- Contenedor de las opcion-ruletaes de la ruleta -->
+                <div class="ruleta-container">
+                    <!-- Ejemplo de opcion-ruletaes de la ruleta -->
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 1</p>Opción 1
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 2</p>Opción 2
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 3</p>Opción 3
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 4</p>Opción 4
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 5</p>Opción 5
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 6</p>Opción 6
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 7</p>Opción 7
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 8</p>Opción 8
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 9</p>Opción 9
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 10</p>Opción 10
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 11</p>Opción 11
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 12</p>Opción 12
+                    </div>
+                    <div class="opcion-ruleta">
+                        <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 13</p>Opción 13
+                    </div>
+                    
+                    <!-- Añadir más opcion-ruletaes según sea necesario -->
+                </div>
+            </section>
+
+            <section>
+                <!-- Botón para iniciar el juego -->
+                <button class="start-game-btn" id="start-game-btn">Iniciar Juego</button>
+            </section>
+
+            <!-- Label para mostrar el producto actual bajo la línea vertical -->
+            <div id="livePreviewLabel" style="margin-top: 20px; font-size: 18px; color: blue;">
+                Producto actual: <span id="liveProductName">Ninguno</span>
+            </div>
+            <div id="livePositionLabel" style="margin-top: 10px; font-size: 18px; color: blue;">Posición actual: <span id="livePositiontName">Ninguno</span>
+            </div>
+
+            
+
+            <!-- Sección de productos rifados -->
+            <section class="productos-rifados">             
+                <h2>Productos Rifados</h2>
+                <!-- Aquí irían los productos rifados -->
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                <div class="producto-rifado">
+                    <div class="probabilidad-rifa">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img class="productos-rifados-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre-prod-rifa">Nombre del Producto 1</p>
+                    <p class="precio-prod-rifa">$10.00</p>
+                </div>
+                
+                
+               
+               
+                <!-- Añadir más productos según sea necesario -->
+
+                <!-- Ventana Modal para anunciar el premio ganador -->
+                <div id="winningModal" class="modal-winnig">
+                    <div class="modal-content-win">
+                        <span class="close-mod-win">&times;</span>
+                        <h1>¡Felicidades tu premio es <span id="prizeName"></span>!</h1>
+                    </div>
+                </div>
+                
+
+            </section>
+        </div>
+
+
+
+        {% comment %} <!-- División para los productos principales franja vertical derecha-->
+        <div class="sidebar-derecha">
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 1</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 2</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 3</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 4</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 5</p>
+                <p class="precio">$10.00</p>
+            </div>
+        </div>
+    </div> {% endcomment %}
+    
+    <!-- Botón flotante -->
+    <div class="floating-button" id="theme_toggle">
+        <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
+    </div>
+
+
+    <!-- Ventana emergente listado de paises compatibles -->  
+    <!-- Código modularizado para ahorrar espacio, buena práctica de desarrollo y brinda una UX - Experiencia de usuario consistente en toda la página -->
+    {% include 'modal_lugares.html' %}
+
+    <!-- Scripts -->
+    <script src="{% static 'js/toggleVisibility.js' %}"></script>
+    <script src="{% static '../static/js/politics.js' %}"></script>
+    <script src="{% static '../static/js/modal-transfer.js' %}"></script>
+    <script src="{% static '../static/js/ruleta-2.js' %}"></script>
+    <script src="{% static 'js/dom-linea-vertical.js-2.js' %}"></script>
+    {% comment %} <script src="{% static '../static/js/modal-ruleta.js' %}"></script> {% endcomment %}
+
+</body>
+</html>

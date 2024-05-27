@@ -1,0 +1,189 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxdrop</title>
+
+    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
+
+    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+    
+     
+      
+
+    
+    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
+    <script>
+        const loginURL = "{% url 'login_form' %}";
+        const openURL = "{% url 'open_account' %}";
+    </script>
+
+</head>
+
+
+
+<body>
+
+
+    <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
+        <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
+           <!-- Header con menú basado en iconos -->
+           <header>
+                <nav>
+                    <ul>
+                        <!-- Título de la página -->
+                        <li class="title"><a href="{% url 'home' %}">Luxdrop</a></li>
+                        {% comment %} <li><a href="#"><i class="fas fa-home"></i></a></li> {% endcomment %}
+                        <li class="dropdown search-dropdown">
+                            <a href="#"><i class="fas fa-search"></i></a>
+                            <div class="dropdown-content search-bar">
+                                <input type="text" placeholder="Buscar..." id="searchInput">
+                                <button type="submit"><i class="fas fa-search"></i></button>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#"><i class="fas fa-box"></i></a>
+                            <div class="dropdown-content">
+                                <a href="{% url 'drop' %}">Ruleta</a>
+                                <a href="#">Rasca & Gana</a>
+                                <a href="#">Reacción</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{% url 'shop' %}"><i class="fas fa-store"></i></a>
+                            <div class="dropdown-content">
+                                <a href="#">Vivienda</a>
+                                <a href="#">Vehiculos</a>
+                                <a href="#">Tecnología</a>
+                                <a href="#">Ropa</a>
+                                <a href="#">Accesorios</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>     
+                        </li>
+                        <li><a href="#"><i class="fas fa-envelope"></i></a></li>
+                        <li><a id="delivery-icon" href="#"><i class="fas fa-truck"></i></a></li>
+                        <li class="dropdown">
+                            <a href="{% url 'user' %}"><i class="fas fa-user"></i></a>
+                            <div class="dropdown-content">
+                                <a href="#">Opción 1</a>
+                                <a href="#">Opción 2</a>
+                                <a href="#">Opción 3</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- Recuadro de saldo y botón de añadir saldo en una estructura propia -->
+                <div class="saldo-container">
+                    <div class="saldo-box">
+                        <p>$ {{ saldo }}</p>
+                    </div>
+                    <button id="openModalButton" data-url="{% url 'transfer' %}"><i class="fas fa-plus"></i></button>
+                </div>
+                <!-- Navegación secundaria para íconos adicionales -->
+                {% comment %} <nav>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-user-circle"></i> Perfil</a></li>
+                        <li><a href="#"><i class="fas fa-piggy-bank"></i> Reservas</a></li>
+                    </ul>
+                </nav> {% endcomment %}
+            </header>
+
+            <!-- Formulario de datos personales para usuarios -->
+            <div class="form-container">
+                <h2>Actualizar Datos Personales</h2>
+                <form action="/submit-your-update-url" method="POST">
+                    <div class="form-group">
+                        <label for="name">Nombres:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Apellidos:</label>
+                        <input type="text" id="last-name" name="last-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Documento:</label>
+                        <input type="text" id="id" name="id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Teléfono:</label>
+                        <input type="text" id="phone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Dirección:</label>
+                        <input type="text" id="address" name="address">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Nueva contraseña (opcional):</label>
+                        <input type="password" id="password" name="password">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Actualizar Datos</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% comment %} <!-- División para los productos principales franja vertical derecha-->
+        <div class="sidebar-derecha">
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 1</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 2</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 3</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 4</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 5</p>
+                <p class="precio">$10.00</p>
+            </div>
+
+        </div> {% endcomment %}
+        <!-- Botón flotante para cambiar el color del tema-->
+        <div class="floating-button" id="theme-toggle">
+            <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
+        </div>
+        <!-- Ventana emergente listado de paises compatibles -->  
+        <!-- Código modularizado para ahorrar espacio, buena práctica de desarrollo y brinda una UX - Experiencia de usuario consistente en toda la página -->
+        {% include 'modal_lugares.html' %}
+
+        <!-- Scripts -->
+        <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
+        <script src="{% static '../static/js/politics.js' %}"></script>
+        <script src="{% static '../static/js/modal-transfer.js' %}"></script>
+
+</body>
+</html>

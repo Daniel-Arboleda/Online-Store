@@ -1,0 +1,78 @@
+/* styles-ruleta-3.css */
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column; /* Cambio a columna para apilar elementos */
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+header {
+    /* Añade espacio en la parte inferior del encabezado para la ruleta */
+    margin-bottom: 20px;
+}
+
+.ruleta {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 5px solid #333;
+    position: relative;
+    animation: giro 5s infinite linear;
+}
+
+.opcion {
+    width: 50px;
+    height: 50px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    transition: transform 5s;
+}
+
+.opcion:nth-child(1) {
+    transform: translate(-50%, -50%) rotate(60deg);
+}
+
+.opcion:nth-child(2) {
+    transform: translate(-50%, -50%) rotate(120deg);
+}
+
+.opcion:nth-child(3) {
+    transform: translate(-50%, -50%) rotate(180deg);
+}
+
+.opcion:nth-child(4) {
+    transform: translate(-50%, -50%) rotate(240deg);
+}
+
+.opcion:nth-child(5) {
+    transform: translate(-50%, -50%) rotate(300deg);
+}
+
+.opcion:nth-child(6) {
+    transform: translate(-50%, -50%) rotate(360deg);
+}
+
+@keyframes giro {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxdrop</title>
+    <link rel="shorcut icon" href="{% static '../static/img/Logo-LuckyCart.png' %}"> 
+    <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="{% static '../static/css/style.css' %}">    
+    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+        </div>
+    </div>
+
+    <!-- Esto manejara el uso de mensajes predeterminados de Django ´para la comunicación con el usuario, para esta oportunidad manejaremos tanto errores de exito como errores reales en el formulario de crear cuenta -->    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="formulario"> 
+        <h2>Crear cuenta</h2>
+            <!-- Botones para iniciar sesión con Steam, Google y Facebook -->
+            <div class="social-login-buttons">
+                <button type="button" onclick="loginWithSteam()"><i class="fab fa-steam"></i> Iniciar sesión con Steam</button>
+                <button type="button" onclick="loginWithGoogle()"><i class="fab fa-google"></i> Iniciar sesión con Google</button>   
+                <button type="button" onclick="loginWithFacebook()"><i class="fab fa-facebook"></i> Iniciar sesión con Facebook</button>
+            </div>
+         <!-- Muestra los errores de validación aquí -->
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}      
+        <form id="account-form" action="{% url 'create_account' %}" method="post" class="login-form">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- Renderiza el formulario aquí -->
+            <!-- Campos de inicio de sesión -->
+            <div class="form-group">
+                <label for="email">Correo Electronico*</label>
+                <input type="email" id="email" name="email" placeholder="Correo electrónico*" required>
+            </div>
+            <div class="form-group">
+                <label for="password1">Contraseña*</label>
+                <input type="password" id="password1" name="password1" placeholder="Contraseña*" required>
+            </div>
+            <div class="form-group">
+                <label for="password2">Confirmar Contraseña*</label>
+                <input type="password" id="password2" name="password2" placeholder="Confirmar Contraseña*" required>
+            </div>
+            
+            <!-- Cuadros de verificación para aceptar los términos & condiciones-->
+            <div class="form-group-terms">
+                <div class="terms_1">
+                    <input type="checkbox" id="accept-terms1" name="accept-terms1" required>
+                    <label for="accept-terms1">
+                        Me gustaría recibir promociones valiosas por correo electrónico
+                    </label>
+                </div>
+                <div class="terms_2">
+                    <input type="checkbox" id="accept-terms2" name="accept-terms2" required>
+                    <label for="accept-terms2">
+                        Al marcar esta casilla, para registrarse en este sitio web, el usuario declara haber leído, entendido y aceptado los Términos y Condiciones Generales. Al marcar esta casilla, EL usuario declara que tiene 18+
+                    </label>
+                </div>
+            </div>
+            <!-- Botón de enviar -->
+            <button type="submit" id="btn-account" data-url="{% url 'home' %}">Crear cuenta</button>
+        </form>
+    </div>
+    <!-- Scripts -->
+    <script src="{% static 'js/crear-cuenta.js' %}"></script>
+</body>
+</html>

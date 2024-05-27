@@ -1,0 +1,221 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxdrop</title>
+
+    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
+
+    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+    
+     
+      
+
+    
+    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
+    <script>
+        const loginURL = "{% url 'login_form' %}";
+        const openURL = "{% url 'open_account' %}";
+    </script>
+
+</head>
+
+
+
+<body>
+
+
+    <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
+        <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
+           <!-- Header con menú basado en iconos -->
+           <header>
+                <nav>
+                    <ul>
+                        <!-- Título de la página -->
+                        <li class="title"><a href="{% url 'home' %}">Luxdrop</a></li>
+                        {% comment %} <li><a href="#"><i class="fas fa-home"></i></a></li> {% endcomment %}
+                        <li class="dropdown search-dropdown">
+                            <a href="#"><i class="fas fa-search"></i></a>
+                            <div class="dropdown-content search-bar">
+                                <input type="text" placeholder="Buscar..." id="searchInput">
+                                <button type="submit"><i class="fas fa-search"></i></button>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#"><i class="fas fa-box"></i></a>
+                            <div class="dropdown-content">
+                                <a href="{% url 'drop' %}">Ruleta</a>
+                                <a href="#">Rasca & Gana</a>
+                                <a href="#">Reacción</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{% url 'shop' %}"><i class="fas fa-store"></i></a>
+                            <div class="dropdown-content">
+                                <a href="#">Vivienda</a>
+                                <a href="#">Vehiculos</a>
+                                <a href="#">Tecnología</a>
+                                <a href="#">Ropa</a>
+                                <a href="#">Accesorios</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>     
+                        </li>
+                        <li><a href="#"><i class="fas fa-envelope"></i></a></li>
+                        <li><a href="{% url 'delivery' %}"><i class="fas fa-truck"></i></a></li>
+                        <li class="dropdown">
+                            <a href="{% url 'user' %}"><i class="fas fa-user"></i></a>
+                            <div class="dropdown-content">
+                                <a href="#">Opción 1</a>
+                                <a href="#">Opción 2</a>
+                                <a href="#">Opción 3</a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- Recuadro de saldo y botón de añadir saldo en una estructura propia -->
+                <div class="saldo-container">
+                    <div class="saldo-box">
+                        <p>$ {{ saldo }}</p>
+                    </div>
+                    <button id="openModalButton" data-url="{% url 'transfer' %}"><i class="fas fa-plus"></i></button>
+                </div>
+                <!-- Navegación secundaria para íconos adicionales -->
+                {% comment %} <nav>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-user-circle"></i> Perfil</a></li>
+                        <li><a href="#"><i class="fas fa-piggy-bank"></i> Reservas</a></li>
+                    </ul>
+                </nav> {% endcomment %}
+            </header>
+            <!-- Sección para el formulario de transferencias o recargas de saldo a su cuento, monedero o billetera de los prodructos del carrito -->
+            <div class="payment-container">
+                <h2 class="payment-tittle">Recargar cuenta</h2>
+                <form action="procesar_pago.php" method="POST" id="paymentForm">
+                    <div class="accordion">
+                        <div class="form-group">
+                            <label for="amount">Monto en pesos colombianos COP$</label>
+                            <input type="number" id="amount" name="amount" required>
+                        </div>
+                        <div class="accordion-item">
+                            <button type="button" class="accordion-toggle" onclick="toggleAccordion('creditCardDetails')">
+                                <i class="fas fa-credit-card"></i> Tarjeta de Crédito
+                            </button>
+                            <div class="accordion-content" id="creditCardDetails" style="display:none;">
+                                <!-- Campos específicos de tarjeta de crédito -->
+                                <label for="cardHolder"><br>Titular de la tarjeta*:</label>
+                                <input type="text" placeholder="Titular de la tarjeta" name="cardHolder">
+                                <label for="documentId"><br>Documento de identificación*:</label>
+                                <input type="text" placeholder="Documento de identificación*" name="documentId">
+                                <label for="cardNumber"><br>Número de tarjeta*:</label>
+                                <input type="text" placeholder="Número de tarjeta*" name="cardNumber">
+                                <label for="expiryDate"><br>Fecha de vencimiento*:</label>
+                                <input type="month" placeholder="Fecha de vencimiento*" name="expiryDate">
+                                <label for="cvv"><br><br>Código de seguridad*:</label>
+                                <input type="text" placeholder="CVV" name="cvv">
+                                <label for="installments">Número de cuotas:</label>
+                                <select id="installments" name="installments">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <!-- Añade más opciones según necesites -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <!-- Botón para proceder con el pago a través de Paypal-->
+                <button id="openModal" class="checkout-btn">Proceder al Pago</button>
+                <!-- Botón Cancelar para limpiar el formulario o abortar la operación -->
+                <button type="button" class="cancel-btn" onclick="cancelTransaction()">Cancelar</button>
+                <!-- Ventana Modal para la confirmación de redirección a la pasarela de pago -->
+                <div id="myModal" class="modal-transfer">
+                    <!-- Contenido del modal -->
+                    <div class="modal-content-transfer">
+                        <span class="close-transfer">&times;</span>
+                        <i class="fa fa-exclamation-circle-transfer" aria-hidden="true"></i>
+                        <p>¿Está seguro de que desea realizar esta transacción?</p>
+                        <button id="confirmYes" class="modal-transfer-btn" data-url="{% url 'transfer_form' %}">Sí</button>
+                        <button id="confirmNo" class="modal-transfer-btn">No</button>
+                    </div>
+                </div>
+                <!-- Ventana Modal para la confirmación de cancelación -->
+                <div id="cancelModal" class="modal-transfer">
+                    <!-- Contenido del modal -->
+                    <div class="modal-content-transfer">
+                        <span class="close-transfer cancel-close">&times;</span>
+                        <p>¿Estás seguro de que deseas cancelar la operación?</p>
+                        <button id="cancelYes" class="modal-transfer-btn" data-url="{% url 'transfer' %}">Sí</button>
+                        <button id="cancelNo" class="modal-transfer-btn">No</button>
+                    </div>
+                </div>
+            </div>
+
+            {% comment %} <!-- División para los productos principales franja vertical derecha-->
+            <div class="sidebar-derecha">
+                <div class="producto">
+                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre">Nombre del Producto 1</p>
+                    <p class="precio">$10.00</p>
+                </div>
+                <div class="producto">
+                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre">Nombre del Producto 2</p>
+                    <p class="precio">$10.00</p>
+                </div>
+                <div class="producto">
+                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre">Nombre del Producto 3</p>
+                    <p class="precio">$10.00</p>
+                </div>
+                <div class="producto">
+                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre">Nombre del Producto 4</p>
+                    <p class="precio">$10.00</p>
+                </div>
+                <div class="producto">
+                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                    <p class="nombre">Nombre del Producto 5</p>
+                    <p class="precio">$10.00</p>
+                </div>
+            </div> {% endcomment %}
+            <!-- Botón flotante para cambiar el color del tema-->
+            <div class="floating-button" id="theme-toggle">
+                <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
+            </div>
+
+
+            <!-- SCRIPT para que JAVASCRIPTS reconosca la url de django así Django procesara la URL y la asigne a una eriable de JS en el escrio externo-->
+
+            {% comment %} <script>
+                // Esta variable se crea en el HTML donde Django puede procesar las plantillas
+                var transferFormUrl = "{% url 'transfer_form' %}"; // Asegúrate de que 'transfer_form' es el nombre correcto en URLs de Django.
+            </script> {% endcomment %}
+
+            <!-- SCRIPT para que JAVASCRIPTS creados puedan ser enlazados al HTML-->
+            <!-- Scripts -->
+            <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
+            <script src="{% static '../static/js/transfer.js' %}"></script>
+            <script src="{% static '../static/js/modal-transfer.js' %}"></script>
+
+</body>
+</html>
