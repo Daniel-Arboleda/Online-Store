@@ -4,7 +4,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from . import views
-from .views import open_account, create_account, product_create_view
+# from .views import open_account, create_account, product_create_view
+from .views import open_account, create_account, products
 
 
 urlpatterns = [
@@ -36,7 +37,11 @@ urlpatterns = [
     # Validación de los datos de formulario crear cuenta o inicio de sesion
     path('create-account/', views.create_account, name='create_account'),
     # Ruta para la creación de los productos mediante el formulario
-     path('create_product/', product_create_view, name='create_product'),
+    # path('create_product/', product_create_view, name='create_product'),
+    # path('products/', product_create_view, name='products'),
+    # Ruta para la creación del render del la vista para las tablas de los productos mediante el formulario... Este método es para visualizar la lista en una página diferente a la del formulario
+    # path('products/list/', views.product_list, name='product_list'),
+
 
 
     # Pasarelas de pago Stripe

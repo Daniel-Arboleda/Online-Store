@@ -123,9 +123,10 @@ def create_account(request):
     return render(request, 'open_account.html', {'form': form})
 
 
-
+# Configuración que maneja el manejo Backend del formulario para crear productos y llevar el método POST del mensaje a la tabla Products de la DB
 logger = logging.getLogger(__name__)
-def product_create_view(request):
+# def product_create_view(request):
+def products(request):
     if request.method == 'POST':
         logger.debug("POST request received.")
         form = ProductForm(request.POST, request.FILES)
@@ -144,9 +145,17 @@ def product_create_view(request):
     else:
         logger.debug("GET request received.")
         form = ProductForm()
-    return render(request, 'products.html', {'form': form})
+    # return render(request, 'products.html', {'form': form})
+
+    # Obtener todos los productos para mostrarlos en la tabla en la misma página del formulario
+    products = Product.objects.all()
+    return render(request, 'products.html', {'form': form, 'products': products})
 
 
+# Método para traducir los datos de la tabla Products para interpretarlos y renderizarlos para llevarlos a la tabla de Productos creados.... este metodo es si quisiera manejar el render de la tabla products en una pagina diferente... , si quisiera usar el metodo en la misma pagina del formulario deberia integrar con el formulario
+# def product_list(request):
+#     products = Product.objects.all()
+#     return render(request, 'products.html', {'products':products})
 
 
 

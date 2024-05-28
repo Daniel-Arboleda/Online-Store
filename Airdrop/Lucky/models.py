@@ -62,13 +62,20 @@ class Product(models.Model):
     ('not_for_sale', 'No Disponible para Venta'),
     ('being_retired', 'En Proceso de Retiro'),
     ]
+    CATEGORY_CHOICES = [
+    ('housing', 'Vivienda'),
+    ('vehicles', 'Vehículos'),
+    ('technology', 'Tecnología'),
+    ('fashion', 'Moda'),
+    ('accessories', 'Accesorios'),
+    ]
     # id = models.AutoField()
     code= models.IntegerField(unique=True)
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=13, decimal_places=2)
     stock = models.IntegerField() 
-    categories = models.CharField(max_length=100) 
+    categories = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='technology') 
     brand = models.CharField(max_length=100)  
     state = models.CharField(max_length=20, choices=STATE_CHOICES, default='coming_soon') 
     image = models.ImageField(upload_to="images/")

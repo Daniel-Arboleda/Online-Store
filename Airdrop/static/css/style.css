@@ -2191,23 +2191,3 @@ select {
 
 
 
-
-
-
-
-
-
-.floating-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #444;
-    color: #fff;
-    padding: 15px;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.floating-button:hover {
-    background-color: #666;
-}

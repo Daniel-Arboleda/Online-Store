@@ -33,7 +33,8 @@
             {% endif %}
             <div class="orm-prod-formulario">
                 <h1>ORM Productos</h1>
-                <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'create_product' %}">
+                {% comment %} <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'create_product' %}"> {% endcomment %}
+                <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'products' %}">
                     {% csrf_token %}
                     <div class="orm-prod-form-group">
                         <label for="code">Código Producto*</label>
@@ -57,7 +58,13 @@
                     </div>
                     <div class="orm-prod-form-group">
                         <label for="categories">Categoría*</label>
-                        <input type="text" id="categories" name="categories" placeholder="Categoría*" required>
+                        <select id="categories" name="categories" required>
+                            <option value="housing">Vivienda</option>
+                            <option value="vehicles" readonly>Vehículos</option>
+                            <option value="technology">Tecnología</option>
+                            <option value="fashion">Moda</option>
+                            <option value="accessories">Accesorios</option>
+                        </select>
                     </div>
                     <div class="orm-prod-form-group">
                         <label for="brand">Marca*</label>
@@ -97,6 +104,7 @@
                     <thead>
                         <tr>
                             <th>Id</th>
+                            <th>Código</th>
                             <th>Categoría</th>
                             <th>Producto</th>
                             <th>Marca</th>
@@ -110,19 +118,24 @@
                     <br>
                     <tbody>
                         <!-- Las filas se llenarán dinámicamente con datos del servidor -->
+                        {% for product in products %}
                         <tr>
-                            <td>2024-01-01</td>
-                            <td>2024-01-01</td>
-                            <td>Smartphone XYZ</td>
-                            <td>Tecnología</td>
-                            <td>1</td>
-                            <td>Entregado</td>
-                            <td>Entregado</td>
-                            <td>Entregado</td>
-                            <td>Entregado</td>
-                            <td>Entregado</td>
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.code }}</td>
+                            <td>{{ product.get_categories_display }}</td> <!-- Usa get_<field>_display para mostrar la opción de categoría legible -->
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.brand }}</td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>{{ product.get_state_display }}</td> <!-- Usa get_<field>_display para mostrar la opción de estado legible -->
+                            <td>{{ product.description }}</td>
+                            <td><img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 50px; height: auto;"></td>
                         </tr>
-                        <!-- Repetir el bloque para más entregas -->
+                        {% empty %}
+                        <tr>
+                            <td colspan="10">No hay productos disponibles.</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </main>
