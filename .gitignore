@@ -1,18 +1,25 @@
-logs/ 
-*.log 
-db_logs/ 
-*.db.log 
-*.sqlite3 
-*.db 
-.env 
-node_modules/ 
-venv/ 
-__pycache__/ 
-*.pyc 
-*.pyo 
-*.pyd 
-*.class 
-.idea/ 
-.vscode/ 
-.DS_Store 
-Airdrop/logs/debug.log
+# Ignorar los logs generales
+logs/
+*.log
+
+# Ignorar los logs de la base de datos
+db_logs/
+*.db.log
+*.sqlite3
+*.db
+
+# Ignorar archivos y directorios generados por entornos virtuales, IDEs, etc.
+.env
+node_modules/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.class
+.idea/
+.vscode/
+.DS_Store
+
+# Mantener el log específico que no se debe ignorar
+!Airdrop/logs/debug.log
