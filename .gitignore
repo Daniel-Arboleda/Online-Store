@@ -1,0 +1,17 @@
+logs/ 
+*.log 
+db_logs/ 
+*.db.log 
+*.sqlite3 
+*.db 
+.env 
+node_modules/ 
+venv/ 
+__pycache__/ 
+*.pyc 
+*.pyo 
+*.pyd 
+*.class 
+.idea/ 
+.vscode/ 
+.DS_Store 
