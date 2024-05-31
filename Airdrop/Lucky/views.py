@@ -62,12 +62,16 @@ def local_form(request):
 
 
 from django.shortcuts import render, redirect
-from .forms import CreateAccountForm, ProductForm
+from django.contrib.auth.decorators import login_required
+from .forms import CreateAccountForm, ProductForm, UserInfoForm
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib import messages
 import logging
-from .models import Product
+from .models import Product, UserInfo
+from .forms import CustomUser, UserInfoForm, CustomAuthenticationForm
+
+
 
 
 # def open_account(request):
@@ -88,8 +92,8 @@ from .models import Product
 
 
 logger = logging.getLogger(__name__)
-# Configuración para definir el metodo que manejara las solicitudes de POST en el formulario de crear cuenta
-def create_account(request):
+# Configuración para definir el metodo que manejara las solicitudes de POST en el formulario de crear cuenta nueva mendiante el formulario personalizado de la página de crear usuario
+def open_account(request):
     if request.method == 'POST':
         form = CreateAccountForm(request.POST)
         if form.is_valid():
@@ -121,6 +125,45 @@ def create_account(request):
     else:
         form = CreateAccountForm()
     return render(request, 'open_account.html', {'form': form})
+
+
+# Método personalizado para manejar la validación de usuarion contra los datos de usuarios creados en la DB mediante el formulario personalizado de login
+def login_form(request):
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')  # Redirigir a la página de inicio o cualquier otra página después del login
+            else:
+                messages.error(request, 'Usuario o contraseña incorrectos.')
+        else:
+            messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
+    else:
+        form = CustomAuthenticationForm()
+    return render(request, 'login_form.html', {'form': form})
+
+
+
+# Método para rellenar la información del usuario con el formulario personalizado de Datos del usuario
+@login_required
+def user_info(request):
+    if request.method == 'POST':
+        form = UserInfoForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Datos personales actualizados exitosamente.')
+            return redirect('user_info')  # Redirigir a la misma página o a otra de tu elección
+        else:
+            messages.error(request, 'Por favor corrija los errores a continuación.')
+    else:
+        form = UserInfoForm(instance=request.user)
+
+    return render(request, 'user_info.html', {'form': form})
+
 
 
 # Configuración que maneja el manejo Backend del formulario para crear productos y llevar el método POST del mensaje a la tabla Products de la DB
@@ -159,8 +202,10 @@ def products(request):
 
 
 
-# Autorellenar el formulario de transfer_form
 
+
+
+# Autorellenar el formulario de transfer_form
 def transfer_form(request):
     context = {
         'empresa_nombre': 'LuckyCart S.A.',

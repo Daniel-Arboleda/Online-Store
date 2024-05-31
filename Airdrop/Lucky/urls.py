@@ -1,11 +1,12 @@
-
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 # from .views import open_account, create_account, product_create_view
-from .views import open_account, create_account, products
+# from .views import open_account, create_account, products, update_user_info
+# from .views import open_account, create_account, products, user_info
+from .views import open_account, products, user_info
 
 
 urlpatterns = [
@@ -34,13 +35,17 @@ urlpatterns = [
     path('local_form/', views.local_form, name='local_form'),
     
 
-    # Validación de los datos de formulario crear cuenta o inicio de sesion
-    path('create-account/', views.create_account, name='create_account'),
+    # Validación de los datos de formulario crear cuenta o inicio de sesion cuando es externa
+    # path('create-account/', views.create_account, name='create_account'),
     # Ruta para la creación de los productos mediante el formulario
     # path('create_product/', product_create_view, name='create_product'),
     # path('products/', product_create_view, name='products'),
     # Ruta para la creación del render del la vista para las tablas de los productos mediante el formulario... Este método es para visualizar la lista en una página diferente a la del formulario
     # path('products/list/', views.product_list, name='product_list'),
+
+    # Ruta extena para renderizar el formulario de datos del usuario 
+    # path('update-info/', update_user_info, name='update_user_info'),
+
 
 
 

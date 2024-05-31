@@ -1,8 +1,9 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.db import models
-from django.contrib.auth.models import Group, Permission
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -17,8 +18,12 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(email, password, **extra_fields)
+        
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
@@ -34,17 +39,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = [] # Aquí se agregan los campos obligatorios si se desean especificar o si no se deja la lista Array en vacio
 
     class Meta:
-        db_table = 'Users'  # Asegúrate de que el nombre de la tabla es correcto
+        db_table = 'Auth'  # Asegúrate de que el nombre de la tabla es correcto
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
     def __str__(self):
         return self.email
-
-
 
 
 
@@ -87,3 +90,28 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+# OneToOneField establece una relación de uno a uno entre dos modelos. Esto significa que cada instancia de UserInfo está vinculada a una única instancia de User y viceversa. Es similar a ForeignKey, pero asegura que no haya múltiples registros en UserInfo asociados con un solo User.
+class UserInfo(models.Model):
+    DOCUMENT_TYPE_CHOICES = [
+        ('CC', 'Cédula de ciudadanía'),
+        ('CE', 'Cédula de Extranjería'),
+        ('NIT', 'NIT'),
+        ('PA', 'Pasaporte'),
+        ('TI', 'Registro Civil'),
+        ('RC', 'Tarjeta de identidad'),
+        ('DNI', 'Documento Nacional de Identificación'),
+    ]
+
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='userinfo')
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    type_document = models.CharField(max_length=3, choices=DOCUMENT_TYPE_CHOICES, blank=True)  # Ajustar max_length
+    document = models.CharField(max_length=20, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.type_document}: {self.document}"

@@ -50,9 +50,9 @@
                 </ul>
             </div>
         {% endif %}      
-        <form id="account-form" action="{% url 'create_account' %}" method="post" class="login-form">
+        <form id="account-form" action="{% url 'open_account' %}" method="post" class="login-form">
             {% csrf_token %}
-            {{ form.as_p }}  <!-- Renderiza el formulario aquí -->
+            {% comment %} {{ form.as_p }}  <!-- Renderiza el formulario predeterminado de Django aquí --> {% endcomment %}
             <!-- Campos de inicio de sesión -->
             <div class="form-group">
                 <label for="email">Correo Electronico*</label>

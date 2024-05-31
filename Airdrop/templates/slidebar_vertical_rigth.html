@@ -1,0 +1,91 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxdrop</title>
+
+    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
+
+    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+    
+     
+      
+
+    
+    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
+    <script>
+        const loginURL = "{% url 'login_form' %}";
+        const openURL = "{% url 'open_account' %}";
+    </script>
+
+</head>
+
+
+
+<body>
+
+
+    <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
+        <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
+            <!-- Header con menú basado en iconos -->
+            {% include 'header.html' %}
+
+        {% comment %} <!-- División para los productos principales franja vertical derecha-->
+        <div class="sidebar-derecha">
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 1</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 2</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 3</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 4</p>
+                <p class="precio">$10.00</p>
+            </div>
+            <div class="producto">
+                <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
+                <p class="nombre">Nombre del Producto 5</p>
+                <p class="precio">$10.00</p>
+            </div>
+
+        </div> {% endcomment %}
+        <!-- Botón flotante para cambiar el color del tema-->
+        <div class="floating-button" id="theme-toggle">
+            <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
+        </div>
+        <!-- Ventana emergente listado de paises compatibles -->  
+        <!-- Código modularizado para ahorrar espacio, buena práctica de desarrollo y brinda una UX - Experiencia de usuario consistente en toda la página -->
+        {% include 'modal_lugares.html' %}
+
+        <!-- Scripts -->
+        <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
+        <script src="{% static '../static/js/politics.js' %}"></script>
+        <script src="{% static '../static/js/modal-transfer.js' %}"></script>
+
+</body>
+</html>
