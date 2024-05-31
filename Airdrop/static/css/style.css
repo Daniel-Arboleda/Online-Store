@@ -2189,5 +2189,24 @@ select {
 
 
 
+/* --------------------------------------------------------- */
+
+/* Tienda creada con la DB consultando la tabla Products */
+.category-section {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.product-item {
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 10px;
+    width: 200px;
+}
+
+.product-item img {
+    max-width: 100%;
+    height: auto;
+}
 
 

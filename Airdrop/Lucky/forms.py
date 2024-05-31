@@ -29,15 +29,20 @@ class CustomAuthenticationForm(AuthenticationForm):
         fields = ['email', 'password']
 
 
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ['id', 'code', 'name', 'description', 'price', 'stock', 'categories', 'brand', 'state', 'image']
-        widgets = {
-            'state': forms.Select(choices=Product.STATE_CHOICES),
-        }
 
 class UserInfoForm(forms.ModelForm):
     class Meta:
         model = UserInfo
         fields = ['first_name', 'last_name', 'type_document', 'document', 'phone', 'address']
+
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['id', 'code', 'name', 'description', 'price', 'stock', 'categories', 'brand', 'state', 'disponibility', 'image']
+        widgets = {
+            'categories': forms.Select(choices=Product.CATEGORY_CHOICES),
+            'state': forms.Select(choices=Product.STATE_CHOICES),
+            'disponibility': forms.Select(choices=Product.DISPONIBILITY_CHOICES),
+        }

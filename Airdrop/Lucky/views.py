@@ -61,7 +61,8 @@ def local_form(request):
 #     return render(request, 'product_list.html', {'products': products})
 
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .forms import CreateAccountForm, ProductForm, UserInfoForm
 from django.contrib.auth.models import User
@@ -199,6 +200,32 @@ def products(request):
 # def product_list(request):
 #     products = Product.objects.all()
 #     return render(request, 'products.html', {'products':products})
+
+
+# Método para manejar el botón de eliminar productos de la tabla stock
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        product.delete()
+    return redirect(reverse('products'))  # Redirigir a la lista de productos después de eliminar
+
+# Método para recuperar los productos por categorías y presentarlos en la tienda segmentados por categorías
+def shop(request):
+    categories = Product.CATEGORY_CHOICES
+    products_by_category = {}
+
+    for category_code, category_name in categories:
+        products = Product.objects.filter(categories=category_code)
+        products_by_category[category_name] = products
+
+    # Verifica la cantidad de productos obtenidos
+    total_products = Product.objects.count()
+    context = {
+        'products_by_category': products_by_category,
+        'total_products': total_products,
+    }
+    
+    return render(request, 'shop.html', {'products_by_category': products_by_category})
 
 
 

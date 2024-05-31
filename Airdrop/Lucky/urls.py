@@ -47,6 +47,11 @@ urlpatterns = [
     # path('update-info/', update_user_info, name='update_user_info'),
 
 
+    # Método para la url del botón eleiminar producto de la tabla de stock
+    path('products/<int:product_id>/delete/', views.delete_product, name='delete_product'),
+
+
+
 
 
     # Pasarelas de pago Stripe
