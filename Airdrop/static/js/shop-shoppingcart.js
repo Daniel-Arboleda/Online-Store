@@ -188,7 +188,7 @@ function addToCart(productId, price, imageUrl, quantity, stock) {
     document.getElementById(`quantity-${productId}`).value = 1;
 }
 
-// Función para cargar los productos del carrito desde el almacenamiento local y mostrarlos en la página del carrito
+// Función para cargar los productos del carrito desde el almacenamiento local y mostrarlos en la página del carrito ---- Para lograr que cada producto del carrito tenga su propio botón de eliminar y que esta funcionalidad permita al usuario eliminar productos específicos sin necesidad de salir de la página del carrito gregamos un boton eliminar al contenedor de la tarjeta del producto el cual llama a la función que creamos llamada removeFromCart la cual eliminara pasando el producID correspondiente eliminando el producto y actualiza el localStorage para posteriormente llamar el loadCart para volver a renderizar el carrito con el producto eliminado---- 
 function loadCart() {
     console.log("loadCart called");
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -210,7 +210,7 @@ function loadCart() {
 
         const productElement = document.createElement('div');
         productElement.classList.add('cart-item');
-
+        // Aquí estan los elementos que se rnderizaran en la tarjeta de cada producto mostrado en el carrito de compras
         productElement.innerHTML = `
             <img src="${product.imageUrl}" alt="Imagen del producto">
             <div class="cart-item-details">
@@ -218,6 +218,8 @@ function loadCart() {
                 <p>Precio: $${product.price}</p>
                 <p>Cantidad: ${product.quantity}</p>
                 <p>Total: $${productTotalPrice.toFixed(2)}</p>
+                <button class="remove-item" onclick="removeFromCart('${product.id}')">Eliminar</button>
+
             </div>
         `;
 
@@ -227,6 +229,58 @@ function loadCart() {
     cartItemCount.textContent = totalItems;
     totalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
 }
+
+
+// Añadir un mensaje de advertencia antes de eliminar un producto del carrito. Usaremos el método confirm para mostrar un cuadro de diálogo con los botones "Aceptar" y "Cancelar". Si el usuario confirma, se procede a eliminar el producto; si cancela, no se realiza ningún cambio.
+
+function confirmRemoveFromCart(productId) {
+    console.log(`confirmRemoveFromCart called with productId: ${productId}`);
+    const userConfirmed = confirm("¿Estás seguro de que deseas eliminar este producto?");
+    if (userConfirmed) {
+        removeFromCart(productId);
+    } else {
+        console.log("Eliminación cancelada por el usuario.");
+    }
+}
+
+
+
+// Función para eliminar un producto específico del carrito
+// function removeFromCart(productId) {
+//     console.log(`removeFromCart called with productId: ${productId}`);
+//     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+//     cart = cart.filter(product => product.id !== productId);
+//     localStorage.setItem('cart', JSON.stringify(cart));
+//     loadCart(); // Actualizar la visualización del carrito
+// }
+
+// Esta función controla completamente la eliminación del producto saltandose la validación por mensaje de advertencia del usuario
+// function removeFromCart(productId) {
+//     console.log(`removeFromCart called with productId: ${productId}`);
+//     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+//     const originalLength = cart.length;
+//     cart = cart.filter(product => product.id !== productId);
+//     localStorage.setItem('cart', JSON.stringify(cart));
+//     const newLength = cart.length;
+
+//     if (originalLength > newLength) {
+//         console.log(`Product with ID: ${productId} removed from cart`);
+//     } else {
+//         console.log(`Product with ID: ${productId} not found in cart`);
+//     }
+
+//     loadCart(); // Actualizar la visualización del carrito
+// }
+
+function removeFromCart(productId) {
+    console.log(`removeFromCart called with productId: ${productId}`);
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart = cart.filter(product => product.id !== productId);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    loadCart(); // Actualizar la visualización del carrito
+}
+
+
 
 // Call loadCart when the page is loaded
 document.addEventListener('DOMContentLoaded', () => {
