@@ -2144,6 +2144,10 @@ select {
     background-color: #666;
 }
 
+/* Estilos para la sección extensible del formulario crear productos */
+.hidden {
+    display: none;
+}
 
 
 /* Estilos para la tabla */
@@ -2209,3 +2213,8 @@ select {
     max-width: 100%;
     height: auto;
 }
+
+
+
+/* ----------------------------------------------------------- */
+

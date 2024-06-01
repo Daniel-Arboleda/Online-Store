@@ -218,7 +218,7 @@ function loadCart() {
                 <p>Precio: $${product.price}</p>
                 <p>Cantidad: ${product.quantity}</p>
                 <p>Total: $${productTotalPrice.toFixed(2)}</p>
-                <button class="remove-item" onclick="removeFromCart('${product.id}')">Eliminar</button>
+                <button class="remove-item" onclick="confirmRemoveFromCart('${product.id}')">Eliminar</button>
 
             </div>
         `;
@@ -255,30 +255,30 @@ function confirmRemoveFromCart(productId) {
 // }
 
 // Esta función controla completamente la eliminación del producto saltandose la validación por mensaje de advertencia del usuario
-// function removeFromCart(productId) {
-//     console.log(`removeFromCart called with productId: ${productId}`);
-//     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-//     const originalLength = cart.length;
-//     cart = cart.filter(product => product.id !== productId);
-//     localStorage.setItem('cart', JSON.stringify(cart));
-//     const newLength = cart.length;
-
-//     if (originalLength > newLength) {
-//         console.log(`Product with ID: ${productId} removed from cart`);
-//     } else {
-//         console.log(`Product with ID: ${productId} not found in cart`);
-//     }
-
-//     loadCart(); // Actualizar la visualización del carrito
-// }
-
 function removeFromCart(productId) {
     console.log(`removeFromCart called with productId: ${productId}`);
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const originalLength = cart.length;
     cart = cart.filter(product => product.id !== productId);
     localStorage.setItem('cart', JSON.stringify(cart));
+    const newLength = cart.length;
+
+    if (originalLength > newLength) {
+        console.log(`Product with ID: ${productId} removed from cart`);
+    } else {
+        console.log(`Product with ID: ${productId} not found in cart`);
+    }
+
     loadCart(); // Actualizar la visualización del carrito
 }
+
+// function removeFromCart(productId) {
+//     console.log(`removeFromCart called with productId: ${productId}`);
+//     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+//     cart = cart.filter(product => product.id !== productId);
+//     localStorage.setItem('cart', JSON.stringify(cart));
+//     loadCart(); // Actualizar la visualización del carrito
+// }
 
 
 

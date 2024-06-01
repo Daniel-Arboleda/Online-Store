@@ -9,6 +9,7 @@
     <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
     <!-- Enlace a la librería de iconos Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    {% comment %} <link rel="stylesheet" href="{% static '../static/css/style.css' %}"> {% endcomment %}
     <link rel="stylesheet" href="{% static '../static/css/style.css' %}">
     <title>Products</title>
 </head>
@@ -31,112 +32,138 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-            <div class="orm-prod-formulario">
-                <h1>ORM Productos</h1>
-                {% comment %} <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'create_product' %}"> {% endcomment %}
-                <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'products' %}">
-                    {% csrf_token %}
-                    <div class="orm-prod-form-group">
-                        <label for="code">Código Producto*</label>
-                        <input type="text" id="code" name="code" placeholder="Código producto*" required>
-                    </div>
-                    <div class="orm-prod-form-group">
-                        <label for="name_prod">Nombre Producto*</label>
-                        <input type="text" id="name_prod" name="name" placeholder="Nombre producto*" required>
-                    </div>
-                    <div class="orm-prod-form-group">
-                        <label for="descrition">Descripción Producto*</label>
-                        <input type="text" id="descrition" name="description" placeholder="Descripción*" required>
-                    </div>
-                    <div class="orm-prod-form-group">
-                        <label for="price">Precio*</label>
-                        <input type="text" id="price" name="price" placeholder="Precio*" required>
-                    </div>
-                    <div class="orm-prod-form-group">
-                        <label for="stock">Stock*</label>
-                        <input type="text" id="stock" name="stock" placeholder="Stock*" required>
-                    </div>
-                    <div class="orm-prod-form-group">
-                        <label for="categories">Categoría*</label>
-                        <select id="categories" name="categories" required>
-                            <option value="housing">Vivienda</option>
-                            <option value="vehicles" readonly>Vehículos</option>
-                            <option value="technology">Tecnología</option>
-                            <option value="fashion">Moda</option>
-                            <option value="accessories">Accesorios</option>
-                        </select>
-                    </div>
-                    <div class="orm-prod-form-group">
-                        <label for="brand">Marca*</label>
-                        <input type="text" id="brand" name="brand" placeholder="Marca*" required>
-                    </div>
-                    <div class="orm-prod-form-group">
-                        <label for="state">Estado*</label>
-                        <select id="state" name="state" required>
-                            <option value="NEW">Nuevo</option>
-                            <option value="USED" readonly>Usado</option>
-                            <option value="REFURBISHED">Reacondicionado</option>
-                            <option value="DAMAGED">Dañado</option>
-                            <option value="OPEN_BOX">Caja Abierta</option>
-                            <option value="FOR_PARTS">Para Piezas</option>
-                            <option value="for_sale">En Venta</option>
-                            <option value="for_rent">En Renta</option>
-                            <option value="sale_in_progress">En Proceso de Venta</option>
-                            <option value="rented">Rentada</option>
-                            <option value="under_contract">Bajo Contrato</option>
-                            <option value="available_soon">Disponible Pronto</option>
-                            <option value="under_renovation">En Renovación</option>
-                            <option value="under_maintenance">En Mantenimiento</option>
-                            <option value="under_construction">En Construcción</option>
-                            <option value="new_listing">Nuevo Listado</option>
-                            <option value="off_market">Fuera del Mercado</option>
-                            <option value="foreclosed">Embargada</option>
-                            <option value="auction">Subasta</option>
-                            <option value="pending_inspection">Pendiente de Inspección</option>
-                            <option value="contingent">Contingente</option>
-                            <option value="move_in_ready">Listo para Mudanza</option>
-                            <option value="fixer_upper">Para Renovar</option>
-                            <option value="historical">Histórico</option>
-                            <option value="luxury">Lujo</option>
-                            <option value="eco_friendly">Ecológico</option>
-                        </select>
-                    </div>
-                    <div class="orm-prod-form-group">
-                        <label for="disponibility">Disponibilidad*</label>
-                        <select id="disponibility" name="disponibility" required>
-                            <option value="available">Disponible</option>
-                            <option value="out_of_stock" readonly>Sin Stock</option>
-                            <option value="coming_soon">Próximamente Disponible</option>
-                            <option value="reserved">Reservado</option>
-                            <option value="discontinued">Descontinuado</option>
-                            <option value="in_transit">En Tránsito</option>
-                            <option value="pending">Pendiente</option>
-                            <option value="returned">Devuelto</option>
-                            <option value="under_repair">En Reparación</option>
-                            <option value="not_for_sale">No Disponible para Venta</option>
-                            <option value="being_retired">En Proceso de Retiro</option>
-                            <option value="in_negotiation">En Negociación</option>
-                            <option value="sold_out">Agotado</option>
-                            <option value="available_now">Disponible Ahora</option>
-                            <option value="temporarily_unavailable">Temporalmente No Disponible</option>
-                            <option value="pre_order">Preorden</option>
-                            <option value="backorder">Pedido Pendiente</option>
-                            <option value="special_order">Pedido Especial</option>
-                            <option value="limited_stock">Stock Limitado</option>
-                            <option value="awaiting_restock">Esperando Reabastecimiento</option>
-                            <option value="to_be_demolished">Para Ser Demolido</option>
-                        </select>
-                    </div>
-                    <div class="orm-prod-form-group">
-                        <label for="image">Imagen*</label>
-                        <input type="file" id="image" name="image" required>
-                    </div>
-                    <div class="open_account_link">
-                        <button type="submit" id="btn-orm-prod-form">Enviar</button>
-                        {% comment %} <a href="#" class="enlace-login" id="home-link" style="display:none"></a> {% endcomment %}
-                    </div>
-                </form>
+
+
+        <div class="container">
+            <button id="toggleFormBtn">Crear Nuevo Producto</button>
+            <div id="productForm" class="hidden">
+
+                <div class="orm-prod-formulario">
+                    <h1>ORM Productos</h1>
+                    {% comment %} <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'create_product' %}"> {% endcomment %}
+
+                    <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'products' %}">
+                        {% csrf_token %}
+                        <!-- Campos ocultos para manejar dinamicamente si es el formulario de creación o el de actualización de los productos --- form_action
+                        Este campo se utiliza para determinar la acción que debe realizar el formulario (crear o actualizar un producto). Su valor puede ser create o update ---- product_id
+                        Este campo se utiliza para almacenar el ID del producto que se va a actualizar. Esto es necesario para saber qué producto específico se debe actualizar cuando se envía el formulario. -->
+            
+                        <input type="hidden" id="productId" name="product_id" value="">
+
+
+
+                        <div class="orm-prod-form-group">
+                            <label for="code">Código Producto*</label>
+                            <input type="text" id="code" name="code" placeholder="Código producto*" required>
+                        </div>
+                        <div class="orm-prod-form-group">
+                            <label for="name_prod">Nombre Producto*</label>
+                            <input type="text" id="name_prod" name="name" placeholder="Nombre producto*" required>
+                        </div>
+                        <div class="orm-prod-form-group">
+                            <label for="descrition">Descripción Producto*</label>
+                            <input type="text" id="descrition" name="description" placeholder="Descripción*" required>
+                        </div>
+                        <div class="orm-prod-form-group">
+                            <label for="price">Precio*</label>
+                            <input type="text" id="price" name="price" placeholder="Precio*" required>
+                        </div>
+                        <div class="orm-prod-form-group">
+                            <label for="stock">Stock*</label>
+                            <input type="text" id="stock" name="stock" placeholder="Stock*" required>
+                        </div>
+                        <div class="orm-prod-form-group">
+                            <label for="categories">Categoría*</label>
+                            <select id="categories" name="categories" required>
+                                <option value="housing">Vivienda</option>
+                                <option value="vehicles" readonly>Vehículos</option>
+                                <option value="technology">Tecnología</option>
+                                <option value="fashion">Moda</option>
+                                <option value="accessories">Accesorios</option>
+                            </select>
+                        </div>
+                        <div class="orm-prod-form-group">
+                            <label for="brand">Marca*</label>
+                            <input type="text" id="brand" name="brand" placeholder="Marca*" required>
+                        </div>
+                        <div class="orm-prod-form-group">
+                            <label for="state">Estado*</label>
+                            <select id="state" name="state" required>
+                                <option value="NEW">Nuevo</option>
+                                <option value="USED" readonly>Usado</option>
+                                <option value="REFURBISHED">Reacondicionado</option>
+                                <option value="DAMAGED">Dañado</option>
+                                <option value="OPEN_BOX">Caja Abierta</option>
+                                <option value="FOR_PARTS">Para Piezas</option>
+                                <option value="for_sale">En Venta</option>
+                                <option value="for_rent">En Renta</option>
+                                <option value="sale_in_progress">En Proceso de Venta</option>
+                                <option value="rented">Rentada</option>
+                                <option value="under_contract">Bajo Contrato</option>
+                                <option value="available_soon">Disponible Pronto</option>
+                                <option value="under_renovation">En Renovación</option>
+                                <option value="under_maintenance">En Mantenimiento</option>
+                                <option value="under_construction">En Construcción</option>
+                                <option value="new_listing">Nuevo Listado</option>
+                                <option value="off_market">Fuera del Mercado</option>
+                                <option value="foreclosed">Embargada</option>
+                                <option value="auction">Subasta</option>
+                                <option value="pending_inspection">Pendiente de Inspección</option>
+                                <option value="contingent">Contingente</option>
+                                <option value="move_in_ready">Listo para Mudanza</option>
+                                <option value="fixer_upper">Para Renovar</option>
+                                <option value="historical">Histórico</option>
+                                <option value="luxury">Lujo</option>
+                                <option value="eco_friendly">Ecológico</option>
+                            </select>
+                        </div>
+                        <div class="orm-prod-form-group">
+                            <label for="disponibility">Disponibilidad*</label>
+                            <select id="disponibility" name="disponibility" required>
+                                <option value="available">Disponible</option>
+                                <option value="out_of_stock" readonly>Sin Stock</option>
+                                <option value="coming_soon">Próximamente Disponible</option>
+                                <option value="reserved">Reservado</option>
+                                <option value="discontinued">Descontinuado</option>
+                                <option value="in_transit">En Tránsito</option>
+                                <option value="pending">Pendiente</option>
+                                <option value="returned">Devuelto</option>
+                                <option value="under_repair">En Reparación</option>
+                                <option value="not_for_sale">No Disponible para Venta</option>
+                                <option value="being_retired">En Proceso de Retiro</option>
+                                <option value="in_negotiation">En Negociación</option>
+                                <option value="sold_out">Agotado</option>
+                                <option value="available_now">Disponible Ahora</option>
+                                <option value="temporarily_unavailable">Temporalmente No Disponible</option>
+                                <option value="pre_order">Preorden</option>
+                                <option value="backorder">Pedido Pendiente</option>
+                                <option value="special_order">Pedido Especial</option>
+                                <option value="limited_stock">Stock Limitado</option>
+                                <option value="awaiting_restock">Esperando Reabastecimiento</option>
+                                <option value="to_be_demolished">Para Ser Demolido</option>
+                            </select>
+                        </div>
+                        <div class="orm-prod-form-group">
+                            <label for="image">Imagen*</label>
+                            <input type="file" id="image" name="image" required>
+                        </div>
+                        <div class="open_account_link">
+                            <button type="submit" id="btn-orm-prod-form">Crear</button>
+                            {% comment %} <a href="#" class="enlace-login" id="home-link" style="display:none"></a> {% endcomment %}
+                        </div>
+                    </form>
+                </div>
+
             </div>
+        </div>
+
+        {% comment %} <div class="container">
+            <button id="toggleFormBtn">Actualizar Producto</button>
+            <div id="productForm" class="hidden">
+
+
+            </div>
+        </div>     {% endcomment %}
 
             <!-- Tabla de productos -->
             <main class="delivery-table">
@@ -200,6 +227,7 @@
     {% include 'modal_lugares.html' %}
     <!-- Scripts -->
     <script src="{% static 'js/toggleVisibility.js' %}"></script>
+    <script src="{% static 'js/toggle_form_button.js' %}"></script>
     <script src="{% static 'js/modal-transfer.js' %}"></script>
     <script src="{% static 'js/login.js' %}"></script>
     <script src="{% static 'js/delete_mess_products.js' %}"></script>
