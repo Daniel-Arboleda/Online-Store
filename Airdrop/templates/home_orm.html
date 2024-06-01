@@ -35,67 +35,7 @@
     <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
         <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
            <!-- Header con menú basado en iconos -->
-           <header>
-                <nav>
-                    <ul>
-                        <!-- Título de la página -->
-                        <li class="title"><a href="{% url 'home' %}">Luxdrop</a></li>
-                        {% comment %} <li><a href="#"><i class="fas fa-home"></i></a></li> {% endcomment %}
-                        <li class="dropdown search-dropdown">
-                            <a href="#"><i class="fas fa-search"></i></a>
-                            <div class="dropdown-content search-bar">
-                                <input type="text" placeholder="Buscar..." id="searchInput">
-                                <button type="submit"><i class="fas fa-search"></i></button>
-                            </div>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#"><i class="fas fa-box"></i></a>
-                            <div class="dropdown-content">
-                                <a href="{% url 'drop' %}">Ruleta</a>
-                                <a href="#">Rasca & Gana</a>
-                                <a href="#">Reacción</a>
-                            </div>
-                        </li>
-                        <li class="dropdown">
-                            <a href="{% url 'shop' %}"><i class="fas fa-store"></i></a>
-                            <div class="dropdown-content">
-                                <a href="#">Vivienda</a>
-                                <a href="#">Vehiculos</a>
-                                <a href="#">Tecnología</a>
-                                <a href="#">Ropa</a>
-                                <a href="#">Accesorios</a>
-                            </div>
-                        </li>
-                        <li class="dropdown">
-                            <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>     
-                        </li>
-                        <li><a href="#"><i class="fas fa-envelope"></i></a></li>
-                        <li><a id="delivery-icon" href="#"><i class="fas fa-truck"></i></a></li>
-                        <li class="dropdown">
-                            <a href="{% url 'user' %}"><i class="fas fa-user"></i></a>
-                            <div class="dropdown-content">
-                                <a href="#">Opción 1</a>
-                                <a href="#">Opción 2</a>
-                                <a href="#">Opción 3</a>
-                            </div>
-                        </li>
-                    </ul>
-                </nav>
-                <!-- Recuadro de saldo y botón de añadir saldo en una estructura propia -->
-                <div class="saldo-container">
-                    <div class="saldo-box">
-                        <p>$ {{ saldo }}</p>
-                    </div>
-                    <button id="openModalButton" data-url="{% url 'transfer' %}"><i class="fas fa-plus"></i></button>
-                </div>
-                <!-- Navegación secundaria para íconos adicionales -->
-                {% comment %} <nav>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-user-circle"></i> Perfil</a></li>
-                        <li><a href="#"><i class="fas fa-piggy-bank"></i> Reservas</a></li>
-                    </ul>
-                </nav> {% endcomment %}
-            </header>
+           {% include 'header.html' %}
 
 
             <!-- Banner de enunciado con mensaje de bienvenida -->
@@ -201,90 +141,8 @@
                 </div>
             </section>
 
-            <!-- Sección del Footer o pie de pagina -->
-
-            <footer>
-                <div class="footer-container">
-                    <!-- Sección Trustpilot -->
-                    {% comment %} <div class="trustpilot-section">
-                        <img src="trustpilot-icon.png" alt="Trustpilot">
-                        <p>4.5</p>
-                        <p>TrustScore | 1000+ Reviews</p>
-                    </div> {% endcomment %}
-
-                    <div class="trustpilot-section">
-                        <div class="trustpilot-logo">
-                            <img src="{% static 'img/trustpilot.svg' %}" alt="Trustpilot Logo">
-                            <h2 class="trustpilot-name">Trustpilot</h2>
-                        </div>
-                        <div class="trustpilot-info">
-                            <p class="trustscore">Trustscore: 9.5</p>
-                            <div class="reviews-info">
-                                <span class="rating">4.7</span> / 5 <!-- Puntaje de la página -->
-                                <span class="separator">|</span> <!-- Separador -->
-                                <span class="reviews-count">1000 reviews</span> <!-- Cantidad de reviews -->
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Sección Redes Sociales -->
-                    <div class="social-media-section">
-                        <!-- Aquí van los iconos de redes sociales -->
-                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                    </div>
-                    <!-- Sección Métodos de Pago -->
-                    <div class="payment-methods-section">
-                        <!-- Aquí van los iconos de métodos de pago -->
-                        <!-- Enlace al método de pago 1 -->
-                        <a href="#link_metodo_pago_1">
-                            <img src="{% static 'img/paypal-logo.png' %}" alt="PayPal">
-                        </a>
-                        <!-- Enlace al método de pago 2 -->
-                        <a href="#link_metodo_pago_2">
-                            <img src="{% static 'img/MasterCard.png' %}" alt="Tarjeta de Crédito">
-                        </a>
-                        <!-- Enlace al método de pago 3 -->
-                        <a href="#link_metodo_pago_2">
-                            <img src="{% static 'img/visa-logo.png' %}" alt="Tarjeta de Crédito">
-                        </a>
-                        <!-- Enlace al método de pago 4 -->
-                        <a href="#link_metodo_pago_2">
-                            <img src="{% static 'img/nubank-logo.png' %}" alt="Tarjeta de Crédito">
-                        </a>
-                        <!-- Enlace al método de pago 5 -->
-                        <a href="#link_metodo_pago_2">
-                            <img src="{% static 'img/Logo-Nequi.png' %}" alt="Tarjeta de Crédito">
-                        </a>
-
-                        <!-- Agrega más enlaces para otros métodos de pago si es necesario -->
-                    </div>
-                    <!-- Sección Patrocinadores -->
-                    <div class="sponsors-section">
-                        <!-- Aquí van los logos de los patrocinadores -->
-                        <a href="enlace-1.html"><img class="logo-sponsors" src="{% static 'img/logo-ktm.png' %}" alt="Logo 1"></a>
-                        <a href="enlace-2.html"><img class="logo-sponsors" src="{% static 'img/Mercedes-Benz-logo.png' %}" alt="Logo 2"></a>
-                        <a href="enlace-3.html"><img class="logo-sponsors" src="{% static 'img/logo-coninsa.png' %}" alt="Logo 3"></a>
-                        <h2>Socio comercial</h2>
-                    </div>
-                    <!-- Sección Enlaces -->
-                    <div class="links-section">
-                        <!-- Aquí van los enlaces de contacto, blog, preguntas frecuentes, etc. -->
-                        <a href="#">CONTACTO</a>
-                        <a href="#">BLOG</a>
-                        <a href="#">PREGUNTAS MÁS FRECUENTES</a>
-                        <a href="#">TÉRMINOS DE SERVICIO</a>
-                        <a href="#">DECLARACIÓN DE PRIVACIDAD</a>
-                        <a href="#">PROBABLEMENTE JUSTO</a>
-                        <a href="#">POLÍTICA DE COOKIES</a>
-                        <a href="#">POLÍTICA ALD</a>
-                    </div>
-                    <!-- Sección Información de la Empresa -->
-                    <div class="company-info-section">
-                        <p>LuxDrop es una marca de Luxury Think Limited, número de registro: HE 2024.02.02.00520, con domicilio social en, Loma El Tesoro con Transversal Superior Carrera 25A # 1A Sur - 45., Medellín, Colombia.<br>2024</p>
-                    </div>
-                </div>
-            </footer>
+            <!-- Footer -->
+            {% include 'footer.html' %}
 
         </div>
 
