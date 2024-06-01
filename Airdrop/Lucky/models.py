@@ -140,7 +140,7 @@ class Product(models.Model):
     ('accessories', 'Accesorios'),
     ]
     # id = models.AutoField()
-    code= models.IntegerField(unique=True)
+    code= models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=13, decimal_places=2)

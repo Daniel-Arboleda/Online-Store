@@ -41,6 +41,8 @@
                 <div class="orm-prod-formulario">
                     <h1>ORM Productos</h1>
                     {% comment %} <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'create_product' %}"> {% endcomment %}
+                    
+                    <div id="message"></div>
 
                     <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'products' %}">
                         {% csrf_token %}

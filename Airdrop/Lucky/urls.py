@@ -49,6 +49,18 @@ urlpatterns = [
 
     # Método para la url del botón eleiminar producto de la tabla de stock
     path('products/<int:product_id>/delete/', views.delete_product, name='delete_product'),
+    # Verifica si el parametro existe en la DB tabla Products
+    path('check_product_existence/', views.check_product_existence, name='check_product_existence'),
+    # Compara las variables para conocer si pertenecen al mismo producto en la DB
+    path('check_product_fields/', views.check_product_fields, name='check_product_fields'),
+
+
+
+    # Método para renderizar el autocargado del formulario
+    path('get_product_details/', views.get_product_details, name='get_product_details'),
+
+
+
 
 
 

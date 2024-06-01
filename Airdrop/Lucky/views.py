@@ -62,6 +62,7 @@ def local_form(request):
 
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .forms import CreateAccountForm, ProductForm, UserInfoForm
@@ -209,7 +210,78 @@ def delete_product(request, product_id):
         product.delete()
     return redirect(reverse('products'))  # Redirigir a la lista de productos después de eliminar
 
-# Método para recuperar los productos por categorías y presentarlos en la tienda segmentados por categorías
+
+# identificar si alguno de los dos campos (code o name_prod) ya pertenece a un producto existente en la base de datos. Empezaremos creando una vista que maneje la solicitud AJAX para verificar si el código o el nombre existe en la base de datos y luego actualizaremos el JavaScript y HTML para hacer uso de esta vista
+def check_product_existence(request):
+    code = request.GET.get('code', None)
+    name = request.GET.get('name', None)
+    
+    response = {
+        'code_exists': False,
+        'name_exists': False,
+    }
+    
+    if code:
+        response['code_exists'] = Product.objects.filter(code=code).exists()
+    
+    if name:
+        response['name_exists'] = Product.objects.filter(name=name).exists()
+    
+    return JsonResponse(response)
+
+# Crear una vista para la comparación de las variables en la DB y conocer si pertenecen al mismo producto. utilizar los eventos de cambio (change) en los campos de entrada del formulario. Cada vez que el usuario complete o modifique los campos de código o nombre del producto, se ejecutará la verificación automáticamente.
+def check_product_fields(request):
+    code = request.GET.get('code')
+    name = request.GET.get('name')
+
+    if code and name:
+        product_by_code = Product.objects.filter(code=code).first()
+        product_by_name = Product.objects.filter(name=name).first()
+
+        if product_by_code and product_by_name:
+            if product_by_code.id == product_by_name.id:
+                return JsonResponse({'message': 'Los campos pertenecen al mismo producto'}, status=200)
+            else:
+                return JsonResponse({'message': 'Los campos pertenecen a productos distintos'}, status=200)
+        elif not product_by_code:
+            return JsonResponse({'message': 'El código del producto no existe en la DB'}, status=404)
+        elif not product_by_name:
+            return JsonResponse({'message': 'El nombre del producto no existe en la DB'}, status=404)
+    else:
+        return JsonResponse({'message': 'Código y nombre son requeridos'}, status=400)
+
+# Método Agregar un endpoint en el backend que devuelva los detalles del producto basado en el código o nombre del producto crea una nueva vista para manejar las solicitudes AJAX y devolver los detalles del producto
+def get_product_details(request):
+    code = request.GET.get('code', None)
+    name = request.GET.get('name', None)
+    
+    product = None
+    if code:
+        product = Product.objects.filter(code=code).first()
+    elif name:
+        product = Product.objects.filter(name=name).first()
+
+    if product:
+        product_details = {
+            'id': product.id,
+            'code': product.code,
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'stock': product.stock,
+            'categories': product.categories,
+            'brand': product.brand,
+            'state': product.state,
+            'disponibility': product.disponibility,
+            'image_url': product.image.url if product.image else ''
+        }
+        return JsonResponse({'product': product_details}, status=200)
+    else:
+        return JsonResponse({'product': None}, status=404)
+
+
+
+# Método para recuperar los productos por categorías y presentarlos en la tienda segmentados por categorías 
 def shop(request):
     categories = Product.CATEGORY_CHOICES
     products_by_category = {}
