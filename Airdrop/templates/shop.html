@@ -45,7 +45,16 @@
                             <p>Marca: {{ product.brand }}</p>
                             <p>Estado: {{ product.get_state_display }}</p>
                             <p>Disponibilidad: {{ product.get_disponibility_display }}</p>
+                            <p>Stock: {{ product.stock }}</p>
                             <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% comment %} Manejador de lo botones en la tarjeta del producto {% endcomment %}
+                            <div class="quantity-selector">
+                                <button type="button" onclick="changeQuantity('decrease', '{{ product.id }}', {{product.stock}})">-</button>
+                                <input type="text" id="quantity-{{ product.id }}" value="1" readonly>
+                                <button type="button" onclick="changeQuantity('increase', '{{ product.id }}', {{ product.stock }})">+</button>
+                            </div>
+                            <button class="addtocart" onclick="addToCart('{{ product.id }}', {{ product.price }}, '{{ product.image.url }}', parseInt(document.getElementById('quantity-{{ product.id }}').value))">Añadir al carrito</button>
+                            <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>
                         </div>
                     {% endfor %}
                 </div>
@@ -56,7 +65,7 @@
 
 
 
-
+{% comment %} 
 
             <!-- Pagina de la tienda en linea -->       
             <main>
@@ -132,7 +141,7 @@
                         <!-- Repetir el bloque para más productos -->
                     </div>
                 </section>
-            </main>
+            </main> {% endcomment %}
         
             <!-- Footer -->
             {% include 'footer.html' %}
