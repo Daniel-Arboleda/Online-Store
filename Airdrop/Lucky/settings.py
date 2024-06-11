@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from decouple import config
 import environ
+import logging 
 
 # Configuración de rutas
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,7 +34,7 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
-# Configuración de registros
+# Configuración de registros logs
 LOGGING_DIR = BASE_DIR / 'logs'
 os.makedirs(LOGGING_DIR, exist_ok=True)
 
@@ -51,15 +52,28 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'filename': LOGGING_DIR / 'errors.log',
         },
+        'info_file': {
+            'level': 'INFO',    # Puedes ajustar el nivel según tus necesidades (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+            'class': 'logging.FileHandler',
+            'filename': LOGGING_DIR / 'info.log',
+            'formatter': 'verbose',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} {levelname} {message} ({pathname}:{lineno})',
+            'style': '{',
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['file', 'error_file'],
+            'handlers': ['file', 'error_file', 'info_file'], # Agrega 'info_file' aquí
             'level': 'DEBUG',
             'propagate': True,
         },
     },
 }
+
 
 # Configuración de archivos estáticos y de medios
 STATIC_URL = '/static/'
@@ -89,6 +103,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'Lucky.middleware.AdminAccessMiddleware',  # Middleware personalizado si lo tienes
+    'django.middleware.common.BrokenLinkEmailsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 # Configuración de URLs

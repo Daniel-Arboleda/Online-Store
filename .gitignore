@@ -21,5 +21,7 @@ __pycache__/
 .vscode/
 .DS_Store
 
-# Mantener el log específico que no se debe ignorar
+# Mantener el log específico que no se debe ignorar el archivo y no subirlo como commit al GitHub
 !Airdrop/logs/debug.log
+!Airdrop/logs/errors.log
+!Airdrop/logs/info.log
