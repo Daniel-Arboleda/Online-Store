@@ -78,83 +78,83 @@ class UserInfo(models.Model):
 
 
 
-
 class Product(models.Model):
     DISPONIBILITY_CHOICES = [
-    ('available', 'Disponible'),
-    ('out_of_stock', 'Agotado'),
-    ('coming_soon', 'Próximamente Disponible'),
-    ('reserved', 'Reservado'),
-    ('discontinued', 'Descontinuado'),
-    ('in_transit', 'En Tránsito'),
-    ('pending', 'Pendiente'),
-    ('returned', 'Devuelto'),
-    ('under_repair', 'En Reparación'),
-    ('not_for_sale', 'No Disponible para Venta'),
-    ('being_retired', 'En Proceso de Retiro'),
-    ('in_negotiation', 'En Negociación'),
-    ('sold_out', 'Agotado'),
-    ('available_now', 'Disponible Ahora'),
-    ('temporarily_unavailable', 'Temporalmente No Disponible'),
-    ('pre_order', 'Preorden'),
-    ('backorder', 'Pedido Pendiente'),
-    ('special_order', 'Pedido Especial'),
-    ('limited_stock', 'Stock Limitado'),
-    ('awaiting_restock', 'Esperando Reabastecimiento'),
-    ('to_be_demolished', 'Para Ser Demolido'),
+        ('available', 'Disponible'),
+        ('out_of_stock', 'Agotado'),
+        ('coming_soon', 'Próximamente Disponible'),
+        ('reserved', 'Reservado'),
+        ('discontinued', 'Descontinuado'),
+        ('in_transit', 'En Tránsito'),
+        ('pending', 'Pendiente'),
+        ('returned', 'Devuelto'),
+        ('under_repair', 'En Reparación'),
+        ('not_for_sale', 'No Disponible para Venta'),
+        ('being_retired', 'En Proceso de Retiro'),
+        ('in_negotiation', 'En Negociación'),
+        ('sold_out', 'Agotado'),
+        ('available_now', 'Disponible Ahora'),
+        ('temporarily_unavailable', 'Temporalmente No Disponible'),
+        ('pre_order', 'Preorden'),
+        ('backorder', 'Pedido Pendiente'),
+        ('special_order', 'Pedido Especial'),
+        ('limited_stock', 'Stock Limitado'),
+        ('awaiting_restock', 'Esperando Reabastecimiento'),
+        ('to_be_demolished', 'Para Ser Demolido'),
     ]
+    
     STATE_CHOICES = [
-    ('NEW', 'Nuevo'),
-    ('USED', 'Usado'),
-    ('REFURBISHED', 'Reacondicionado'),
-    ('DAMAGED', 'Dañado'),
-    ('OPEN_BOX', 'Caja Abierta'),
-    ('FOR_PARTS', 'Para Piezas'),
-    # Estados pensados para las viivendas
-    ('for_sale', 'En Venta'),
-    ('for_rent', 'En Renta'),
-    ('sale_in_progress', 'En Proceso de Venta'),
-    ('rented', 'Rentada'),
-    ('under_contract', 'Bajo Contrato'),
-    ('available_soon', 'Disponible Pronto'),
-    ('under_renovation', 'En Renovación'),
-    ('under_maintenance', 'En Mantenimiento'),
-    ('under_construction', 'En Construcción'),
-    ('new_listing', 'Nuevo Listado'),
-    ('off_market', 'Fuera del Mercado'),
-    ('foreclosed', 'Embargada'),
-    ('auction', 'Subasta'),
-    ('pending_inspection', 'Pendiente de Inspección'),
-    ('contingent', 'Contingente'),
-    ('move_in_ready', 'Listo para Mudanza'),
-    ('fixer_upper', 'Para Renovar'),
-    ('historical', 'Histórico'),
-    ('luxury', 'Lujo'),
-    ('eco_friendly', 'Ecológico'),
+        ('NEW', 'Nuevo'),
+        ('USED', 'Usado'),
+        ('REFURBISHED', 'Reacondicionado'),
+        ('DAMAGED', 'Dañado'),
+        ('OPEN_BOX', 'Caja Abierta'),
+        ('FOR_PARTS', 'Para Piezas'),
+        ('for_sale', 'En Venta'),
+        ('for_rent', 'En Renta'),
+        ('sale_in_progress', 'En Proceso de Venta'),
+        ('rented', 'Rentada'),
+        ('under_contract', 'Bajo Contrato'),
+        ('available_soon', 'Disponible Pronto'),
+        ('under_renovation', 'En Renovación'),
+        ('under_maintenance', 'En Mantenimiento'),
+        ('under_construction', 'En Construcción'),
+        ('new_listing', 'Nuevo Listado'),
+        ('off_market', 'Fuera del Mercado'),
+        ('foreclosed', 'Embargada'),
+        ('auction', 'Subasta'),
+        ('pending_inspection', 'Pendiente de Inspección'),
+        ('contingent', 'Contingente'),
+        ('move_in_ready', 'Listo para Mudanza'),
+        ('fixer_upper', 'Para Renovar'),
+        ('historical', 'Histórico'),
+        ('luxury', 'Lujo'),
+        ('eco_friendly', 'Ecológico'),
     ]
+    
     CATEGORY_CHOICES = [
-    ('housing', 'Vivienda'),
-    ('vehicles', 'Vehículos'),
-    ('technology', 'Tecnología'),
-    ('fashion', 'Moda'),
-    ('accessories', 'Accesorios'),
+        ('housing', 'Vivienda'),
+        ('vehicles', 'Vehículos'),
+        ('technology', 'Tecnología'),
+        ('fashion', 'Moda'),
+        ('accessories', 'Accesorios'),
     ]
-    # id = models.AutoField()
-    code= models.CharField(max_length=100, unique=True)
+    
+    code = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=13, decimal_places=2)
-    stock = models.IntegerField() 
-    categories = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True, default='technology') 
-    brand = models.CharField(max_length=100)  
-    disponibility = models.CharField(max_length=50, choices=DISPONIBILITY_CHOICES, blank=True, null=True, default='coming_soon') 
-    state = models.CharField(max_length=20, choices=STATE_CHOICES, blank=True, null=True, default='NEW') 
+    stock = models.IntegerField()
+    categories = models.CharField(max_length=20, choices=CATEGORY_CHOICES, blank=True, null=True, default='technology')
+    brand = models.CharField(max_length=100)
+    disponibility = models.CharField(max_length=50, choices=DISPONIBILITY_CHOICES, blank=True, null=True, default='coming_soon')
+    state = models.CharField(max_length=20, choices=STATE_CHOICES, blank=True, null=True, default='NEW')
     image = models.ImageField(upload_to="images/")
 
     class Meta:
-        db_table = 'Products'  # Asegúrate de que el nombre de la tabla es correcto
+        db_table = 'Products'
         verbose_name = _('product')
-        verbose_name_plural = _('product')
+        verbose_name_plural = _('products')
 
     def __str__(self):
         return self.name

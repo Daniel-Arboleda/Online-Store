@@ -1,135 +1,27 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
-from django.http import JsonResponse
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from paypalrestsdk import Payment, configure
-from django.conf import settings
 from datetime import date
 import stripe
+import logging
 
+from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm
+from .models import Product, UserInfo
+from django.conf import settings
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+logger = logging.getLogger(__name__)
 
 def index(request):
     return render(request, 'index.html')
+
 def drop(request):
     return render(request, 'drop.html')
-def login_form(request):
-    return render(request, 'login_form.html')
-def open_account(request):
-    return render(request, 'open_account.html')
-def home(request):
-    return render(request, 'home.html')
-def home_orm(request):
-    return render(request, 'home_orm.html')
-def user(request):
-    return render(request, 'user.html')
-def user_info(request):
-    return render(request, 'user_info.html')
-def cart(request):
-    return render(request, 'cart.html')
-def products(request):
-    return render(request, 'products.html')
-def shop(request):
-    return render(request, 'shop.html')
-def delivery(request):
-    return render(request, 'delivery.html')
-def wallet(request):
-    return render(request, 'wallet.html')
-def transactions(request):
-    return render(request, 'transactions.html')
-def record(request):
-    return render(request, 'record.html')
-def codes(request):
-    return render(request, 'codes.html')
-def transfer(request):
-    return render(request, 'transfer.html')
-def transfer_form(request):
-    return render(request, 'transfer_form.html')
-def paypal_form(request):
-    return render(request, 'paypal_form.html')
-def credit_form(request):
-    return render(request, 'credit_form.html')
-def bank_form(request):
-    return render(request, 'bank_form.html')
-def local_form(request):
-    return render(request, 'local_form.html')
 
-# def product_list_view(request):
-#     products = Product.objects.all()
-#     return render(request, 'product_list.html', {'products': products})
-
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
-from .forms import CreateAccountForm, ProductForm, UserInfoForm
-from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate
-from django.contrib import messages
-import logging
-from .models import Product, UserInfo
-from .forms import CustomUser, UserInfoForm, CustomAuthenticationForm
-
-
-
-
-# def open_account(request):
-#     if request.method == 'POST':
-#         email = request.POST['email']
-#         password = request.POST['password']
-#         hashed_password = make_password(password)
-
-#         if not User.objects.filter(email=email).exists():
-#             user = User(email=email, password=hashed_password)
-#             user.save()
-#             return redirect('success')  # Redirige a una página de éxito
-#         else:
-#             return render(request, 'open_account.html', {'error': 'Email already in use'})
-#     return render(request, 'open_account.html')
-
-
-
-
-logger = logging.getLogger(__name__)
-# Configuración para definir el metodo que manejara las solicitudes de POST en el formulario de crear cuenta nueva mendiante el formulario personalizado de la página de crear usuario
-def open_account(request):
-    if request.method == 'POST':
-        form = CreateAccountForm(request.POST)
-        if form.is_valid():
-            try:
-                user = form.save()
-                login(request, user)  # Inicia sesión con el usuario creado
-                messages.success(request, 'Cuenta creada exitosamente.')
-                logger.debug("Cuenta creada con éxito para el usuario: %s", user.email)
-                return redirect('home')  # Redirige a la página de inicio
-            except Exception as e:
-                logger.error("Error al crear la cuenta: %s", e)
-                messages.error(request, 'Error al crear la cuenta. Por favor revise los datos ingresados.')
-                # Intento crear un usuario
-                username = form.cleaned_data.get('username')
-                password = form.cleaned_data.get('password')
-                user = User.objects.create_user(username=username, password=password)
-                user.save()
-                login(request, user)  # Inicia sesión con el usuario creado
-                messages.success(request, 'Cuenta creada exitosamente.')
-                logger.debug("Cuenta creada con éxito para el usuario: %s", username)
-                return redirect('home')  # Redirige a la página de inicio
-            except Exception as e:
-                logger.error("Error al crear la cuenta para el usuario %s: %s", username, e)
-                messages.error(request, 'Error al crear la cuenta. Por favor revise los datos ingresados.')
-                # Es opcional re-lanzar la excepción, depende de cómo quieras manejarla
-        else:
-            logger.warning("Formulario de creación de cuenta no es válido: %s", form.errors)
-            messages.error(request, 'Error al crear la cuenta. Por favor revise los datos ingresados.')
-    else:
-        form = CreateAccountForm()
-    return render(request, 'open_account.html', {'form': form})
-
-
-# Método personalizado para manejar la validación de usuarion contra los datos de usuarios creados en la DB mediante el formulario personalizado de login
 def login_form(request):
     if request.method == 'POST':
         form = CustomAuthenticationForm(request, data=request.POST)
@@ -137,9 +29,9 @@ def login_form(request):
             email = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(request, username=email, password=password)
-            if user is not None:
+            if user:
                 login(request, user)
-                return redirect('home')  # Redirigir a la página de inicio o cualquier otra página después del login
+                return redirect('home')
             else:
                 messages.error(request, 'Usuario o contraseña incorrectos.')
         else:
@@ -148,9 +40,103 @@ def login_form(request):
         form = CustomAuthenticationForm()
     return render(request, 'login_form.html', {'form': form})
 
+def open_account(request):
+    if request.method == 'POST':
+        form = CreateAccountForm(request.POST)
+        if form.is_valid():
+            try:
+                user = form.save()
+                login(request, user)
+                messages.success(request, 'Cuenta creada exitosamente.')
+                logger.debug("Cuenta creada con éxito para el usuario: %s", user.email)
+                return redirect('home')
+            except Exception as e:
+                logger.error("Error al crear la cuenta: %s", e)
+                messages.error(request, 'Error al crear la cuenta. Por favor revise los datos ingresados.')
+        else:
+            logger.warning("Formulario de creación de cuenta no es válido: %s", form.errors)
+            messages.error(request, 'Error al crear la cuenta. Por favor revise los datos ingresados.')
+    else:
+        form = CreateAccountForm()
+    return render(request, 'open_account.html', {'form': form})
+
+def open_buyer_account(request):
+    if request.method == 'POST':
+        form = CreateBuyerForm(request.POST)
+        if form.is_valid():
+            try:
+                user = form.save()
+                login(request, user)
+                messages.success(request, 'Cuenta creada exitosamente.')
+                return redirect('home')
+            except Exception as e:
+                messages.error(request, 'Error al crear la cuenta. Por favor revise los datos ingresados.')
+        else:
+            messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
+    else:
+        form = CreateBuyerForm()
+    return render(request, 'open_buyer_account.html', {'form': form})
 
 
-# Método para rellenar la información del usuario con el formulario personalizado de Datos del usuario
+@login_required
+def open_manager_account(request):
+    if not request.user.is_superuser:
+        return HttpResponse('No tienes permiso para acceder a esta página.', status=403)
+
+    if request.method == 'POST':
+        form = CreateManagerForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, 'Manager creado exitosamente.')
+                return redirect('home')
+            except Exception as e:
+                messages.error(request, 'Error al crear el Manager. Por favor revise los datos ingresados.')
+        else:
+            messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
+    else:
+        form = CreateManagerForm()
+    return render(request, 'open_manager_account.html', {'form': form})
+
+@login_required
+def open_admin_account(request):
+    if not request.user.is_superuser:
+        return HttpResponse('No tienes permiso para acceder a esta página.', status=403)
+
+    max_superusers = 5
+    current_superusers = CustomUser.objects.filter(is_superuser=True).count()
+
+    if current_superusers >= max_superusers:
+        messages.error(request, 'No se puede crear más de %d superusuarios.' % max_superusers)
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = CreateAdminForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, 'Administrador creado exitosamente.')
+                return redirect('home')
+            except Exception as e:
+                messages.error(request, 'Error al crear el Administrador. Por favor revise los datos ingresados.')
+        else:
+            messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
+    else:
+        form = CreateAdminForm()
+    return render(request, 'open_admin_account.html', {'form': form})
+
+    
+
+def home(request):
+    current_year = date.today().year
+    return render(request, 'home.html', {'current_year': current_year})
+
+def home_orm(request):
+    return render(request, 'home_orm.html')
+
+def user(request):
+    return render(request, 'user.html')
+
 @login_required
 def user_info(request):
     if request.method == 'POST':
@@ -158,204 +144,133 @@ def user_info(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Datos personales actualizados exitosamente.')
-            return redirect('user_info')  # Redirigir a la misma página o a otra de tu elección
+            return redirect('user_info')
         else:
             messages.error(request, 'Por favor corrija los errores a continuación.')
     else:
         form = UserInfoForm(instance=request.user)
-
     return render(request, 'user_info.html', {'form': form})
 
+def cart(request):
+    return render(request, 'cart.html')
 
-
-# Configuración que maneja el manejo Backend del formulario para crear productos y llevar el método POST del mensaje a la tabla Products de la DB
-logger = logging.getLogger(__name__)
-# def product_create_view(request):
 def products(request):
     if request.method == 'POST':
-        logger.debug("POST request received.")
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            logger.debug("Form is valid.")
-            # logger.info("Producto guardado exitosamente")
-            # print("Producto guardado exitosamente")
             messages.success(request, 'Producto creado exitosamente.')
-            return redirect('products')  # Redirigir a una vista de lista de productos o alguna otra vista de éxito
+            return redirect('products')
         else:
-            logger.warning("Formulario no válido: %s", form.errors)
             messages.error(request, 'Error al crear el producto. Por favor revise los datos ingresados.')
-            # print("Formulario no válido")
-            # print(form.errors)
     else:
-        logger.debug("GET request received.")
         form = ProductForm()
-    # return render(request, 'products.html', {'form': form})
-
-    # Obtener todos los productos para mostrarlos en la tabla en la misma página del formulario
+    
     products = Product.objects.all()
     return render(request, 'products.html', {'form': form, 'products': products})
 
-
-# Método para traducir los datos de la tabla Products para interpretarlos y renderizarlos para llevarlos a la tabla de Productos creados.... este metodo es si quisiera manejar el render de la tabla products en una pagina diferente... , si quisiera usar el metodo en la misma pagina del formulario deberia integrar con el formulario
-# def product_list(request):
-#     products = Product.objects.all()
-#     return render(request, 'products.html', {'products':products})
-
-
-# Método para manejar el botón de eliminar productos de la tabla stock
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     if request.method == 'POST':
         product.delete()
-    return redirect(reverse('products'))  # Redirigir a la lista de productos después de eliminar
+    return redirect(reverse('products'))
 
-
-# identificar si alguno de los dos campos (code o name_prod) ya pertenece a un producto existente en la base de datos. Empezaremos creando una vista que maneje la solicitud AJAX para verificar si el código o el nombre existe en la base de datos y luego actualizaremos el JavaScript y HTML para hacer uso de esta vista
 def check_product_existence(request):
     code = request.GET.get('code', None)
     name = request.GET.get('name', None)
-    
+
     response = {
-        'code_exists': False,
-        'name_exists': False,
+        'code_exists': Product.objects.filter(code=code).exists() if code else False,
+        'name_exists': Product.objects.filter(name=name).exists() if name else False,
     }
-    
-    if code:
-        response['code_exists'] = Product.objects.filter(code=code).exists()
-    
-    if name:
-        response['name_exists'] = Product.objects.filter(name=name).exists()
-    
+
     return JsonResponse(response)
 
-# Crear una vista para la comparación de las variables en la DB y conocer si pertenecen al mismo producto. utilizar los eventos de cambio (change) en los campos de entrada del formulario. Cada vez que el usuario complete o modifique los campos de código o nombre del producto, se ejecutará la verificación automáticamente.
-def check_product_fields(request):
+def get_product_details(request):
     code = request.GET.get('code')
     name = request.GET.get('name')
 
-    if code and name:
-        product_by_code = Product.objects.filter(code=code).first()
-        product_by_name = Product.objects.filter(name=name).first()
+    product_by_code = Product.objects.filter(code=code).first() if code else None
+    product_by_name = Product.objects.filter(name=name).first() if name else None
 
-        if product_by_code and product_by_name:
-            if product_by_code.id == product_by_name.id:
-                return JsonResponse({'message': 'Los campos pertenecen al mismo producto'}, status=200)
-            else:
-                return JsonResponse({'message': 'Los campos pertenecen a productos distintos'}, status=200)
-        elif not product_by_code:
-            return JsonResponse({'message': 'El código del producto no existe en la DB'}, status=404)
-        elif not product_by_name:
-            return JsonResponse({'message': 'El nombre del producto no existe en la DB'}, status=404)
+    response_data = {
+        'code_exists': bool(product_by_code),
+        'name_exists': bool(product_by_name),
+        'message': '',
+        'product': None
+    }
+
+    if product_by_code and product_by_name:
+        if product_by_code.id == product_by_name.id:
+            response_data['message'] = 'Ambos campos son del mismo producto'
+            response_data['product'] = {
+                'id': product_by_code.id,
+                'description': product_by_code.description,
+                'price': product_by_code.price,
+                'stock': product_by_code.stock,
+                'categories': product_by_code.categories,
+                'brand': product_by_code.brand,
+                'state': product_by_code.state,
+                'disponibility': product_by_code.disponibility,
+            }
+        else:
+            response_data['message'] = 'Los campos pertenecen a productos distintos'
+    elif product_by_code:
+        response_data['message'] = 'El nombre del producto no existe en la DB'
+    elif product_by_name:
+        response_data['message'] = 'El código del producto no existe en la DB'
     else:
-        return JsonResponse({'message': 'Código y nombre son requeridos'}, status=400)
+        response_data['message'] = 'Crear nuevo producto'
 
-# Método Agregar un endpoint en el backend que devuelva los detalles del producto basado en el código o nombre del producto crea una nueva vista para manejar las solicitudes AJAX y devolver los detalles del producto
-def get_product_details(request):
-    code = request.GET.get('code', None)
-    name = request.GET.get('name', None)
-    
-    product = None
-    if code:
-        product = Product.objects.filter(code=code).first()
-    elif name:
-        product = Product.objects.filter(name=name).first()
+    return JsonResponse(response_data)
 
-    if product:
-        product_details = {
-            'id': product.id,
-            'code': product.code,
-            'name': product.name,
-            'description': product.description,
-            'price': product.price,
-            'stock': product.stock,
-            'categories': product.categories,
-            'brand': product.brand,
-            'state': product.state,
-            'disponibility': product.disponibility,
-            'image_url': product.image.url if product.image else ''
-        }
-        return JsonResponse({'product': product_details}, status=200)
-    else:
-        return JsonResponse({'product': None}, status=404)
-
-
-
-# Método para recuperar los productos por categorías y presentarlos en la tienda segmentados por categorías 
 def shop(request):
     categories = Product.CATEGORY_CHOICES
-    products_by_category = {}
-
-    for category_code, category_name in categories:
-        products = Product.objects.filter(categories=category_code)
-        products_by_category[category_name] = products
-
-    # Verifica la cantidad de productos obtenidos
-    total_products = Product.objects.count()
+    products_by_category = {category_name: Product.objects.filter(categories=category_code) 
+                            for category_code, category_name in categories}
+    
     context = {
         'products_by_category': products_by_category,
-        'total_products': total_products,
+        'total_products': Product.objects.count(),
     }
     
-    return render(request, 'shop.html', {'products_by_category': products_by_category})
+    return render(request, 'shop.html', context)
 
+def delivery(request):
+    return render(request, 'delivery.html')
 
+def wallet(request):
+    return render(request, 'wallet.html')
 
+def transactions(request):
+    return render(request, 'transactions.html')
 
+def record(request):
+    return render(request, 'record.html')
 
+def codes(request):
+    return render(request, 'codes.html')
 
-# Autorellenar el formulario de transfer_form
+def transfer(request):
+    return render(request, 'transfer.html')
+
 def transfer_form(request):
     context = {
         'empresa_nombre': 'LuckyCart S.A.',
         'nit': '900123456-7',
         'fecha_actual': date.today().isoformat(),  # Formato AAAA-MM-DD
-        'estado' : 'Completado',
-        'referencia_de_pedido' : '199dan-01arbo-06tan-2024med-05col',
-        'referencia_de_transacion' : '19920106',
-        'numero_de_transaccion_CUS' : '6060928',
-        'banco' : 'nequi',
-        'valor' : '50.000',
-        'moneda' : 'cop',
-        'IP_de_origen' : '128.255.255.24'
-
+        'estado': 'Completado',
+        'referencia_de_pedido': '199dan-01arbo-06tan-2024med-05col',
+        'referencia_de_transacion': '19920106',
+        'numero_de_transaccion_CUS': '6060928',
+        'banco': 'nequi',
+        'valor': '50.000',
+        'moneda': 'cop',
+        'IP_de_origen': '128.255.255.24'
     }
     return render(request, 'transfer_form.html', context)
 
 
-
-
-
-# # Cookies con seguridad para manejo de respuestas de saldo
-# def mi_vista(request):
-#     # Aquí iría la lógica de tu vista
-#     response = HttpResponse("Mensaje")
-#     response.set_cookie('saldo', 'valor_del_saldo', httponly=True, secure=True)
-#     return response
-
-
-
-
-# def process_transfer(request):
-#     if request.method == 'POST':
-#         amount = request.POST.get('amount')
-#         # Aquí iría la lógica para procesar el pago y actualizar el saldo
-#         # Por ejemplo, actualizar el saldo del usuario en la base de datos
-#         new_balance = update_user_balance(request.user, amount)
-#         return JsonResponse({'success': True, 'new_balance': new_balance})
-#     return JsonResponse({'success': False})
-
-
-
-# @login_required
-# def get_saldo(request):
-#     # Asume que tienes un método para obtener el saldo del usuario
-#     saldo = request.user.get_saldo()
-#     return JsonResponse({'saldo': saldo})
-
-    # Configuraci´on de las pasarelas de pago
-# Configurar la clave secreta de Stripe
-stripe.api_key = settings.STRIPE_SECRET_KEY
 def charge(request):
     if request.method == 'POST':
         token = request.POST.get('stripeToken')
@@ -370,62 +285,19 @@ def charge(request):
             )
             return render(request, 'payments/charge_success.html')
         except stripe.error.StripeError as e:
+            logger.error("Stripe error: %s", e)
             return render(request, 'payments/charge_fail.html', {'error': str(e)})
 
     return render(request, 'payments/charge_form.html')
 
-# Configuración de paypal
-configure({
-  "mode": settings.PAYPAL_MODE,  # sandbox or live
-  "client_id": settings.PAYPAL_CLIENT_ID,
-  "client_secret": settings.PAYPAL_CLIENT_SECRET
-})
+def paypal_form(request):
+    return render(request, 'paypal_form.html')
 
-def payment_process(request):
-    if request.method == 'POST':
-        payment = Payment({
-            "intent": "sale",
-            "payer": {
-                "payment_method": "paypal"
-            },
-            "transactions": [{
-                "amount": {
-                    "total": "10.00",
-                    "currency": "USD"
-                },
-                "description": "Descripción del pago."
-            }],
-            "redirect_urls": {
-                "return_url": request.build_absolute_uri('/payment/execute/'),
-                "cancel_url": request.build_absolute_uri('/payment/cancelled/')
-            }
-        })
+def credit_form(request):
+    return render(request, 'credit_form.html')
 
-        if payment.create():
-            for link in payment.links:
-                if link.rel == "approval_url":
-                    # Redirigir al usuario al approval_url
-                    return redirect(link.href)
-        else:
-            print(payment.error)
-            return render(request, 'payments/payment_error.html')
+def bank_form(request):
+    return render(request, 'bank_form.html')
 
-    return render(request, 'payments/payment_form.html')
-
-def payment_execute(request):
-    payment_id = request.GET.get('paymentId')
-    payer_id = request.GET.get('PayerID')
-    payment = Payment.find(payment_id)
-
-    if payment.execute({"payer_id": payer_id}):
-        return render(request, 'payments/payment_success.html')
-    else:
-        return render(request, 'payments/payment_error.html')
-
-def payment_cancelled(request):
-    return HttpResponse("Pago cancelado.")
-
-# @login_required
-# def transfer_form(request):
-#     return render(request, 'transfer_form.html')
-    
+def local_form(request):
+    return render(request, 'local_form.html')

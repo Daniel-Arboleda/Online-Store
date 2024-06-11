@@ -12,6 +12,7 @@
     {% comment %} <link rel="stylesheet" href="{% static '../static/css/style.css' %}"> {% endcomment %}
     <link rel="stylesheet" href="{% static '../static/css/style.css' %}">
     <title>Products</title>
+
 </head>
 
 
@@ -42,7 +43,7 @@
                     <h1>ORM Productos</h1>
                     {% comment %} <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'create_product' %}"> {% endcomment %}
                     
-                    <div id="message"></div>
+                    
 
                     <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'products' %}">
                         {% csrf_token %}
@@ -52,8 +53,6 @@
             
                         <input type="hidden" id="productId" name="product_id" value="">
 
-
-
                         <div class="orm-prod-form-group">
                             <label for="code">Código Producto*</label>
                             <input type="text" id="code" name="code" placeholder="Código producto*" required>
@@ -62,6 +61,7 @@
                             <label for="name_prod">Nombre Producto*</label>
                             <input type="text" id="name_prod" name="name" placeholder="Nombre producto*" required>
                         </div>
+                        <div id="message"></div>
                         <div class="orm-prod-form-group">
                             <label for="descrition">Descripción Producto*</label>
                             <input type="text" id="descrition" name="description" placeholder="Descripción*" required>
@@ -150,7 +150,7 @@
                             <input type="file" id="image" name="image" required>
                         </div>
                         <div class="open_account_link">
-                            <button type="submit" id="btn-orm-prod-form">Crear</button>
+                            <button id="submitButton">Crear</button>
                             {% comment %} <a href="#" class="enlace-login" id="home-link" style="display:none"></a> {% endcomment %}
                         </div>
                     </form>
@@ -230,8 +230,8 @@
     <!-- Scripts -->
     <script src="{% static 'js/toggleVisibility.js' %}"></script>
     <script src="{% static 'js/toggle_form_button.js' %}"></script>
-    <script src="{% static 'js/modal-transfer.js' %}"></script>
-    <script src="{% static 'js/login.js' %}"></script>
+    {% comment %} <script src="{% static 'js/modal-transfer.js' %}"></script> {% endcomment %}
+    {% comment %} <script src="{% static 'js/login.js' %}"></script> {% endcomment %}
     <script src="{% static 'js/delete_mess_products.js' %}"></script>
 </body>
 </html>

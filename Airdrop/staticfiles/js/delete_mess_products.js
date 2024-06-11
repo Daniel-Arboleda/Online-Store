@@ -162,3 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return form;
     }
 });
+
+
+// ror al crear la cuenta. Por favor revise los datos ingresados.
+// User with this Email already exists.
