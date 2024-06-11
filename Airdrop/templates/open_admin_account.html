@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Create Admin Account</title>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Create Admin Account</h1>
+        <form method="post">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="Email" autocomplete="username">
+            {% if form.email.errors %}
+                <div class="error">
+                    {% for error in form.email.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <input type="password" name="password1" placeholder="Password" autocomplete="new-password">
+            {% if form.password1.errors %}
+                <div class="error">
+                    {% for error in form.password1.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+
+            <p>
+                <ul>
+                    <li>Su contraseña no puede asemejarse tanto a su otra información personal.</li>
+                    <li>Su contraseña debe contener al menos 8 caracteres.</li>
+                    <li>Su contraseña no puede ser una clave utilizada comúnmente.</li>
+                    <li>Su contraseña no puede ser completamente numérica.</li>
+                </ul>
+            </p>
+            <input type="password" name="password2" placeholder="Confirm Password" autocomplete="new-password">
+            {% if form.password2.errors %}
+                <div class="error">
+                    {% for error in form.password2.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <button type="submit">Create Admin</button>
+        </form>
+        <a href="{% url 'home' %}">Back to Home
+    </div>
+</body>
+</html>

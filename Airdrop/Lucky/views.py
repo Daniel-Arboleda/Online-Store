@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -9,8 +10,8 @@ from datetime import date
 import stripe
 import logging
 
-from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm
-from .models import Product, UserInfo
+from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm
+from .models import Product, UserInfo, CustomUser
 from django.conf import settings
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -79,6 +80,38 @@ def open_buyer_account(request):
 
 
 @login_required
+@staff_member_required
+def open_admin_account(request):
+    if not request.user.is_superuser:
+        return HttpResponse('No tienes permiso para acceder a esta página.', status=403)
+
+    max_superusers = 5
+    current_superusers = CustomUser.objects.filter(is_superuser=True).count()
+
+    if current_superusers >= max_superusers:
+        messages.error(request, 'No se puede crear más de %d superusuarios.' % max_superusers)
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = CreateAdminForm(request.POST)
+        if form.is_valid():
+            try:
+                user = form.save()
+                messages.success(request, 'Administrador creado exitosamente.')
+                return redirect('home')
+            except Exception as e:
+                messages.error(request, 'Error al crear el Administrador. Por favor revise los datos ingresados.')
+                logger.error("Error al crear el Administrador: %s", e)
+        else:
+            messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
+    else:
+        form = CreateAdminForm()
+
+    return render(request, 'open_admin_account.html', {'form': form})
+
+
+
+@login_required
 def open_manager_account(request):
     if not request.user.is_superuser:
         return HttpResponse('No tienes permiso para acceder a esta página.', status=403)
@@ -98,34 +131,7 @@ def open_manager_account(request):
         form = CreateManagerForm()
     return render(request, 'open_manager_account.html', {'form': form})
 
-@login_required
-def open_admin_account(request):
-    if not request.user.is_superuser:
-        return HttpResponse('No tienes permiso para acceder a esta página.', status=403)
 
-    max_superusers = 5
-    current_superusers = CustomUser.objects.filter(is_superuser=True).count()
-
-    if current_superusers >= max_superusers:
-        messages.error(request, 'No se puede crear más de %d superusuarios.' % max_superusers)
-        return redirect('home')
-
-    if request.method == 'POST':
-        form = CreateAdminForm(request.POST)
-        if form.is_valid():
-            try:
-                form.save()
-                messages.success(request, 'Administrador creado exitosamente.')
-                return redirect('home')
-            except Exception as e:
-                messages.error(request, 'Error al crear el Administrador. Por favor revise los datos ingresados.')
-        else:
-            messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
-    else:
-        form = CreateAdminForm()
-    return render(request, 'open_admin_account.html', {'form': form})
-
-    
 
 def home(request):
     current_year = date.today().year
