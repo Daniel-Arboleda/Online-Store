@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'img/Logo-LuckyCart.png' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <title>Luxdrop</title>
+    <script>
+        const loginURL = "{% url 'login_form' %}";
+        const openURL = "{% url 'open_account' %}";
+    </script>
+</head>
+<body>
+    <!-- Header con menú basado en iconos -->
+    <header>
+        <nav>
+            <button class="menu-toggle" aria-label="Abrir menú" >
+                <img class="fas fa-bars" src="{% static '../static/img/menu.svg' %}" alt="Menu"></i>
+            </button>
+            <ul>
+                <!-- Título de la página -->
+                <li class="title"><a href="#">Luxdrop</a></li>
+                <!-- boton login-->
+                <li><a href="{% url 'login_form' %}" class="boton-login"  id="login-account" >Iniciar sesión</a></li>
+                <!-- Botón "Abrir cuenta" con el atributo de datos 'data-login-url' -->
+                <li><a href="{% url 'open_account' %}" class="boton-crear-cuenta" id="open_account">Crear cuenta</a></li>
+                {% comment %} <li><a href="#"><i class="fas fa-home"></i></a></li> {% endcomment %}
+                <li class="dropdown">
+                    <a href="#"><i class="fas fa-box"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'drop' %}">Ruleta</a>
+                        <a href="#">Rasca & Gana</a>
+                        <a href="#">Reacción</a>
+                    </div>
+                </li>
+                <li><a href="#"><i class="fas fa-search"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+    <script src="{% static 'js/modal-transfer.js' %}"></script>
+    <script src="{% static 'js/hamburger-menu.js' %}"></script>
+</body>
+</html>

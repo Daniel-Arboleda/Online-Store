@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
   
     
@@ -36,31 +37,7 @@
         <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
 
             <!-- Header con menú basado en iconos -->
-            <header>
-                <nav>
-                    <button class="menu-toggle" aria-label="Abrir menú" >
-                        <img class="fas fa-bars" src="{% static '../static/img/menu.svg' %}" alt="Menu"></i>
-                    </button>
-                    <ul>
-                        <!-- Título de la página -->
-                        <li class="title"><a href="#">Luxdrop</a></li>
-                        <!-- boton login-->
-                        <li><a href="{% url 'login_form' %}" class="boton-login"  id="login-account" >Iniciar sesión</a></li>
-                        <!-- Botón "Abrir cuenta" con el atributo de datos 'data-login-url' -->
-                        <li><a href="{% url 'open_account' %}" class="boton-crear-cuenta" id="open_account">Crear cuenta</a></li>
-                        {% comment %} <li><a href="#"><i class="fas fa-home"></i></a></li> {% endcomment %}
-                        <li class="dropdown">
-                            <a href="#"><i class="fas fa-box"></i></a>
-                            <div class="dropdown-content">
-                                <a href="{% url 'drop' %}">Ruleta</a>
-                                <a href="#">Rasca & Gana</a>
-                                <a href="#">Reacción</a>
-                            </div>
-                        </li>
-                        <li><a href="#"><i class="fas fa-search"></i></a></li>
-                    </ul>
-                </nav>
-            </header>
+            {% include 'header_index.html' %}
 
             <!-- Banner de enunciado con mensaje de bienvenida -->
             <div class="banner">
@@ -166,99 +143,10 @@
             </section>
 
             <!-- Sección del Footer o pie de pagina -->
+            <!-- Footer -->
+            {% include 'footer.html' %}
 
-            <footer>
-                <div class="footer-container">
-                    <!-- Sección Trustpilot -->
-                    {% comment %} <div class="trustpilot-section">
-                        <img src="trustpilot-icon.png" alt="Trustpilot">
-                        <p>4.5</p>
-                        <p>TrustScore | 1000+ Reviews</p>
-                    </div> {% endcomment %}
-
-                    <div class="trustpilot-section">
-                        <div class="trustpilot-logo">
-                            <img src="{% static 'img/trustpilot.svg' %}" alt="Trustpilot Logo">
-                            <h2 class="trustpilot-name">Trustpilot</h2>
-                        </div>
-                        <div class="trustpilot-info">
-                            <p class="trustscore">Trustscore: 9.5</p>
-                            <div class="reviews-info">
-                                <span class="rating">4.7</span> / 5 <!-- Puntaje de la página -->
-                                <span class="separator">|</span> <!-- Separador -->
-                                <span class="reviews-count">1000 reviews</span> <!-- Cantidad de reviews -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sección Redes Sociales -->
-                    <div class="social-media-section">
-                        <!-- Aquí van los iconos de redes sociales -->
-                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                    </div>
-            
-                    <!-- Sección Métodos de Pago -->
-                    <div class="payment-methods-section">
-                        <!-- Aquí van los iconos de métodos de pago -->
-
-                        <!-- Enlace al método de pago 1 -->
-                        <a href="#link_metodo_pago_1">
-                            <img src="{% static 'img/paypal-logo.png' %}" alt="PayPal">
-                        </a>
-
-                        <!-- Enlace al método de pago 2 -->
-                        <a href="#link_metodo_pago_2">
-                            <img src="{% static 'img/MasterCard.png' %}" alt="Tarjeta de Crédito">
-                        </a>
-
-                        <!-- Enlace al método de pago 3 -->
-                        <a href="#link_metodo_pago_2">
-                            <img src="{% static 'img/visa-logo.png' %}" alt="Tarjeta de Crédito">
-                        </a>
-
-                        <!-- Enlace al método de pago 4 -->
-                        <a href="#link_metodo_pago_2">
-                            <img src="{% static 'img/nubank-logo.png' %}" alt="Tarjeta de Crédito">
-                        </a>
-
-                        <!-- Enlace al método de pago 5 -->
-                        <a href="#link_metodo_pago_2">
-                            <img src="{% static 'img/Logo-Nequi.png' %}" alt="Tarjeta de Crédito">
-                        </a>
-
-                        <!-- Agrega más enlaces para otros métodos de pago si es necesario -->
-                    </div>
-            
-                    <!-- Sección Patrocinadores -->
-                    <div class="sponsors-section">
-                        <!-- Aquí van los logos de los patrocinadores -->
-                        <a href="enlace-1.html"><img src="logo-1.png" alt="Logo 1"></a>
-                        <a href="enlace-2.html"><img src="logo-2.png" alt="Logo 2"></a>
-                        <a href="enlace-3.html"><img src="logo-3.png" alt="Logo 3"></a>
-                        <h2>Socio comercial</h2>
-                    </div>
-            
-                    <!-- Sección Enlaces -->
-                    <div class="links-section">
-                        <!-- Aquí van los enlaces de contacto, blog, preguntas frecuentes, etc. -->
-                        <a href="#">CONTACTO</a>
-                        <a href="#">BLOG</a>
-                        <a href="#">PREGUNTAS MÁS FRECUENTES</a>
-                        <a href="#">TÉRMINOS DE SERVICIO</a>
-                        <a href="#">DECLARACIÓN DE PRIVACIDAD</a>
-                        <a href="#">PROBABLEMENTE JUSTO</a>
-                        <a href="#">POLÍTICA DE COOKIES</a>
-                        <a href="#">POLÍTICA ALD</a>
-                    </div>
-            
-                    <!-- Sección Información de la Empresa -->
-                    <div class="company-info-section">
-                        <p>LuxDrop es una marca de XXX XXXX Limited, número de registro: HE xxxx, con domicilio social en xxxx, Maria House, Nicosia, xxxChipre.</p>
-                    </div>
-                </div>
-            </footer>
+           
         </div>
 
     </div>

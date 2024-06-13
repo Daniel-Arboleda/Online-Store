@@ -19,8 +19,9 @@
             <div class="hamburger-menu">
                 <img src="{% static 'img/menu.svg' %}" alt="Menu">
             </div>
+            <!-- Moved the title outside the ul -->
+            <li class="title"><a href="{% url 'home' %}">Luxdrop</a></li>
             <ul id="navMenu">
-                <li class="title"><a href="{% url 'home' %}">Luxdrop</a></li>
                 <li class="dropdown search-dropdown">
                     <a href="#"><i class="fas fa-search"></i></a>
                     <div class="dropdown-content search-bar">
@@ -57,17 +58,17 @@
                         <a href="#">Opción 3</a>
                     </div>
                 </li>
-                <li class="logout">
-                    <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
-                </li>
-                <!-- Moved saldo-container inside the ul -->
-                <li class="saldo-container">
-                    <div class="saldo-box">
-                        <p>$ {{ saldo }}</p>
-                    </div>
-                    <button id="openModalButton" data-url="{% url 'transfer' %}"><i class="fas fa-plus"></i></button>
-                </li>
             </ul>
+            <!-- Moved saldo-container and logout outside the ul -->
+            <div class="saldo-container">
+                <div class="saldo-box">
+                    <p>$ {{ saldo }}</p>
+                </div>
+                <button id="openModalButton" data-url="{% url 'transfer' %}"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="logout">
+                <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+            </div>
         </nav>
     </header>
     <script src="{% static 'js/modal-transfer.js' %}"></script>

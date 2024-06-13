@@ -8,12 +8,19 @@ header {
     left: 0;
     z-index: 1000;
     width: 100%;
-    height: 50px;
+    height: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 0 10px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 nav ul {
@@ -25,15 +32,19 @@ nav ul {
 }
 
 nav ul li {
-    margin: 0 15px;
+    margin: 0 60px; /* Incrementa el margen para ampliar el área de influencia */
+    padding: 60px; /* Aumenta el padding para ampliar el área de influencia */
     position: relative;
 }
 
 nav ul li a {
+    
     color: #fff;
     text-decoration: none;
     font-size: 20px;
-    padding: 15px;
+    padding: 50px;
+    margin: 0 50px; /* Incrementa el margen para ampliar el área de influencia */
+
 }
 
 nav ul li a:hover {
@@ -50,7 +61,19 @@ nav ul li i {
     font-weight: bold;
     color: #fff;
     margin-right: auto;
+    padding: 15px;
+    list-style-type: none; /* Elimina el estilo de lista (punto) */
 }
+
+.title a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.title a:hover {
+    color: #ddd;
+}
+
 
 .search-dropdown {
     position: relative;
@@ -96,9 +119,13 @@ nav ul li i {
     background-color: #3396FF;
     min-width: 160px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    top: 36px;
+    z-index: 1000; /* Asegura que el submenú esté por encima de otros elementos */
+    top: 120%; /* Posiciona inicialmente el submenú justo debajo del ícono */
+    left: 0;
+    margin-top: 200px; /* Ajuste el margen para crear un área de transición */
 }
+
+
 
 .dropdown-content a {
     color: black;
@@ -141,6 +168,12 @@ nav ul li i {
 
 #openModalButton i {
     margin-right: 5px;
+}
+
+.logout {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
 }
 
 .logout-button {
@@ -197,20 +230,19 @@ nav, nav ul, nav ul li, nav ul li a, .dropdown, .dropdown-content, .saldo-contai
         text-align: left;
     }
 
-    .saldo-container {
-        flex-direction: column;
-        align-items: flex-start;
-        margin-top: 10px;
+    .saldo-container, .logout {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
     }
 
     .saldo-box {
-        margin-right: 0;
-        margin-bottom: 10px;
+        margin-right: 10px; /* Mantén un margen a la derecha del saldo */
     }
 
     .dropdown-content {
         position: relative;
-        top: 0;
+        top: calc(100% + 5px); /* Ajuste para el espacio de transición en modo responsivo */
         background-color: #285363;
     }
 
