@@ -38,6 +38,9 @@ if not DEBUG:
 LOGGING_DIR = BASE_DIR / 'logs'
 os.makedirs(LOGGING_DIR, exist_ok=True)
 
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

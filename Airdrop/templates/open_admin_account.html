@@ -28,6 +28,14 @@
             {% endif %}
 
 
+            <input type="password" name="password2" placeholder="Confirm Password" autocomplete="new-password">
+            {% if form.password2.errors %}
+            <div class="error">
+                {% for error in form.password2.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
             <p>
                 <ul>
                     <li>Su contraseña no puede asemejarse tanto a su otra información personal.</li>
@@ -36,14 +44,6 @@
                     <li>Su contraseña no puede ser completamente numérica.</li>
                 </ul>
             </p>
-            <input type="password" name="password2" placeholder="Confirm Password" autocomplete="new-password">
-            {% if form.password2.errors %}
-                <div class="error">
-                    {% for error in form.password2.errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
             <button type="submit">Create Admin</button>
         </form>
         <a href="{% url 'home' %}">Back to Home

@@ -23,6 +23,9 @@ def index(request):
 def drop(request):
     return render(request, 'drop.html')
 
+def header(request):
+    return render(request, 'header.html')
+
 def login_form(request):
     if request.method == 'POST':
         form = CustomAuthenticationForm(request, data=request.POST)

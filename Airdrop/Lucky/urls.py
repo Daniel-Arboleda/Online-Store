@@ -1,16 +1,22 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.contrib.auth.views import LogoutView
 from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('drop/', views.drop, name='drop'),
+
+    path('header/', views.header, name='header'),
     path('login/', views.login_form, name='login_form'),
+    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),  # Esto redirige a la página principal después del logout
     path('open/', views.open_account, name='open_account'),
     # path('open_buyer_account/', views.open_buyer_account, name='open_buyer_account'),
     path('open_manager_account/', views.open_manager_account, name='open_manager_account'),
     path('open_admin_account/', views.open_admin_account, name='open_admin_account'),
+
+    # path('logout/', LogoutView.as_view(), name='logout'),
 
     path('home/', views.home, name='home'),
     path('home_orm/', views.home_orm, name='home_orm'),

@@ -1,102 +1,76 @@
-
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxdrop</title>
-
-    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
-
-    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="shortcut icon" href="{% static 'img/Logo-LuckyCart.png' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <!-- Enlace al archivo CSS externo -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-    
-    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <title>Luxdrop</title>
     <script>
         const loginURL = "{% url 'login_form' %}";
         const openURL = "{% url 'open_account' %}";
     </script>
-    
-
-
 </head>
-
-
-
 <body>
-    
-
-    <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
-        <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
-           <!-- Header con menú basado en iconos -->
-           <header>
-                <nav>
-                    <ul>
-                        <!-- Título de la página -->
-                        <li class="title"><a href="{% url 'home' %}">Luxdrop</a></li>
-                        {% comment %} <li><a href="#"><i class="fas fa-home"></i></a></li> {% endcomment %}
-                        <li class="dropdown search-dropdown">
-                            <a href="#"><i class="fas fa-search"></i></a>
-                            <div class="dropdown-content search-bar">
-                                <input type="text" placeholder="Buscar..." id="searchInput">
-                                <button type="submit"><i class="fas fa-search"></i></button>
-                            </div>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#"><i class="fas fa-box"></i></a>
-                            <div class="dropdown-content">
-                                <a href="{% url 'drop' %}">Ruleta</a>
-                                <a href="#">Rasca & Gana</a>
-                                <a href="#">Reacción</a>
-                            </div>
-                        </li>
-                        <li class="dropdown">
-                            <a href="{% url 'shop' %}"><i class="fas fa-store"></i></a>
-                            <div class="dropdown-content">
-                                <a href="#">Vivienda</a>
-                                <a href="#">Vehiculos</a>
-                                <a href="#">Tecnología</a>
-                                <a href="#">Ropa</a>
-                                <a href="#">Accesorios</a>
-                            </div>
-                        </li>
-                        <li class="dropdown">
-                            <a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a>     
-                        </li>
-                        <li><a href="#"><i class="fas fa-envelope"></i></a></li>
-                        <li><a id="delivery-icon" href="#"><i class="fas fa-truck"></i></a></li>
-                        <li class="dropdown">
-                            <a href="{% url 'user' %}"><i class="fas fa-user"></i></a>
-                            <div class="dropdown-content">
-                                <a href="#">Opción 1</a>
-                                <a href="#">Opción 2</a>
-                                <a href="#">Opción 3</a>
-                            </div>
-                        </li>
-                    </ul>
-                </nav>
-                <!-- Recuadro de saldo y botón de añadir saldo en una estructura propia -->
-                <div class="saldo-container">
+    <header>
+        <nav>
+            <div class="hamburger-menu">
+                <img src="{% static 'img/menu.svg' %}" alt="Menu">
+            </div>
+            <ul id="navMenu">
+                <li class="title"><a href="{% url 'home' %}">Luxdrop</a></li>
+                <li class="dropdown search-dropdown">
+                    <a href="#"><i class="fas fa-search"></i></a>
+                    <div class="dropdown-content search-bar">
+                        <input type="text" placeholder="Buscar..." id="searchInput">
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#"><i class="fas fa-box"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'drop' %}">Ruleta</a>
+                        <a href="#">Rasca & Gana</a>
+                        <a href="#">Reacción</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="{% url 'shop' %}"><i class="fas fa-store"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#">Vivienda</a>
+                        <a href="#">Vehículos</a>
+                        <a href="#">Tecnología</a>
+                        <a href="#">Ropa</a>
+                        <a href="#">Accesorios</a>
+                    </div>
+                </li>
+                <li><a href="{% url 'cart' %}"><i class="fas fa-shopping-cart"></i></a></li>
+                <li><a href="#"><i class="fas fa-envelope"></i></a></li>
+                <li><a id="delivery-icon" href="#"><i class="fas fa-truck"></i></a></li>
+                <li class="dropdown">
+                    <a href="{% url 'user' %}"><i class="fas fa-user"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#">Opción 1</a>
+                        <a href="#">Opción 2</a>
+                        <a href="#">Opción 3</a>
+                    </div>
+                </li>
+                <li class="logout">
+                    <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+                </li>
+                <!-- Moved saldo-container inside the ul -->
+                <li class="saldo-container">
                     <div class="saldo-box">
                         <p>$ {{ saldo }}</p>
                     </div>
                     <button id="openModalButton" data-url="{% url 'transfer' %}"><i class="fas fa-plus"></i></button>
-                </div>
-                <!-- Navegación secundaria para íconos adicionales -->
-                {% comment %} <nav>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-user-circle"></i> Perfil</a></li>
-                        <li><a href="#"><i class="fas fa-piggy-bank"></i> Reservas</a></li>
-                    </ul>
-                </nav> {% endcomment %}
-            </header>
-
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <script src="{% static 'js/modal-transfer.js' %}"></script>
+    <script src="{% static 'js/hamburger-menu.js' %}"></script>
 </body>
 </html>
-        
