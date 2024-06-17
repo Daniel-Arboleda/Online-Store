@@ -203,7 +203,7 @@ def home_orm(request):
 
 @login_required
 def user(request):
-    return render(request, 'user.html')
+    return render(request, 'user.html', {'user': request.user})
 
 @login_required
 def user_info(request):
@@ -217,7 +217,7 @@ def user_info(request):
             messages.error(request, 'Por favor corrija los errores a continuación.')
     else:
         form = UserInfoForm(instance=request.user)
-    return render(request, 'user_info.html', {'form': form})
+    return render(request, 'user_info.html', {'form': form, 'user': request.user})
 
 @login_required
 def cart(request):

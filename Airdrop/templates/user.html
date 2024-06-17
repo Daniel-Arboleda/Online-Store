@@ -1,6 +1,5 @@
 
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,8 +23,6 @@
 
 
 <body>
-
-
     <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
         <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
            <!-- Header con menú basado en iconos -->
@@ -38,6 +35,9 @@
                     <img src="perfil.jpg" alt="Foto de Perfil" class="foto-perfil">
                     <div class="info-perfil">
                         <h1>Nombre del Usuario</h1>
+                        {% comment %} <h1>{{ user.username }}</h1> {% endcomment %}
+                        {% comment %} <p>{{ user.username }}</p>  {% endcomment %}
+                        <p>{{ user.email }}</p> <!-- Muestra el correo electrónico del usuario -->
                         <div class="barra-experiencia">
                             <span style="width: 70%;">Nivel 3</span> <!-- Ejemplo de progreso -->
                         </div>
@@ -113,8 +113,6 @@
     <div class="floating-button" id="theme-toggle">
         <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
     </div>
-
-    
 
     <!-- Ventana emergente listado de paises compatibles -->  
     <!-- Código modularizado para ahorrar espacio, buena práctica de desarrollo y brinda una UX - Experiencia de usuario consistente en toda la página -->

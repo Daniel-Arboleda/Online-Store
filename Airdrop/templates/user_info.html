@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -6,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luxdrop</title>
-    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
+    <link rel="shortcut icon" href="{% static 'img/Logo-LuckyCart.png' %}">
     <!-- Enlace a la librería de iconos Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Enlace al archivo CSS externo -->
@@ -16,9 +15,7 @@
         const loginURL = "{% url 'login_form' %}";
         const openURL = "{% url 'open_account' %}";
     </script>
-
 </head>
-
 <body>
     <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
         <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
@@ -27,7 +24,10 @@
             <!-- Formulario de datos personales para usuarios -->
             <div class="form-container">
                 <h2>Actualizar Datos Personales</h2>
+                <p>Nombre de Usuario: {{ user.username }}</p>
+                <p>Email: {{ user.email }}</p>
                 <form action="/submit-your-update-url" method="POST">
+                    {% csrf_token %}
                     <div class="form-group">
                         <label for="first_name">Nombre:</label>
                         <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required>
@@ -52,10 +52,10 @@
                         <label for="document">Documento:</label>
                         <input type="text" id="document" name="document" value="{{ user.document }}" required>
                     </div>
-                    {% comment %} <div class="form-group">
-                        <label for="email">Correo electrónico:</label>
-                        <input type="email" id="email" name="email" value="{{ user.email }}" required>
-                    </div> {% endcomment %}
+                    <div class="form-group">
+                        <label for="nationality">Nacionalidad:</label>
+                        <input type="text" id="nationality" name="nationality" value="{{ user.nationality }}">
+                    </div>
                     <div class="form-group">
                         <label for="phone">Teléfono:</label>
                         <input type="text" id="phone" name="phone" value="{{ user.phone }}">
@@ -64,16 +64,13 @@
                         <label for="address">Dirección:</label>
                         <input type="text" id="address" name="address" value="{{ user.address }}">
                     </div>
-                    {% comment %} <div class="form-group">
-                        <label for="password">Nueva contraseña (opcional):</label>
-                        <input type="password" id="password" name="password">
-                    </div> {% endcomment %}
                     <div class="form-group">
                         <button type="submit">Actualizar Datos</button>
                     </div>
                 </form>
+                <a href="{% url 'home' %}">Volver</a>
             </div>
-        </div>  
+        </div>
         <!-- Botón flotante para cambiar el color del tema-->
         <div class="floating-button" id="theme-toggle">
             <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
