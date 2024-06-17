@@ -21,6 +21,7 @@ def index(request):
 def drop(request):
     return render(request, 'drop.html')
 
+@login_required
 def header(request):
     return render(request, 'header.html')
 
@@ -191,14 +192,16 @@ def open_manager_account(request):
     return render(request, 'open_manager_account.html', {'form': form})
 
 
-
+@login_required
 def home(request):
     current_year = date.today().year
     return render(request, 'home.html', {'current_year': current_year})
 
+@login_required
 def home_orm(request):
     return render(request, 'home_orm.html')
 
+@login_required
 def user(request):
     return render(request, 'user.html')
 
@@ -216,9 +219,11 @@ def user_info(request):
         form = UserInfoForm(instance=request.user)
     return render(request, 'user_info.html', {'form': form})
 
+@login_required
 def cart(request):
     return render(request, 'cart.html')
 
+@login_required
 def products(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
@@ -234,6 +239,7 @@ def products(request):
     products = Product.objects.all()
     return render(request, 'products.html', {'form': form, 'products': products})
 
+@login_required
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     if request.method == 'POST':
@@ -301,21 +307,27 @@ def shop(request):
     
     return render(request, 'shop.html', context)
 
+@login_required
 def delivery(request):
     return render(request, 'delivery.html')
 
+@login_required
 def wallet(request):
     return render(request, 'wallet.html')
 
+@login_required
 def transactions(request):
     return render(request, 'transactions.html')
 
+@login_required
 def record(request):
     return render(request, 'record.html')
 
+@login_required
 def codes(request):
     return render(request, 'codes.html')
 
+@login_required
 def charge(request):
     if request.method == 'POST':
         token = request.POST.get('stripeToken')
@@ -335,9 +347,11 @@ def charge(request):
 
     return render(request, 'payments/charge_form.html')
 
+@login_required
 def transfer(request):
     return render(request, 'transfer.html')
 
+@login_required
 def transfer_form(request):
     context = {
         'empresa_nombre': 'LuckyCart S.A.',
@@ -355,15 +369,18 @@ def transfer_form(request):
     return render(request, 'transfer_form.html', context)
 
 
-
+@login_required
 def paypal_form(request):
     return render(request, 'paypal_form.html')
 
+@login_required
 def credit_form(request):
     return render(request, 'credit_form.html')
 
+@login_required
 def bank_form(request):
     return render(request, 'bank_form.html')
 
+@login_required
 def local_form(request):
     return render(request, 'local_form.html')
