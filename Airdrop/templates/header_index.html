@@ -17,17 +17,11 @@
     <!-- Header con menú basado en iconos -->
     <header>
         <nav>
-            <button class="menu-toggle" aria-label="Abrir menú" >
-                <img class="fas fa-bars" src="{% static '../static/img/menu.svg' %}" alt="Menu"></i>
-            </button>
-            <ul>
-                <!-- Título de la página -->
-                <li class="title"><a href="#">Luxdrop</a></li>
-                <!-- boton login-->
-                <li><a href="{% url 'login_form' %}" class="boton-login"  id="login-account" >Iniciar sesión</a></li>
-                <!-- Botón "Abrir cuenta" con el atributo de datos 'data-login-url' -->
-                <li><a href="{% url 'open_account' %}" class="boton-crear-cuenta" id="open_account">Crear cuenta</a></li>
-                {% comment %} <li><a href="#"><i class="fas fa-home"></i></a></li> {% endcomment %}
+            <div class="hamburger-menu">
+                <img src="{% static 'img/menu.svg' %}" alt="Menu">
+            </div>
+            <li class="title"><a href="#">Luxdrop</a></li>
+            <ul class="menu-items">
                 <li class="dropdown">
                     <a href="#"><i class="fas fa-box"></i></a>
                     <div class="dropdown-content">
@@ -36,11 +30,22 @@
                         <a href="#">Reacción</a>
                     </div>
                 </li>
-                <li><a href="#"><i class="fas fa-search"></i></a></li>
+                <li class="search-dropdown">
+                    <a href="#"><i class="fas fa-search"></i></a>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Buscar...">
+                        <button type="button"><i class="fas fa-search"></i></button>
+                    </div>
+                </li>
+                
+                        
             </ul>
+            <div class="user-actions">
+                <a href="{% url 'login_form' %}" class="boton-login" id="login-account">Iniciar sesión</a>
+                <a href="{% url 'open_account' %}" class="boton-crear-cuenta" id="open_account">Crear cuenta</a>
+            </div>
         </nav>
     </header>
-    <script src="{% static 'js/modal-transfer.js' %}"></script>
     <script src="{% static 'js/hamburger-menu.js' %}"></script>
 </body>
 </html>

@@ -1,3 +1,8 @@
+
+
+// Análisis del Código JavaScript
+// El archivo login.js actualmente intercepta el envío del formulario y redirige al usuario directamente al enlace de inicio (home-link). Esto impide que la solicitud POST sea enviada al servidor para la validación.
+
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('login-form');
     const homeLink = document.getElementById('home-link');

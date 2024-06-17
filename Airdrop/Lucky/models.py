@@ -18,7 +18,7 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('role', 'superuser')  # Establecer el rol como 'superuser'
+        extra_fields.setdefault('role', 'superuser')
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -27,7 +27,6 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('role') != 'superuser':
             raise ValueError('Superuser must have role="superuser"')
         return self.create_user(email, password, **extra_fields)
-        
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
@@ -36,17 +35,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('manager', 'Manager'),
         ('customer', 'Customer'),
     ]
-    
-    role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='customer')
+
     email = models.EmailField(unique=True)
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(_('last login'), blank=True, null=True)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     groups = models.ManyToManyField(Group, related_name='customuser_set', blank=True)
     user_permissions = models.ManyToManyField(Permission, related_name='customuser_set', blank=True)
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='customer')
 
     objects = CustomUserManager()
 
@@ -60,8 +59,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-
-
 
 # OneToOneField establece una relación de uno a uno entre dos modelos. Esto significa que cada instancia de UserInfo está vinculada a una única instancia de User y viceversa. Es similar a ForeignKey, pero asegura que no haya múltiples registros en UserInfo asociados con un solo User.
 class UserInfo(models.Model):

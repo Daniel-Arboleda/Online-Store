@@ -2,17 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.models import User
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from datetime import date
-import stripe
-import logging
-
-from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm
+from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm, CreateManagerForm
 from .models import Product, UserInfo, CustomUser
 from django.conf import settings
+import stripe
+import logging
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 logger = logging.getLogger(__name__)
@@ -26,23 +24,81 @@ def drop(request):
 def header(request):
     return render(request, 'header.html')
 
+
 def login_form(request):
     if request.method == 'POST':
         form = CustomAuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=email, password=password)
-            if user:
-                login(request, user)
-                return redirect('home')
-            else:
-                messages.error(request, 'Usuario o contraseña incorrectos.')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        if email and password:
+            try:
+                user = CustomUser.objects.get(email=email)
+                print(f"Email '{email}' exists in Auth table: True")
+                user = authenticate(request, username=email, password=password)
+                if user is not None:
+                    login(request, user)
+                    return redirect('home')
+                else:
+                    messages.error(request, "Correo o contraseña incorrectos.")
+            except CustomUser.DoesNotExist:
+                print(f"Email '{email}' does not exist in Auth table.")
+                messages.error(request, "Correo o contraseña incorrectos.")
         else:
-            messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
+            messages.error(request, "Ambos campos son obligatorios.")
+        print("Formulario inválido. Errores:", form.errors)
     else:
         form = CustomAuthenticationForm()
+
     return render(request, 'login_form.html', {'form': form})
+
+# def login_view(request):
+#     if request.method == 'POST':
+#         form = EmailAuthenticationForm(request, data=request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+#             user = authenticate(request, username=email, password=password)
+#             if user is not None:
+#                 login(request, user)
+#                 return redirect('home')
+#             else:
+#                 form.add_error(None, 'Invalid email or password')
+#     else:
+#         form = EmailAuthenticationForm()
+#     return render(request, 'login_form.html', {'form': form})
+
+
+
+
+# def login_form(request):
+#     if request.method == 'POST':
+#         print("Formulario enviado")
+#         form = CustomAuthenticationForm(request, data=request.POST)
+#         print("Datos del formulario:", form.data)
+#         if form.is_valid():
+#             print("Formulario válido")
+#             email = form.cleaned_data.get('email')
+#             password = form.cleaned_data.get('password')
+#             print("Datos limpios del formulario - Email:", email, "Password:", password)
+#             user = authenticate(request, username=email, password=password)
+#             if user is not None:
+#                 print("Usuario autenticado:", user)
+#                 login(request, user)
+#                 logger.info(f"User {user.email} logged in successfully.")
+#                 return redirect('home')
+#             else:
+#                 print("Usuario no encontrado")
+#                 logger.warning(f"Login attempt failed for email: {email}")
+#                 messages.error(request, 'Usuario o contraseña incorrectos.')
+#         else:
+#             print("Formulario inválido. Errores:", form.errors)
+#             logger.warning(f"Invalid login form submitted: {form.errors}")
+#             messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
+#     else:
+#         form = CustomAuthenticationForm()
+#     return render(request, 'login_form.html', {'form': form})
+
 
 def open_account(request):
     if request.method == 'POST':
@@ -64,22 +120,22 @@ def open_account(request):
         form = CreateAccountForm()
     return render(request, 'open_account.html', {'form': form})
 
-def open_buyer_account(request):
-    if request.method == 'POST':
-        form = CreateBuyerForm(request.POST)
-        if form.is_valid():
-            try:
-                user = form.save()
-                login(request, user)
-                messages.success(request, 'Cuenta creada exitosamente.')
-                return redirect('home')
-            except Exception as e:
-                messages.error(request, 'Error al crear la cuenta. Por favor revise los datos ingresados.')
-        else:
-            messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
-    else:
-        form = CreateBuyerForm()
-    return render(request, 'open_buyer_account.html', {'form': form})
+# def open_buyer_account(request):
+#     if request.method == 'POST':
+#         form = CreateBuyerForm(request.POST)
+#         if form.is_valid():
+#             try:
+#                 user = form.save()
+#                 login(request, user)
+#                 messages.success(request, 'Cuenta creada exitosamente.')
+#                 return redirect('home')
+#             except Exception as e:
+#                 messages.error(request, 'Error al crear la cuenta. Por favor revise los datos ingresados.')
+#         else:
+#             messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
+#     else:
+#         form = CreateBuyerForm()
+#     return render(request, 'open_buyer_account.html', {'form': form})
 
 
 @login_required
@@ -260,6 +316,25 @@ def record(request):
 def codes(request):
     return render(request, 'codes.html')
 
+def charge(request):
+    if request.method == 'POST':
+        token = request.POST.get('stripeToken')
+
+        try:
+            # Crear el cargo en Stripe
+            charge = stripe.Charge.create(
+                amount=1000,  # $10.00 cobrado
+                currency='usd',
+                description='Descripción del producto o servicio',
+                source=token
+            )
+            return render(request, 'payments/charge_success.html')
+        except stripe.error.StripeError as e:
+            logger.error("Stripe error: %s", e)
+            return render(request, 'payments/charge_fail.html', {'error': str(e)})
+
+    return render(request, 'payments/charge_form.html')
+
 def transfer(request):
     return render(request, 'transfer.html')
 
@@ -280,24 +355,6 @@ def transfer_form(request):
     return render(request, 'transfer_form.html', context)
 
 
-def charge(request):
-    if request.method == 'POST':
-        token = request.POST.get('stripeToken')
-
-        try:
-            # Crear el cargo en Stripe
-            charge = stripe.Charge.create(
-                amount=1000,  # $10.00 cobrado
-                currency='usd',
-                description='Descripción del producto o servicio',
-                source=token
-            )
-            return render(request, 'payments/charge_success.html')
-        except stripe.error.StripeError as e:
-            logger.error("Stripe error: %s", e)
-            return render(request, 'payments/charge_fail.html', {'error': str(e)})
-
-    return render(request, 'payments/charge_form.html')
 
 def paypal_form(request):
     return render(request, 'paypal_form.html')

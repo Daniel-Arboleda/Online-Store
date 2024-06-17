@@ -38,6 +38,7 @@ if not DEBUG:
 LOGGING_DIR = BASE_DIR / 'logs'
 os.makedirs(LOGGING_DIR, exist_ok=True)
 
+LOGIN_URL = 'login_form'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
@@ -71,6 +72,11 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['file', 'error_file', 'info_file'], # Agrega 'info_file' aquí
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'Lucky': {  # Replace 'app_name' with the name of your Django app
+            'handlers': ['file', 'error_file', 'info_file'],
             'level': 'DEBUG',
             'propagate': True,
         },
@@ -160,6 +166,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Configuración del modelo de usuario personalizado
 AUTH_USER_MODEL = 'Lucky.CustomUser'
+
+# Configuración del modelo personalizado de autenticación en el login con el uso del email y no del username
+AUTHENTICATION_BACKENDS: [
+    'django.contrib.auth.backends.ModelBackend',  # Keep the default
+    'Lucky.backends.EmailBackend',  # Add your custom backend
+]
+
+
+
 
 # Configuración de internacionalización
 LANGUAGE_CODE = 'en-us'
