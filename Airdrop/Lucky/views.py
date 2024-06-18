@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from datetime import date
-from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm, CreateManagerForm
-from .models import Product, UserInfo, CustomUser
+from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm, CreateManagerForm, DiscountCodeForm, ValidateCodeForm
+from .models import Product, UserInfo, CustomUser, DiscountCode
 from django.conf import settings
 import stripe
 import logging
@@ -335,7 +335,51 @@ def record(request):
 
 @login_required
 def codes(request):
+    if request.method == 'POST':
+        code = request.POST.get('discount_code')
+        try:
+            discount_code = DiscountCode.objects.get(code=code)
+            if discount_code.is_valid():
+                discount_code.used_count += 1
+                discount_code.save()
+                messages.success(request, f'Código válido! Descuento: {discount_code.discount_percentage}%')
+            else:
+                messages.error(request, 'Código no válido o expirado.')
+        except DiscountCode.DoesNotExist:
+            messages.error(request, 'Código no encontrado.')
+        return redirect('codes')  # Redirige a la misma página después de procesar el formulario
     return render(request, 'codes.html')
+
+@login_required
+def create_discount_code(request):
+    if request.method == 'POST':
+        form = DiscountCodeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Código de descuento creado exitosamente.')
+            return redirect('create_discount_code')  # Asegúrate de que 'create_discount_code' sea el nombre correcto del path
+    else:
+        form = DiscountCodeForm()
+    return render(request, 'create_discount_code.html', {'form': form})
+
+
+# @login_required
+# def validate_discount_code(request):
+#     if request.method == 'POST':
+#         code = request.POST.get('discount_code')
+#         try:
+#             discount_code = DiscountCode.objects.get(code=code)
+#             if discount_code.is_valid():
+#                 discount_code.used_count += 1
+#                 discount_code.save()
+#                 messages.success(request, f'Código válido! Descuento: {discount_code.discount_percentage}%')
+#             else:
+#                 messages.error(request, 'Código no válido o expirado.')
+#         except DiscountCode.DoesNotExist:
+#             messages.error(request, 'Código no encontrado.')
+#         return redirect('codes')  # Redirige a la misma página después de procesar el formulario
+#     return render(request, 'codes.html')
+
 
 @login_required
 def charge(request):
@@ -357,6 +401,7 @@ def charge(request):
 
     return render(request, 'payments/charge_form.html')
 
+
 @login_required
 def transfer(request):
     return render(request, 'transfer.html')
@@ -377,6 +422,19 @@ def transfer_form(request):
         'IP_de_origen': '128.255.255.24'
     }
     return render(request, 'transfer_form.html', context)
+
+
+# @login_required
+# def transfer_form(request):
+#     amount = request.GET.get('amount')
+#     bankName = request.GET.get('bankName')
+#     accountNumber = request.GET.get('accountNumber')
+#     # Agrega la lógica de tu vista aquí
+#     return render(request, 'transfer_form.html', {
+#         'amount': amount,
+#         'bankName': bankName,
+#         'accountNumber': accountNumber,
+#     })
 
 
 @login_required

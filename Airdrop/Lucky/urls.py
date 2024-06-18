@@ -30,7 +30,13 @@ urlpatterns = [
     path('wallet/', views.wallet, name='wallet'),
     path('transactions/', views.transactions, name='transactions'),
     path('record/', views.record, name='record'),
+
+
     path('codes/', views.codes, name='codes'),
+    path('create_discount_code/', views.create_discount_code, name='create_discount_code'),
+    # path('validate_discount_code/', views.validate_discount_code, name='validate_discount_code'),
+
+
     path('transfer/', views.transfer, name='transfer'),
     path('transfer_form/', views.transfer_form, name='transfer_form'),
     path('paypal_form/', views.paypal_form, name='paypal_form'),

@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils.translation import gettext_lazy as _
-from .models import Product, UserInfo, CustomUser,UserInfo
+from .models import Product, UserInfo, CustomUser,UserInfo, DiscountCode
 
 class CreateSuperuserForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -143,3 +143,13 @@ class ProductForm(forms.ModelForm):
             'state': forms.Select(choices=Product.STATE_CHOICES),
             'disponibility': forms.Select(choices=Product.DISPONIBILITY_CHOICES),
         }
+
+
+
+class DiscountCodeForm(forms.ModelForm):
+    class Meta:
+        model = DiscountCode
+        fields = ['code', 'discount_percentage', 'max_uses', 'valid_from', 'valid_to', 'is_active']
+
+class ValidateCodeForm(forms.Form):
+    code = forms.CharField(max_length=50)
