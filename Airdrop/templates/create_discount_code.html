@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'img/Logo-LuckyCart.png' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Crear Código de Descuento</title>
+    <script>
+        const loginURL = "{% url 'login_form' %}";
+        const openURL = "{% url 'open_account' %}";
+    </script>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="main-content">
+            {% include 'header.html' %}
+            <div class="container">
+                <button id="toggleFormBtn">Crear Código de Descuento</button>
+                <div id="discountCodeForm" class="hidden">
+                    <div class="form-container">
+                        <h2>Crear Código de Descuento</h2>
+                        <form action="{% url 'create_discount_code' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="code">Código:</label>
+                                <input type="text" id="code" name="code" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="discount_percentage">Porcentaje de Descuento:</label>
+                                <input type="number" step="0.01" id="discount_percentage" name="discount_percentage" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="max_uses">Máximo de Usos:</label>
+                                <input type="number" id="max_uses" name="max_uses" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="valid_from">Válido Desde:</label>
+                                <input type="datetime-local" id="valid_from" name="valid_from" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="valid_to">Válido Hasta:</label>
+                                <input type="datetime-local" id="valid_to" name="valid_to" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="is_active">Activo:</label>
+                                <input type="checkbox" id="is_active" name="is_active">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Crear Código</button>
+                            </div>
+                        </form>
+                        <a href="{% url 'user' %}">Volver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="floating-button" id="theme-toggle">
+            <i class="fas fa-adjust"></i>
+        </div>
+        {% include 'modal_lugares.html' %}
+        <script src="{% static '../static/js/toggle_form_button.js' %}"></script>
+        <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
+        <script src="{% static '../static/js/politics.js' %}"></script>
+    </div>
+</body>
+</html>
