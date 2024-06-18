@@ -4,77 +4,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxdrop</title>
-    <link rel="shortcut icon" href="{% static 'img/Logo-LuckyCart.png' %}">
-    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Enlace al archivo CSS externo -->
     <link rel="stylesheet" href="{% static '../static/css/style.css' %}">
-    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
+    <title>Información Usuario</title>
     <script>
         const loginURL = "{% url 'login_form' %}";
         const openURL = "{% url 'open_account' %}";
     </script>
 </head>
 <body>
-    <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
-        <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
-            <!-- Header con menú basado en iconos -->
+    <div class="page-wrapper">
+        <div class="main-content">
             {% include 'header.html' %}
-            <!-- Formulario de datos personales para usuarios -->
-            <div class="form-container">
-                <h2>Actualizar Datos Personales</h2>
-                <p>Nombre de Usuario: {{ user.username }}</p>
-                <p>Email: {{ user.email }}</p>
-                <form action="{% url 'user_info' %}" method="POST">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" value="{{ form.email.value }}" disabled>
+            <div class="container">
+                <button id="toggleFormBtn">Actualizar Datos Personales</button>
+                <div id="userForm" class="hidden">
+                    <div class="form-container">
+                        <h2>Actualizar Datos Personales</h2>
+                        <p>Nombre de Usuario: {{ user.username }}</p>
+                        <p>Email: {{ user.email }}</p>
+                        <form action="{% url 'user_info' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" id="email" name="email" value="{{ form.email.value }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="first_name">Nombre:</label>
+                                <input type="text" id="first_name" name="first_name" value="{{ user_info.first_name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Apellidos:</label>
+                                <input type="text" id="last_name" name="last_name" value="{{ user_info.last_name }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="type_document">Tipo de documento*</label>
+                                <select id="type_document" name="type_document" required>
+                                    <option value="CC" {% if user_info.type_document == "CC" %}selected{% endif %}>Cedula de ciudadanía</option>
+                                    <option value="CE" {% if user_info.type_document == "CE" %}selected{% endif %}>Cedula de extranjería</option>
+                                    <option value="NIT" {% if user_info.type_document == "NIT" %}selected{% endif %}>NIT</option>
+                                    <option value="PA" {% if user_info.type_document == "PA" %}selected{% endif %}>Pasaporte</option>
+                                    <option value="TI" {% if user_info.type_document == "TI" %}selected{% endif %}>Tarjeta de identidad</option>
+                                    <option value="RC" {% if user_info.type_document == "RC" %}selected{% endif %}>Registro civil</option>
+                                    <option value="DNI" {% if user_info.type_document == "DNI" %}selected{% endif %}>Documento nacional de identificación</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="document">Documento:</label>
+                                <input type="text" id="document" name="document" value="{{ user_info.document }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Teléfono:</label>
+                                <input type="text" id="phone" name="phone" value="{{ user_info.phone }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="nationality">Nacionalidad:</label>
+                                <input type="text" id="nationality" name="nationality" value="{{ user_info.nationality }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Dirección:</label>
+                                <input type="text" id="address" name="address" value="{{ user_info.address }}">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Actualizar Datos</button>
+                            </div>
+                        </form>
+                        <a href="{% url 'home' %}">Volver</a>
                     </div>
-                    <div class="form-group">
-                        <label for="first_name">Nombre:</label>
-                        <input type="text" id="first_name" name="first_name" value="{{ user_info.first_name }}"  required>
-                    </div>
-                    <div class="form-group">
-                        <label for="last_name">Apellidos:</label>
-                        <input type="text" id="last_name" name="last_name" value="{{ user_info.last_name }}"value="{{ user.last_name }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="type_document">Tipo de documento*</label>
-                        <select id="type_document" name="type_document" required>
-                            <option value="CC" {% if user_info.type_document == "CC" %}selected{% endif %}>Cedula de ciudadanía</option>
-                            <option value="CE" {% if user_info.type_document == "CE" %}selected{% endif %}>Cedula de extranjería</option>
-                            <option value="NIT" {% if user_info.type_document == "NIT" %}selected{% endif %}>NIT</option>
-                            <option value="PA" {% if user_info.type_document == "PA" %}selected{% endif %}>Pasaporte</option>
-                            <option value="TI" {% if user_info.type_document == "TI" %}selected{% endif %}>Tarjeta de identidad</option>
-                            <option value="RC" {% if user_info.type_document == "RC" %}selected{% endif %}>Registro civil</option>
-                            <option value="DNI" {% if user_info.type_document == "DNI" %}selected{% endif %}>Documento nacional de identificación</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="document">Documento:</label>
-                        <input type="text" id="document" name="document" value="{{ user_info.document }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Teléfono:</label>
-                        <input type="text" id="phone" name="phone" value="{{ user_info.phone }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="nationality">Nacionalidad:</label>
-                        <input type="text" id="nationality" name="nationality" value="{{ user_info.nationality }}">
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Dirección:</label>
-                        <input type="text" id="address" name="address" value="{{ user_info.address }}">
-                    </div>
-                    <div class="form-group">
-                        <button type="submit">Actualizar Datos</button>
-                    </div>
-                </form>
-                <a href="{% url 'home' %}">Volver</a>
+                </div>
             </div>
-            <!-- Tabla de datos del usuario -->
             <div class="user-data-table">
                 <h3>Datos del Usuario</h3>
                 <table class="deliveries-table">
@@ -116,18 +115,14 @@
                     </tr>
                 </table>
             </div>
-
         </div>
-        <!-- Botón flotante para cambiar el color del tema-->
         <div class="floating-button" id="theme-toggle">
-            <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
+            <i class="fas fa-adjust"></i>
         </div>
-        <!-- Ventana emergente listado de paises compatibles -->  
-        <!-- Código modularizado para ahorrar espacio, buena práctica de desarrollo y brinda una UX - Experiencia de usuario consistente en toda la página -->
         {% include 'modal_lugares.html' %}
-        <!-- Scripts -->
+        <script src="{% static '../static/js/toggle_form_button.js' %}"></script>
         <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
         <script src="{% static '../static/js/politics.js' %}"></script>
-        {% comment %} <script src="{% static '../static/js/modal-transfer.js' %}"></script> {% endcomment %}
+    </div>
 </body>
 </html>
