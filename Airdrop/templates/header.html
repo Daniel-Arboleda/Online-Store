@@ -60,13 +60,14 @@
                 </li>
             </ul>
             <!-- Moved saldo-container and logout outside the ul -->
-            <div class="saldo-container">
+            <div class="user-actions">
                 <div class="saldo-box">
                     <p>$ {{ saldo }}</p>
                 </div>
                 <button id="openModalButton" data-url="{% url 'transfer' %}"><i class="fas fa-plus"></i></button>
             </div>
             <div class="user-actions">
+                <p class="username">{{ user.email }}</p>
                 <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
             </div>
         </nav>

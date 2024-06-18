@@ -100,8 +100,6 @@ nav ul li i {
     color: #000;
 }
 
-
-
 .title {
     font-size: 24px;
     font-weight: bold;
@@ -179,7 +177,11 @@ nav ul li i {
     color: #000;
 }
 
-
+.username {
+    margin-right: 10px;
+    font-size: 16px;
+    color: #333;
+}
 
 .search-dropdown {
     position: relative;
@@ -231,8 +233,6 @@ nav ul li i {
     margin-top: 200px; /* Ajuste el margen para crear un área de transición */
 }
 
-
-
 .dropdown-content a {
     color: black;
     padding: 12px 16px;
@@ -261,6 +261,30 @@ nav ul li i {
     padding: 8px;
     border-radius: 5px;
     margin-right: 10px;
+}
+
+.button-common-style {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 5px 10px; /* Ajusta el padding */
+    border: 1px solid #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s, border-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-common-style i {
+    margin-right: 5px;
+    font-size: 14px; /* Ajusta el tamaño del icono */
+}
+
+.button-common-style:hover {
+    background-color: #ddd;
+    color: #000;
+    border-color: #ddd;
 }
 
 #openModalButton {
@@ -392,7 +416,7 @@ nav, nav ul, nav ul li, nav ul li a, .dropdown, .dropdown-content, .saldo-contai
         width: 100%;
         text-align: center;
     }
-
+    
     .saldo-container, .logout {
         display: flex;
         flex-direction: row;

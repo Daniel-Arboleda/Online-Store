@@ -25,6 +25,11 @@ def drop(request):
 def header(request):
     return render(request, 'header.html')
 
+@login_required
+def some_view(request):
+    saldo = get_user_saldo(request.user)  # Asegúrate de tener esta función para obtener el saldo del usuario
+    return render(request, 'some_template.html', {'saldo': saldo})
+
 
 def login_form(request):
     if request.method == 'POST':
