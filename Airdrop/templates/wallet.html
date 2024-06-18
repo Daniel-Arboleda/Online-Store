@@ -1,6 +1,4 @@
-
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,17 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
     <!-- Enlace al archivo CSS externo -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>LuckyCart</title>
-    
+    <title>Wallet</title>
     <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
     <script>
         const loginURL = "{% url 'login_form' %}";
         const openURL = "{% url 'open_account' %}";
     </script>
-
 </head>
-
-
 
 <body>
     <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
@@ -57,14 +51,10 @@
             <!-- Footer -->
             {% include 'footer.html' %}
         </div>
-
         <!-- Botón flotante -->
         <div class="floating-button" id="theme-toggle">
             <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
         </div>
-
-       
-
         <!-- Ventana emergente listado de paises compatibles -->  
         <!-- Código modularizado para ahorrar espacio, buena práctica de desarrollo y brinda una UX - Experiencia de usuario consistente en toda la página -->
         {% include 'modal_lugares.html' %}
@@ -76,7 +66,6 @@
     </div>
         <script src="{% static '../static/js/local-query.js' %}"></script>
     </div>
-
 </body>
 </html>
 

@@ -20,11 +20,7 @@
 
 </head>
 
-
-
 <body>
-
-
     <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
         <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
            <!-- Header con menú basado en iconos -->
@@ -96,44 +92,10 @@
                 </div>
             </div>
 
-            {% comment %} <!-- División para los productos principales franja vertical derecha-->
-            <div class="sidebar-derecha">
-                <div class="producto">
-                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
-                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
-                    <p class="nombre">Nombre del Producto 1</p>
-                    <p class="precio">$10.00</p>
-                </div>
-                <div class="producto">
-                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
-                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
-                    <p class="nombre">Nombre del Producto 2</p>
-                    <p class="precio">$10.00</p>
-                </div>
-                <div class="producto">
-                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
-                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
-                    <p class="nombre">Nombre del Producto 3</p>
-                    <p class="precio">$10.00</p>
-                </div>
-                <div class="producto">
-                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
-                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
-                    <p class="nombre">Nombre del Producto 4</p>
-                    <p class="precio">$10.00</p>
-                </div>
-                <div class="producto">
-                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
-                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
-                    <p class="nombre">Nombre del Producto 5</p>
-                    <p class="precio">$10.00</p>
-                </div>
-            </div> {% endcomment %}
             <!-- Botón flotante para cambiar el color del tema-->
             <div class="floating-button" id="theme-toggle">
                 <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
             </div>
-
 
             <!-- SCRIPT para que JAVASCRIPTS reconosca la url de django así Django procesara la URL y la asigne a una eriable de JS en el escrio externo-->
 
@@ -147,6 +109,5 @@
             <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
             <script src="{% static '../static/js/transfer.js' %}"></script>
             <script src="{% static '../static/js/modal-transfer.js' %}"></script>
-
 </body>
 </html>

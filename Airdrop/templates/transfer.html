@@ -11,8 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> 
     <!-- Enlace al archivo CSS externo -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Luxdrop</title>
-    
+    <title>Transfer</title>
     <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
     <script>
         const loginURL = "{% url 'login_form' %}";
@@ -21,14 +20,9 @@
 
 </head>
 
-
-
 <body>
-
-
     <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
         <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
-           <!-- Header con menú basado en iconos -->
            <!-- Header con menú basado en iconos -->
            {% include 'header.html' %}
 
@@ -46,9 +40,9 @@
                             <i class="fab fa-paypal"></i> PayPal
                         </button>
 
-                        {% comment %} <button type="button" class="accordion-toggle" data-url="{% url 'bank_form' %}">
+                        <button type="button" class="accordion-toggle" data-url="{% url 'bank_form' %}">
                             <i class="fas fa-university" ></i> Transferencia Bancaria
-                        </button> {% endcomment %}
+                        </button>
 
                         <button type="button" class="accordion-toggle"  data-url="{% url 'local_form' %}">
                             <i class="fas fa-store" ></i> Punto de venta
@@ -56,7 +50,7 @@
                    
                 </form>
             </div>
-            
+          
             <!-- Botón flotante para cambiar el color del tema-->
             <div class="floating-button" id="theme-toggle">
                 <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
@@ -64,11 +58,9 @@
             <!-- Ventana emergente listado de paises compatibles -->  
             <!-- Código modularizado para ahorrar espacio, buena práctica de desarrollo y brinda una UX - Experiencia de usuario consistente en toda la página -->
             {% include 'modal_lugares.html' %}
-
             <!-- Scripts -->
             <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
             <script src="{% static '../static/js/transfer.js' %}"></script>
             <script src="{% static '../static/js/modal-transfer.js' %}"></script>
-
 </body>
 </html>

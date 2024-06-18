@@ -1,7 +1,3 @@
-
-// Este script de JS maneja la ventana emergente para aceptar la redirección a la pasarela de pago y continuar con la transferencia de fondos de su banco segun sea su método de pago seleccionado y cargar el saldo en su cuenta de la aplicación
-
-
 document.addEventListener('DOMContentLoaded', function() {
     var modal = document.getElementById("myModal");
     var btn = document.getElementById("openModal");
@@ -22,8 +18,19 @@ document.addEventListener('DOMContentLoaded', function() {
     confirmYes.onclick = function() {
         console.log("Transacción confirmada");
         modal.style.display = "none";
-        // Use Django to define the URL directly in the HTML attribute
-        window.location.href = confirmYes.getAttribute('data-url'); // Assumes data-url is correctly set in the HTML
+
+        // Obtener el valor del formulario
+        const amount = document.getElementById("amount").value;
+        const bankName = document.querySelector("input[name='bankName']").value;
+        const accountNumber = document.querySelector("input[name='accountNumber']").value;
+
+        // Validar los valores obtenidos antes de redirigir
+        if (amount && bankName && accountNumber) {
+            const url = `/transfer_form/?amount=${amount}&bankName=${encodeURIComponent(bankName)}&accountNumber=${encodeURIComponent(accountNumber)}`;
+            window.location.href = url;
+        } else {
+            alert("Por favor, complete todos los campos requeridos.");
+        }
     };
 
     confirmNo.onclick = function() {
@@ -38,23 +45,24 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 });
 
-
-// Modal para el boton cancelar
-
+// Modal para el botón cancelar
 document.addEventListener('DOMContentLoaded', function() {
     var cancelModal = document.getElementById("cancelModal");
     var cancelButton = document.querySelector(".cancel-btn");
     var closeCancelModal = document.querySelector(".cancel-close");
     var cancelYes = document.getElementById("cancelYes");
     var cancelNo = document.getElementById("cancelNo");
+
     // Abre la ventana modal de cancelación
     cancelButton.onclick = function() {
         cancelModal.style.display = "block";
     };
+
     // Cierra la ventana modal con la cruz
     closeCancelModal.onclick = function() {
         cancelModal.style.display = "none";
     };
+
     // Botón 'Sí' en la ventana modal de cancelación
     cancelYes.onclick = function() {
         console.log("Operación cancelada");
@@ -62,10 +70,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Aquí puedes agregar más código para realizar acciones después de la cancelación
         window.location.href = cancelYes.getAttribute('data-url'); // Assumes data-url is correctly set in the HTML
     };
+
     // Botón 'No' simplemente cierra la ventana modal
     cancelNo.onclick = function() {
         cancelModal.style.display = "none";
     };
+
     // Cierra el modal al hacer clic fuera del contenido
     window.onclick = function(event) {
         if (event.target == cancelModal) {
@@ -74,9 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 });
 
-
 // SCRIP para la confirmación de la ventana modal al dar click en el botón Finalizar Transacción en la página transfer_form.html
-
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('confirmationModal');
     const closeModal = modal.querySelector('.close-transfer');
@@ -110,12 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 });
 
-
-
-
-
 // Script para que redirija a la página transfer.html cuando el usuario necesite cargar saldo a la página hacciendo click en el botón del menu superior principal marcado con un icono de +
-
 document.addEventListener('DOMContentLoaded', function() {
     var openModalButton = document.getElementById('openModalButton');
     openModalButton.addEventListener('click', function() {
@@ -124,10 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
-
 // JavaScript para manejar la presentación del formulario y la actualización del saldo
-
 document.addEventListener('DOMContentLoaded', function() {
     const confirmBtn = document.getElementById('confirmTransaction');
     confirmBtn.addEventListener('click', function() {
