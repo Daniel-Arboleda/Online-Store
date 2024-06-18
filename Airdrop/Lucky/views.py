@@ -121,23 +121,6 @@ def open_account(request):
         form = CreateAccountForm()
     return render(request, 'open_account.html', {'form': form})
 
-# def open_buyer_account(request):
-#     if request.method == 'POST':
-#         form = CreateBuyerForm(request.POST)
-#         if form.is_valid():
-#             try:
-#                 user = form.save()
-#                 login(request, user)
-#                 messages.success(request, 'Cuenta creada exitosamente.')
-#                 return redirect('home')
-#             except Exception as e:
-#                 messages.error(request, 'Error al crear la cuenta. Por favor revise los datos ingresados.')
-#         else:
-#             messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
-#     else:
-#         form = CreateBuyerForm()
-#     return render(request, 'open_buyer_account.html', {'form': form})
-
 
 @login_required
 @staff_member_required
@@ -205,19 +188,46 @@ def home_orm(request):
 def user(request):
     return render(request, 'user.html', {'user': request.user})
 
+
+
+
+
+
 @login_required
 def user_info(request):
+    user_instance = get_object_or_404(CustomUser, pk=request.user.pk)
+    user_info_instance, created = UserInfo.objects.get_or_create(user=user_instance)
+
     if request.method == 'POST':
-        form = UserInfoForm(request.POST, instance=request.user)
+        form = UserInfoForm(request.POST, instance=user_info_instance)
         if form.is_valid():
-            form.save()
+            user_info = form.save(commit=False)
+            user_info.user = user_instance  # Aseguramos que user_info esté asociado al usuario correcto
+            user_info.save()
+
+            # También actualizamos el objeto CustomUser
+            user_instance.first_name = form.cleaned_data['first_name']
+            user_instance.last_name = form.cleaned_data['last_name']
+            user_instance.save()
+
             messages.success(request, 'Datos personales actualizados exitosamente.')
             return redirect('user_info')
         else:
             messages.error(request, 'Por favor corrija los errores a continuación.')
     else:
-        form = UserInfoForm(instance=request.user)
-    return render(request, 'user_info.html', {'form': form, 'user': request.user})
+        form = UserInfoForm(instance=user_info_instance)
+
+    return render(request, 'user_info.html', {
+        'form': form,
+        'user': user_instance,
+        'user_info': user_info_instance
+    })
+
+
+
+
+
+
 
 @login_required
 def cart(request):

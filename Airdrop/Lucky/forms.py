@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils.translation import gettext_lazy as _
-from .models import Product, UserInfo, CustomUser
+from .models import Product, UserInfo, CustomUser,UserInfo
 
 class CreateSuperuserForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -93,10 +93,46 @@ class CreateManagerForm(UserCreationForm):
             user.save()
         return user
 
+
+
+
+
+
 class UserInfoForm(forms.ModelForm):
     class Meta:
         model = UserInfo
-        fields = ['first_name', 'last_name', 'type_document', 'document', 'phone', 'address']
+        fields = ['first_name', 'last_name', 'type_document', 'document', 'nationality', 'phone', 'address']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'type_document': forms.Select(attrs={'class': 'form-control'}),
+            'document': forms.TextInput(attrs={'class': 'form-control'}),
+            'nationality': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Obtenemos el usuario asociado al formulario
+        user = self.instance.user
+        # Establecemos el valor del campo 'email' con el email del usuario
+        self.fields['email'] = forms.EmailField(label='Email', initial=user.email, disabled=True)
+
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if UserInfo.objects.filter(phone=phone).exclude(user=self.instance.user).exists():
+            raise forms.ValidationError('El número de teléfono ya está en uso por otro usuario.')
+        return phone
+
+
+
+
+
+
+
+
 
 class ProductForm(forms.ModelForm):
     class Meta:

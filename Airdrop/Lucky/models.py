@@ -43,6 +43,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=50, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    user_number = models.IntegerField(blank=True)
+    is_verified = models.BooleanField(default=False, blank=True)
     groups = models.ManyToManyField(Group, related_name='customuser_set', blank=True)
     user_permissions = models.ManyToManyField(Permission, related_name='customuser_set', blank=True)
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='customer')
@@ -60,6 +62,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+
+
+
+
+
 # OneToOneField establece una relación de uno a uno entre dos modelos. Esto significa que cada instancia de UserInfo está vinculada a una única instancia de User y viceversa. Es similar a ForeignKey, pero asegura que no haya múltiples registros en UserInfo asociados con un solo User.
 class UserInfo(models.Model):
     DOCUMENT_TYPE_CHOICES = [
@@ -72,13 +79,19 @@ class UserInfo(models.Model):
         ('DNI', 'Documento Nacional de Identificación'),
     ]
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='userinfo')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True, related_name='userinfo')
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     type_document = models.CharField(max_length=3, choices=DOCUMENT_TYPE_CHOICES, blank=True)  # Ajustar max_length
     document = models.CharField(max_length=20, blank=True)
-    phone = models.CharField(max_length=20, blank=True)
+    nationality = models.CharField(max_length=150, blank=True)
+    phone = models.CharField(max_length=20, blank=True, null=True, unique=True)
     address = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        db_table = 'Users'  # Nombre de la tabla en la base de datos
+        verbose_name = 'User Info'
+        verbose_name_plural = 'User Infos'
 
     def __str__(self):
         return f"{self.user.email} - {self.type_document}: {self.document}"
