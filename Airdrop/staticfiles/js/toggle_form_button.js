@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const disponibilityInput = document.getElementById('disponibility');
 
     document.getElementById('toggleFormBtn').addEventListener('click', function() {
-        ['userForm', 'productForm'].forEach(function(formId) {
+        ['userForm', 'productForm', 'discountCodeForm'].forEach(function(formId) { // Aquí se añadió 'discountCodeForm' y l os formularios en el arreglo de ID Formularios para la vinculación del funcionamiento del botón en el formulario
             var form = document.getElementById(formId);
             if (form) {
                 form.classList.toggle('hidden');
