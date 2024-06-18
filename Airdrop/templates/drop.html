@@ -1,48 +1,32 @@
-
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxdrop</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
-
     <!-- Enlace a la librería de iconos Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">  
     <!-- Enlace al archivo CSS externo -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
+    <title>Drop</title> 
     <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
     <script>
         const loginURL = "{% url 'login_form' %}";
         const openURL = "{% url 'open_account' %}";
     </script>
-
 </head>
 
-
-
 <body>
-
-
     <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
         <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
            <!-- Header con menú basado en iconos -->
            {% include 'header.html' %}
-
             <!-- Sección de la ruleta de la suerte -->
             <section class="ruleta">
-
                 <!-- HTML: Definición de la línea vertical y el lugar donde mostrar su posición -->
                 <div id="linea-vertical" class="linea-vertical" onclick="newLeft" newLeft="mousemove" data-position="100px" style="position: absolute; left: 100px; top: 0; bottom: 0; width: 10px; background-color: red;"></div>
-
                 <p>Posición de la línea vertical: <span id="linePosition">0</span> px</p>
-
-
                 <div class="tittle-ruleta">
                 <h2>Ruleta de la Suerte</h2>
                 </div>
@@ -87,8 +71,7 @@
                     </div>
                     <div class="opcion-ruleta">
                         <img class="prod-rif-opt-img" src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1"><p class="nombre-op-rul-game">Nombre del Producto 13</p>Opción 13
-                    </div>
-                    
+                    </div>         
                     <!-- Añadir más opcion-ruletaes según sea necesario -->
                 </div>
             </section>
@@ -104,8 +87,6 @@
             </div>
             <div id="livePositionLabel" style="margin-top: 10px; font-size: 18px; color: blue;">Posición actual: <span id="livePositiontName">Ninguno</span>
             </div>
-
-            
 
             <!-- Sección de productos rifados -->
             <section class="productos-rifados">             
@@ -183,10 +164,7 @@
                     <p class="nombre-prod-rifa">Nombre del Producto 1</p>
                     <p class="precio-prod-rifa">$10.00</p>
                 </div>
-                
-                
-               
-               
+                         
                 <!-- Añadir más productos según sea necesario -->
 
                 <!-- Ventana Modal para anunciar el premio ganador -->
@@ -195,22 +173,15 @@
                         <span class="close-mod-win">&times;</span>
                         <h1>¡Felicidades tu premio es <span id="prizeName"></span>!</h1>
                     </div>
-                </div>
-                
-
+                </div>          
             </section>
         </div>
-
-
-
-
-    
+  
     <!-- Botón flotante -->
     <div class="floating-button" id="theme_toggle">
         <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
     </div>
-
-
+    
     <!-- Ventana emergente listado de paises compatibles -->  
     <!-- Código modularizado para ahorrar espacio, buena práctica de desarrollo y brinda una UX - Experiencia de usuario consistente en toda la página -->
     {% include 'modal_lugares.html' %}
