@@ -9,7 +9,7 @@
     <!-- Enlace a la librería de iconos Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Enlace al archivo CSS externo -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static '../static/css/style.css' %}">
     <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
     <script>
         const loginURL = "{% url 'login_form' %}";
@@ -26,43 +26,47 @@
                 <h2>Actualizar Datos Personales</h2>
                 <p>Nombre de Usuario: {{ user.username }}</p>
                 <p>Email: {{ user.email }}</p>
-                <form action="/submit-your-update-url" method="POST">
+                <form action="{% url 'user_info' %}" method="POST">
                     {% csrf_token %}
                     <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" value="{{ form.email.value }}" disabled>
+                    </div>
+                    <div class="form-group">
                         <label for="first_name">Nombre:</label>
-                        <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+                        <input type="text" id="first_name" name="first_name" value="{{ user_info.first_name }}"  required>
                     </div>
                     <div class="form-group">
                         <label for="last_name">Apellidos:</label>
-                        <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+                        <input type="text" id="last_name" name="last_name" value="{{ user_info.last_name }}"value="{{ user.last_name }}" required>
                     </div>
                     <div class="form-group">
                         <label for="type_document">Tipo de documento*</label>
                         <select id="type_document" name="type_document" required>
-                            <option value="CC">Cedula de ciudadanía</option>
-                            <option value="CE">Cedula de extranjería</option>
-                            <option value="NIT">NIT</option>
-                            <option value="PA" readonly>Pasaporte</option>
-                            <option value="TI" readonly>Tarjeta de identidad</option>
-                            <option value="RC" readonly>Registro civil</option>
-                            <option value="DNI" readonly>Documento nacional de identificación</option>
+                            <option value="CC" {% if user_info.type_document == "CC" %}selected{% endif %}>Cedula de ciudadanía</option>
+                            <option value="CE" {% if user_info.type_document == "CE" %}selected{% endif %}>Cedula de extranjería</option>
+                            <option value="NIT" {% if user_info.type_document == "NIT" %}selected{% endif %}>NIT</option>
+                            <option value="PA" {% if user_info.type_document == "PA" %}selected{% endif %}>Pasaporte</option>
+                            <option value="TI" {% if user_info.type_document == "TI" %}selected{% endif %}>Tarjeta de identidad</option>
+                            <option value="RC" {% if user_info.type_document == "RC" %}selected{% endif %}>Registro civil</option>
+                            <option value="DNI" {% if user_info.type_document == "DNI" %}selected{% endif %}>Documento nacional de identificación</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="document">Documento:</label>
-                        <input type="text" id="document" name="document" value="{{ user.document }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nationality">Nacionalidad:</label>
-                        <input type="text" id="nationality" name="nationality" value="{{ user.nationality }}">
+                        <input type="text" id="document" name="document" value="{{ user_info.document }}" required>
                     </div>
                     <div class="form-group">
                         <label for="phone">Teléfono:</label>
-                        <input type="text" id="phone" name="phone" value="{{ user.phone }}">
+                        <input type="text" id="phone" name="phone" value="{{ user_info.phone }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="nationality">Nacionalidad:</label>
+                        <input type="text" id="nationality" name="nationality" value="{{ user_info.nationality }}">
                     </div>
                     <div class="form-group">
                         <label for="address">Dirección:</label>
-                        <input type="text" id="address" name="address" value="{{ user.address }}">
+                        <input type="text" id="address" name="address" value="{{ user_info.address }}">
                     </div>
                     <div class="form-group">
                         <button type="submit">Actualizar Datos</button>
@@ -70,6 +74,49 @@
                 </form>
                 <a href="{% url 'home' %}">Volver</a>
             </div>
+            <!-- Tabla de datos del usuario -->
+            <div class="user-data-table">
+                <h3>Datos del Usuario</h3>
+                <table class="deliveries-table">
+                    <tr>
+                        <th>Campo</th>
+                        <th>Valor</th>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{ user_info.user.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Nombre</td>
+                        <td>{{ user_info.first_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Apellidos</td>
+                        <td>{{ user_info.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Tipo de documento</td>
+                        <td>{{ user_info.get_type_document_display }}</td>
+                    </tr>
+                    <tr>
+                        <td>Documento</td>
+                        <td>{{ user_info.document }}</td>
+                    </tr>
+                    <tr>
+                        <td>Teléfono</td>
+                        <td>{{ user_info.phone }}</td>
+                    </tr>
+                    <tr>
+                        <td>Nacionalidad</td>
+                        <td>{{ user_info.nationality }}</td>
+                    </tr>
+                    <tr>
+                        <td>Dirección</td>
+                        <td>{{ user_info.address }}</td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
         <!-- Botón flotante para cambiar el color del tema-->
         <div class="floating-button" id="theme-toggle">
@@ -81,6 +128,6 @@
         <!-- Scripts -->
         <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
         <script src="{% static '../static/js/politics.js' %}"></script>
-        <script src="{% static '../static/js/modal-transfer.js' %}"></script>
+        {% comment %} <script src="{% static '../static/js/modal-transfer.js' %}"></script> {% endcomment %}
 </body>
 </html>
