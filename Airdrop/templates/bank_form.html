@@ -4,105 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
-    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="shortcut icon" href="{% static 'img/Logo-LuckyCart.png' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Enlace al archivo CSS externo -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">   
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Bank Form</title>
-    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
     <script>
         const loginURL = "{% url 'login_form' %}";
         const openURL = "{% url 'open_account' %}";
     </script>
-
 </head>
-
 <body>
-
-    <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
-        <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
-            <!-- Header con menú basado en iconos -->
+    <div class="page-wrapper">
+        <div class="main-content">
             {% include 'header.html' %}
-            <!-- Sección para el formulario de transferencias o recargas de saldo a su cuento, monedero o billetera de los prodructos del carrito -->
             <div class="payment-container">
-                <h2 class="payment-tittle">Recargar cuenta</h2>
-                <form action="procesar_pago.php" method="POST" id="paymentForm">
-                    <div class="accordion">
-                        <div class="form-group">
-                            <label for="amount">Monto en pesos colombianos COP$</label>
-                            <input type="number" id="amount" name="amount" required>
-                        </div>
-                        <div class="accordion-item">
-                            <button type="button" class="accordion-toggle" onclick="toggleAccordion('bankTransferDetails')">
-                                <i class="fas fa-university"></i> Transferencia Bancaria
-                            </button>
-                            <div class="accordion-content" id="bankTransferDetails">
-                                <!-- Campos específicos de transferencia bancaria -->
-                                <input type="text" placeholder="Nombre del banco" name="bankName">
-                                <input type="text" placeholder="Número de cuenta" name="accountNumber">
-                            </div>
-                        </div>
+                <h2 class="payment-title">Recargar cuenta</h2>
+                <form action="{% url 'transfer_form' %}" method="GET" id="paymentForm">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="amount">Monto en pesos colombianos COP$</label>
+                        <input type="number" id="amount" name="amount" required>
                     </div>
+                    <div class="form-group">
+                        <label for="bank">Banco</label>
+                        <select id="bank" name="bank" required>
+                            <option value="" disabled selected>Seleccione un banco</option>
+                            <option value="bancolombia">Bancolombia</option>
+                            <option value="davivienda">Davivienda</option>
+                            <option value="bbva">BBVA</option>
+                            <option value="nequi">Nequi</option>
+                            <option value="banco_de_bogota">Banco de Bogotá</option>
+                            <option value="banco_de_occidente">Banco de Occidente</option>
+                            <option value="banco_popular">Banco Popular</option>
+                            <option value="banco_av_villas">Banco AV Villas</option>
+                            <option value="banco_agrario">Banco Agrario</option>
+                            <option value="gnb_sudameris">GNB Sudameris</option>
+                            <option value="itau">Itaú</option>
+                            <option value="scotiabank">Scotiabank</option>
+                            <option value="citibank">Citibank</option>
+                            <option value="daviplata">DaviPlata</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountNumber">Número de cuenta</label>
+                        <input type="text" id="accountNumber" name="accountNumber" required>
+                    </div>
+                    <button type="submit" id="openModal" class="checkout-btn">Proceder al Pago</button>
+                    <button type="button" class="cancel-btn" onclick="cancelTransaction()">Cancelar</button>
                 </form>
-                <!-- Botón para proceder con el pago a través de Paypal-->
-                <button id="openModal" class="checkout-btn">Proceder al Pago</button>
-                <!-- Botón Cancelar para limpiar el formulario o abortar la operación -->
-                <button type="button" class="cancel-btn" onclick="cancelTransaction()">Cancelar</button>
-                <!-- Ventana Modal para la confirmación de redirección a la pasarela de pago -->
-                <div id="myModal" class="modal-transfer">
-                    <!-- Contenido del modal -->
-                    <div class="modal-content-transfer">
-                        <span class="close-transfer">&times;</span>
-                        <i class="fa fa-exclamation-circle-transfer" aria-hidden="true"></i>
-                        <p>¿Está seguro de que desea realizar esta transacción?</p>
-                        <button id="confirmYes" class="modal-transfer-btn" data-url="{% url 'transfer_form' %}">Sí</button>
-                        <button id="confirmNo" class="modal-transfer-btn">No</button>
-                    </div>
-                </div>
             </div>
-            <!-- División para los productos principales franja vertical derecha-->
             <div class="sidebar-derecha">
                 <div class="producto">
-                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
+                    <div class="probabilidad">70%</div>
                     <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
                     <p class="nombre">Nombre del Producto 1</p>
                     <p class="precio">$10.00</p>
                 </div>
-                <div class="producto">
-                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
-                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
-                    <p class="nombre">Nombre del Producto 2</p>
-                    <p class="precio">$10.00</p>
-                </div>
-                <div class="producto">
-                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
-                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
-                    <p class="nombre">Nombre del Producto 3</p>
-                    <p class="precio">$10.00</p>
-                </div>
-                <div class="producto">
-                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
-                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
-                    <p class="nombre">Nombre del Producto 4</p>
-                    <p class="precio">$10.00</p>
-                </div>
-                <div class="producto">
-                    <div class="probabilidad">70%</div> <!-- Aquí va el porcentaje de probabilidad -->
-                    <img src="{% static 'img/nike-air-force-one-white.jpg' %}" alt="Producto 1">
-                    <p class="nombre">Nombre del Producto 5</p>
-                    <p class="precio">$10.00</p>
-                </div>
+            </div>
+            <div class="floating-button" id="theme-toggle">
+                <i class="fas fa-adjust"></i>
+            </div>
         </div>
-        <!-- Botón flotante para cambiar el color del tema-->
-        <div class="floating-button" id="theme-toggle">
-            <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
-        </div>
-
-        <!-- Scripts -->
-        <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
-        <script src="{% static '../static/js/transfer.js' %}"></script>
-        <script src="{% static '../static/js/modal-transfer.js' %}"></script>
-
+    </div>
+    <script src="{% static 'js/toggleVisibility.js' %}"></script>
+    <script src="{% static 'js/transfer.js' %}"></script>
+    <script src="{% static 'js/modal-transfer.js' %}"></script>
 </body>
 </html>

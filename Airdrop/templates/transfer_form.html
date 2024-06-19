@@ -1,34 +1,27 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
-    <!-- Enlace a la librería de iconos Font Awesome -->
+    <link rel="shortcut icon" href="{% static 'img/Logo-LuckyCart.png' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Enlace al archivo CSS externo -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Transfer Form</title>
-    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
     <script>
         const loginURL = "{% url 'login_form' %}";
         const openURL = "{% url 'open_account' %}";
     </script>
 </head>
-
 <body>
-    <div class="page-wrapper"> <!-- Envuelve sidebar y contenido principal -->
-        <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
-            <!-- Header con menú basado en iconos -->
+    <div class="page-wrapper">
+        <div class="main-content">
             {% include 'header.html' %}
-            <!-- Formulario de registro para las transacciones monetarias para recargas por parte del usuario -->
             <div class="transfer-form-container">
                 <h1>Formulario de Transacción</h1>
                 <p>Por favor, ingrese los detalles de su transacción a continuación:</p>
                 <form action="procesar_transaccion.php" method="POST">
-                    {% comment %} Para hacer que un campo de entrada (input) en un formulario HTML esté pre-rellenado y además sea de solo lectura (es decir, que el usuario no pueda modificar su contenido), puedes usar los atributos value y readonly en el elemento input. {% endcomment %}
+                    {% csrf_token %}
                     <label for="empresa">Empresa:</label>
                     <input type="text" id="empresa" name="empresa" required value="{{ empresa_nombre }}" readonly>
                     <label for="nit">NIT:</label>
@@ -38,7 +31,7 @@
                     <label for="estado">Estado:</label>
                     <select id="estado" name="estado">
                         <option value="pendiente">Pendiente</option>
-                        <option value="{{ estado }}" readonly>Completado</option>
+                        <option value="completado">Completado</option>
                         <option value="fallido">Fallido</option>
                     </select>
                     <label for="refPedido">Referencia de pedido:</label>
@@ -47,15 +40,14 @@
                     <input type="text" id="refTransaccion" name="refTransaccion" required value="{{ referencia_de_transacion }}" readonly>
                     <label for="numTransaccion">Número de transacción / CUS:</label>
                     <input type="text" id="numTransaccion" name="numTransaccion" required value="{{ numero_de_transaccion_CUS }}" readonly>
-                    <label for="banco">Banco:</label>
-                    <input type="text" id="banco" name="banco" required value="{{ banco }}" readonly>
-                    <label for="valor">Valor:</label>
-                    <input type="number" id="valor" name="valor" required value="{{ valor }}" readonly>
+                    <label for="bank">Banco:</label>
+                    <input type="text" id="bank" name="bank" required value="{{ banco }}" readonly>
+                    <label for="amount">Valor:</label>
+                    <input type="number" id="anmount" name="amount" required value="{{ valor }}" readonly>
                     <label for="ipOrigen">IP Origen:</label>
-                    <input type="text" id="ipOrigen" name="ipOrigen" required value="{{ IP_de_origen }}" readonly>  
+                    <input type="text" id="ipOrigen" name="ipOrigen" required value="{{ IP_de_origen }}" readonly>
                     <button type="submit" class="transfer-form-btn">Finalizar Transacción</button>
                 </form>
-                <!-- Ventana Modal para confirmar la finalización de la transacción -->
                 <div id="confirmationModal" class="modal-transfer" style="display:none;">
                     <div class="modal-content-transfer">
                         <span class="close-transfer">&times;</span>
@@ -67,19 +59,14 @@
                     </div>
                 </div>
             </div>
-        </div>     
-        <!-- Botón flotante para cambiar el color del tema-->
-        <div class="floating-button" id="theme-toggle">
-            <i class="fas fa-adjust"></i> <!-- Icono de cambio de tema -->
         </div>
-        <!-- Ventana emergente listado de paises compatibles -->  
-        <!-- Código modularizado para ahorrar espacio, buena práctica de desarrollo y brinda una UX - Experiencia de usuario consistente en toda la página -->
+        <div class="floating-button" id="theme-toggle">
+            <i class="fas fa-adjust"></i>
+        </div>
         {% include 'modal_lugares.html' %}
-        <!-- Scripts -->
-        <script src="{% static '../static/js/toggleVisibility.js' %}"></script>
-        <script src="{% static '../static/js/politics.js' %}"></script>
-        <script src="{% static '../static/js/modal-transfer.js' %}"></script>
+        <script src="{% static 'js/toggleVisibility.js' %}"></script>
+        <script src="{% static 'js/politics.js' %}"></script>
+        <script src="{% static 'js/modal-transfer.js' %}"></script>
     </div>
 </body>
 </html>
-    

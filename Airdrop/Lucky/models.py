@@ -70,12 +70,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 
-
-
-
-
-
-
 class Wallet(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='wallet')
     user_email = models.EmailField(unique=True)

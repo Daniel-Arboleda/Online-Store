@@ -5,6 +5,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
+from django.utils.dateformat import DateFormat
 from datetime import date
 from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm, CreateManagerForm, DiscountCodeForm, ValidateCodeForm, TransferFundsForm  
 from .models import Product, UserInfo, CustomUser, DiscountCode, Wallet, Transfer
@@ -370,25 +371,29 @@ def wallet(request):
         # Obtener el objeto Wallet del usuario actual basado en su email
         user_email = request.user.email
         user_wallet = Wallet.objects.get(user_email=user_email)
+        wallet = Wallet.objects.get(user=user)
         # Obtener el saldo actual
         saldo_actual = user_wallet.amount
     except Wallet.DoesNotExist:
         saldo_actual = 0  # Manejar caso donde no existe Wallet para el usuario
+        wallet = None
 
     context = {
+        'user': user,
+        'wallet': wallet,
         'saldo_actual': saldo_actual,
     }
     return render(request, 'wallet.html', context)
 
 
-def wallet_view(request):
-    user = request.user
-    wallet = user.wallet  # Accede a la billetera asociada al usuario actual
-    context = {
-        'user': user,
-        'wallet': wallet,
-    }
-    return render(request, 'wallet.html', context)
+# def wallet_view(request):
+#     user = request.user
+#     wallet = user.wallet  # Accede a la billetera asociada al usuario actual
+#     context = {
+#         'user': user,
+#         'wallet': wallet,
+#     }
+#     return render(request, 'wallet.html', context)
 
 
 
@@ -469,26 +474,55 @@ def charge(request):
     return render(request, 'payments/charge_form.html')
 
 
+
+@login_required
+def paypal_form(request):
+    return render(request, 'paypal_form.html')
+
+@login_required
+def credit_form(request):
+    return render(request, 'credit_form.html')
+
+
+
+
+
+@login_required
+def bank_form(request):
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        bank = request.POST.get('bank')
+        return HttpResponseRedirect(reverse('transfer_form') + f'?amount={amount}&bank={bank}')
+    return render(request, 'bank_form.html')
+
+
+@login_required
+def local_form(request):
+    return render(request, 'local_form.html')
+
 @login_required
 def transfer(request):
     return render(request, 'transfer.html')
 
 @login_required
 def transfer_form(request):
+    bank = request.GET.get('bank', 'Nequi')
+    amount = request.GET.get('amount', '50.000')
     context = {
         'empresa_nombre': 'LuckyCart S.A.',
         'nit': '900123456-7',
-        'fecha_actual': date.today().isoformat(),  # Formato AAAA-MM-DD
+        'fecha_actual': DateFormat(date.today()).format('Y-m-d'),
         'estado': 'Completado',
         'referencia_de_pedido': '199dan-01arbo-06tan-2024med-05col',
         'referencia_de_transacion': '19920106',
         'numero_de_transaccion_CUS': '6060928',
-        'banco': 'nequi',
-        'valor': '50.000',
-        'moneda': 'cop',
+        'banco': bank,
+        'valor': amount,
         'IP_de_origen': '128.255.255.24'
     }
     return render(request, 'transfer_form.html', context)
+
+
 
 
 # @login_required
@@ -529,19 +563,3 @@ def transfer_funds(request):
 
 
 
-
-@login_required
-def paypal_form(request):
-    return render(request, 'paypal_form.html')
-
-@login_required
-def credit_form(request):
-    return render(request, 'credit_form.html')
-
-@login_required
-def bank_form(request):
-    return render(request, 'bank_form.html')
-
-@login_required
-def local_form(request):
-    return render(request, 'local_form.html')
