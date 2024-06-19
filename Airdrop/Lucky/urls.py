@@ -9,7 +9,9 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('drop/', views.drop, name='drop'),
 
-    path('header/', views.header, name='header'),
+    # path('header/', views.header, name='header'),
+    path('header/', views.header_view, name='header_view'),
+
     path('login/', views.login_form, name='login_form'),
     path('logout/', LogoutView.as_view(next_page='/'), name='logout'),  # Esto redirige a la página principal después del logout
     path('open/', views.open_account, name='open_account'),
@@ -37,8 +39,13 @@ urlpatterns = [
     # path('validate_discount_code/', views.validate_discount_code, name='validate_discount_code'),
 
 
-    path('transfer/', views.transfer, name='transfer'),
+    path('transfer_funds/', views.transfer_funds, name='transfer_funds'),
     path('transfer_form/', views.transfer_form, name='transfer_form'),
+    path('transfer/', views.transfer, name='transfer'),
+
+
+
+
     path('paypal_form/', views.paypal_form, name='paypal_form'),
     path('credit_form/', views.credit_form, name='credit_form'),
     path('bank_form/', views.bank_form, name='bank_form'),

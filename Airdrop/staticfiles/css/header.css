@@ -1,5 +1,3 @@
-/* Estilos generales */
-
 header {
     background-color: #285363;
     color: #fff;
@@ -8,7 +6,7 @@ header {
     left: 0;
     z-index: 1000;
     width: 100%;
-    height: 60px; /* Ajusta la altura según sea necesario */
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,53 +30,19 @@ nav ul {
 }
 
 nav ul li {
-    margin: 0 60px; /* Incrementa el margen para ampliar el área de influencia */
-    padding: 60px; /* Aumenta el padding para ampliar el área de influencia */
+    margin: 0 20px; /* Reduce margin for better spacing */
+    padding: 0; /* Remove unnecessary padding */
     position: relative;
 }
 
 nav ul li a {
-    
     color: #fff;
     text-decoration: none;
-    font-size: 20px;
-    padding: 50px;
-    margin: 0 50px; /* Incrementa el margen para ampliar el área de influencia */
-
+    font-size: 18px; /* Adjust font size */
+    padding: 10px; /* Adjust padding for better spacing */
 }
 
 nav ul li a:hover {
-    background-color: #ddd;
-    color: black;
-}
-
-nav ul li i {
-    margin-right: 5px;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    
-}
-
-.nav-links li {
-    margin-right: 20px;
-    
-}
-
-.nav-links li a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 10px;
-    
-}
-
-.nav-links li a:hover {
     background-color: #ddd;
     color: black;
 }
@@ -106,7 +70,7 @@ nav ul li i {
     color: #fff;
     margin-right: auto;
     padding: 15px;
-    list-style-type: none; /* Elimina el estilo de lista (punto) */
+    list-style-type: none;
 }
 
 .title a {
@@ -116,43 +80,6 @@ nav ul li i {
 
 .title a:hover {
     color: #ddd;
-}
-
-.menu-items .title {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.menu-items .user-actions {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-}
-
-.menu-items .user-actions .nav-links {
-    display: flex;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-.menu-items .user-actions .nav-links li {
-    margin-right: 10px; /* Ajusta el margen entre los elementos */
-}
-
-.menu-items .user-actions .nav-links li a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 10px;
-    border: 1px solid #fff;
-    border-radius: 5px;
-    transition: background-color 0.3s, border-color 0.3s;
-}
-
-.menu-items .user-actions .nav-links li a:hover {
-    background-color: #ddd;
-    color: #000;
 }
 
 .user-actions {
@@ -165,8 +92,8 @@ nav ul li i {
     color: #fff;
     text-decoration: none;
     font-size: 16px;
-    padding: 10px 20px; /* Ajusta el padding según sea necesario */
-    margin-left: 10px; /* Espacio entre los botones */
+    padding: 10px 20px;
+    margin-left: 10px;
     border: 1px solid #fff;
     border-radius: 5px;
     transition: background-color 0.3s, border-color 0.3s;
@@ -180,45 +107,7 @@ nav ul li i {
 .username {
     margin-right: 10px;
     font-size: 16px;
-    color: #333;
-}
-
-.search-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.search-bar {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #f9f9f9;
-    padding: 8px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-}
-
-.search-bar input[type="text"] {
-    border: none;
-    padding: 8px;
-    width: calc(100% - 50px);
-}
-
-.search-bar button {
-    padding: 8px;
-    background: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.search-dropdown:hover .search-bar {
-    display: block;
-}
-
-.dropdown {
-    position: relative;
+    color: #fff; /* Changed to white for better visibility */
 }
 
 .dropdown-content {
@@ -227,10 +116,9 @@ nav ul li i {
     background-color: #3396FF;
     min-width: 160px;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1000; /* Asegura que el submenú esté por encima de otros elementos */
-    top: 120%; /* Posiciona inicialmente el submenú justo debajo del ícono */
+    z-index: 1000;
+    top: 100%; /* Changed from 120% to 100% for better alignment */
     left: 0;
-    margin-top: 200px; /* Ajuste el margen para crear un área de transición */
 }
 
 .dropdown-content a {
@@ -267,7 +155,7 @@ nav ul li i {
     color: #fff;
     text-decoration: none;
     font-size: 14px;
-    padding: 5px 10px; /* Ajusta el padding */
+    padding: 5px 10px;
     border: 1px solid #fff;
     border-radius: 5px;
     transition: background-color 0.3s, border-color 0.3s;
@@ -278,7 +166,7 @@ nav ul li i {
 
 .button-common-style i {
     margin-right: 5px;
-    font-size: 14px; /* Ajusta el tamaño del icono */
+    font-size: 14px;
 }
 
 .button-common-style:hover {
@@ -300,12 +188,6 @@ nav ul li i {
     margin-right: 5px;
 }
 
-.logout {
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
-}
-
 .logout-button {
     color: red;
     font-weight: bold;
@@ -321,8 +203,8 @@ nav ul li i {
 }
 
 .hamburger-menu img {
-    width: 30px; /* Ajusta este tamaño según sea necesario */
-    height: 30px; /* Ajusta este tamaño según sea necesario */
+    width: 30px;
+    height: 30px;
 }
 
 nav, nav ul, nav ul li, nav ul li a, .dropdown, .dropdown-content, .saldo-container, .saldo-box, #openModalButton, .search-bar, .search-bar input[type="text"], .search-bar button {
@@ -347,7 +229,7 @@ nav, nav ul, nav ul li, nav ul li a, .dropdown, .dropdown-content, .saldo-contai
         background-color: #285363;
         padding: 10px 0;
         position: absolute;
-        top: 50px; /* Justo debajo de la barra de navegación */
+        top: 50px;
         left: 0;
     }
 
@@ -364,12 +246,12 @@ nav, nav ul, nav ul li, nav ul li a, .dropdown, .dropdown-content, .saldo-contai
         display: none;
         flex-direction: column;
         position: absolute;
-        top: 50px; /* Justo debajo de la barra de navegación */
+        top: 50px;
         left: 0;
         background-color: #285363;
         width: 100%;
         padding: 10px 0;
-        z-index: 999; /* Asegura que esté por encima del contenido */
+        z-index: 999;
     }
 
     .nav-links.active {
@@ -379,18 +261,16 @@ nav, nav ul, nav ul li, nav ul li a, .dropdown, .dropdown-content, .saldo-contai
     .nav-links li {
         width: 100%;
         text-align: center;
-        margin: 10px 0; /* Espacio entre elementos del menú */
+        margin: 10px 0;
     }
 
     .menu-items {
-        margin-left: auto; /* Alinea los elementos a la derecha del header */
+        margin-left: auto;
     }
-
-
 
     .menu-items .user-actions {
         margin-left: 0;
-        margin-top: 10px; /* Ajusta el margen superior según sea necesario */
+        margin-top: 10px;
     }
 
     .menu-items .user-actions .nav-links {
@@ -399,7 +279,7 @@ nav, nav ul, nav ul li, nav ul li a, .dropdown, .dropdown-content, .saldo-contai
     }
 
     .menu-items .user-actions .nav-links li {
-        margin: 5px 0; /* Ajusta el margen vertical entre elementos */
+        margin: 5px 0;
     }
 
     .menu-items .user-actions .nav-links li a {
@@ -409,7 +289,7 @@ nav, nav ul, nav ul li, nav ul li a, .dropdown, .dropdown-content, .saldo-contai
 
     .user-actions {
         margin-left: 0;
-        margin-top: 10px; /* Ajusta el margen superior según sea necesario */
+        margin-top: 10px;
     }
 
     .user-actions a {
@@ -424,12 +304,12 @@ nav, nav ul, nav ul li, nav ul li a, .dropdown, .dropdown-content, .saldo-contai
     }
 
     .saldo-box {
-        margin-right: 10px; /* Mantén un margen a la derecha del saldo */
+        margin-right: 10px;
     }
 
     .dropdown-content {
         position: relative;
-        top: calc(100% + 5px); /* Ajuste para el espacio de transición en modo responsivo */
+        top: calc(100% + 5px);
         background-color: #285363;
     }
 
@@ -443,10 +323,9 @@ nav, nav ul, nav ul li, nav ul li a, .dropdown, .dropdown-content, .saldo-contai
     }
 
     .search-dropdown {
-        margin-top: 10px; /* Espacio entre el icono de búsqueda y el menú */
+        margin-top: 10px;
     }
 
-    /* Force display dropdown content when menu is active */
     nav ul.active .dropdown-content {
         display: none;
     }

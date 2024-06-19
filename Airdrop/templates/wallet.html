@@ -22,8 +22,10 @@
         <div class="main-content"> <!-- Nuevo contenedor para todo el contenido que no es sidebar -->
            <!-- Header con menú basado en iconos -->
            {% include 'header.html' %}
-           
-            {% comment %} <header>
+
+
+
+            {% comment %} <section class="amount-section" id="servicios">
                 <h1>Billetera Virtual</h1>
                 <nav>
                     <ul>
@@ -32,12 +34,34 @@
                         <li><a href="#ajustes">Ajustes</a></li>
                     </ul>
                 </nav>
-            </header> {% endcomment %}
+            </section> {% endcomment %}
+
+
+            <!-- Información del usuario -->
+            <section class="user-info">
+                <h2>Información del Usuario</h2>
+                <div class="perfil">
+                    <img src="perfil.jpg" alt="Foto de Perfil" class="foto-perfil">
+                    <div class="info-perfil">
+                        <h3>{{ user.username }}</h3> <!-- Nombre de usuario -->
+                        <p>{{ user.email }}</p> <!-- Correo electrónico del usuario -->
+                        <div class="barra-experiencia">
+                            <span style="width: 70%;">Nivel 3</span> <!-- Nivel de experiencia -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Sección reservada para la billetera o monedero del usuario-->
             <section class="amount-section" id="saldo">
                 <h2>Saldo Actual</h2>
+                <p>{{ user.email }}</p> <!-- Muestra el correo electrónico del usuario -->
+                <!-- Mostrar el saldo actual desde el contexto -->
+                <p class="saldo-amount">${{ saldo_actual }}</p>
+                <!-- Mostrar el saldo actual desde el contexto -->
+                <p class="saldo-amount">${{ wallet.amount }}</p> <!-- Accede al saldo de la billetera del usuario -->
                 <p class="saldo-amount">$1,000</p>
-                <button class="recargarSaldoBtn" id="recargarSaldoBtn" onclick="recargarSaldo()" data-url="{% url 'transfer' %}">Recargar Saldo</button>
+                <button class="recargarSaldoBtn" id="recargarSaldoBtn" onclick="recargarSaldo()" data-url="{% url 'transfer_funds' %}">Recargar Saldo</button>
             </section>
             <section class="amount-transfer" id="transacciones-wallet">
                 <h2>Historial de Transacciones</h2>
@@ -47,7 +71,8 @@
                     <li>Recarga - $200</li>
                     <!-- Más transacciones -->
                 </ul>
-            
+            </section>
+
             <!-- Footer -->
             {% include 'footer.html' %}
         </div>

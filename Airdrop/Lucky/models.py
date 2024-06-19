@@ -3,6 +3,9 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 
 class CustomUserManager(BaseUserManager):
@@ -12,7 +15,10 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
+        # Guardar el usuario primero
         user.save(using=self._db)
+        # Crear la billetera asociada al usuario
+        Wallet.objects.create(user=user, user_email=email)
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
@@ -61,6 +67,27 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+
+
+
+
+
+
+
+class Wallet(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='wallet')
+    user_email = models.EmailField(unique=True)
+    currency = models.CharField(max_length=3, default='USD')
+    last_update_date = models.DateTimeField(auto_now=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def __str__(self):
+        return f"Wallet for {self.user.email}"
+
+    class Meta:
+        db_table = 'Wallet'
 
 
 
@@ -201,3 +228,20 @@ class DiscountCode(models.Model):
 
     class Meta:
         db_table = 'DiscountCode'
+
+
+
+
+
+
+
+
+
+    
+class Transfer(models.Model):
+    wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transfers')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Transfer of {self.amount} to {self.wallet.user.username}'s Wallet"

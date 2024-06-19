@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from datetime import date
-from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm, CreateManagerForm, DiscountCodeForm, ValidateCodeForm
-from .models import Product, UserInfo, CustomUser, DiscountCode
+from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm, CreateManagerForm, DiscountCodeForm, ValidateCodeForm, TransferFundsForm  
+from .models import Product, UserInfo, CustomUser, DiscountCode, Wallet, Transfer
 from django.conf import settings
 import stripe
 import logging
@@ -27,8 +27,24 @@ def header(request):
 
 @login_required
 def some_view(request):
-    saldo = get_user_saldo(request.user)  # Asegúrate de tener esta función para obtener el saldo del usuario
+    user_wallet = Wallet.objects.get(user=request.user)
+    saldo = user_wallet.amount
     return render(request, 'some_template.html', {'saldo': saldo})
+
+@login_required
+def header_view(request):
+    if request.user.is_authenticated:
+        wallet = Wallet.objects.get(user=request.user)
+        saldo = wallet.amount
+    else:
+        saldo = 0  # o cualquier otro valor por defecto
+
+    context = {
+        'saldo': saldo,
+        'user': request.user
+    }
+    return render(request, 'header.html', context)
+
 
 
 def login_form(request):
@@ -127,6 +143,21 @@ def open_account(request):
     return render(request, 'open_account.html', {'form': form})
 
 
+def create_wallet_for_user(email):
+    try:
+        user = CustomUser.objects.get(email=email)
+        wallet = Wallet.objects.create(user=user, currency=1, amount=0)  # Ajusta según tus necesidades
+        wallet.save()
+        print(f"Billetera creada para {user.email}")
+    except CustomUser.DoesNotExist:
+        print(f"No se encontró ningún usuario con el correo electrónico {email}")
+
+# Uso de la función
+create_wallet_for_user('correo@example.com')
+
+
+
+
 @login_required
 @staff_member_required
 def open_admin_account(request):
@@ -178,6 +209,11 @@ def open_manager_account(request):
     else:
         form = CreateManagerForm()
     return render(request, 'open_manager_account.html', {'form': form})
+
+
+
+
+
 
 
 @login_required
@@ -326,9 +362,35 @@ def shop(request):
 def delivery(request):
     return render(request, 'delivery.html')
 
+
+
 @login_required
 def wallet(request):
-    return render(request, 'wallet.html')
+    try:
+        # Obtener el objeto Wallet del usuario actual basado en su email
+        user_email = request.user.email
+        user_wallet = Wallet.objects.get(user_email=user_email)
+        # Obtener el saldo actual
+        saldo_actual = user_wallet.amount
+    except Wallet.DoesNotExist:
+        saldo_actual = 0  # Manejar caso donde no existe Wallet para el usuario
+
+    context = {
+        'saldo_actual': saldo_actual,
+    }
+    return render(request, 'wallet.html', context)
+
+
+def wallet_view(request):
+    user = request.user
+    wallet = user.wallet  # Accede a la billetera asociada al usuario actual
+    context = {
+        'user': user,
+        'wallet': wallet,
+    }
+    return render(request, 'wallet.html', context)
+
+
 
 @login_required
 def transactions(request):
@@ -440,6 +502,32 @@ def transfer_form(request):
 #         'bankName': bankName,
 #         'accountNumber': accountNumber,
 #     })
+
+
+
+@login_required
+def transfer_funds(request):
+    try:
+        user_wallet = Wallet.objects.get(id_user=request.user.id)
+    except Wallet.DoesNotExist:
+        messages.error(request, "Wallet not found for the user.")
+        print("Redirigiendo a la vista 'transfer' porque no se encontró la wallet.")
+        # return redirect('transfer')  # Asegúrate de que esta vista no redirija de nuevo a 'transfer_funds'
+
+    if request.method == 'POST':
+        form = TransferFundsForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+            user_wallet.amount += amount
+            user_wallet.save()
+            messages.success(request, 'Funds transferred successfully!')
+            return redirect('home')  # Asegúrate de que 'home' no redirija de nuevo a 'transfer_funds'
+    else:
+        form = TransferFundsForm()
+
+    return render(request, 'transfer_funds.html', {'form': form, 'saldo': user_wallet.amount})
+
+
 
 
 @login_required

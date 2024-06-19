@@ -2,7 +2,7 @@ import os
 import django
 
 # Configura el entorno de Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Lucky.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'L.settings')
 django.setup()
 
 from Lucky.models import CustomUser

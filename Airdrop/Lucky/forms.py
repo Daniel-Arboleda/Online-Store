@@ -35,6 +35,7 @@ class CreateAccountForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         if commit:
             user.save()
+            Wallet.objects.create(user=user, user_email=user.email)
         return user
 
 
@@ -153,3 +154,10 @@ class DiscountCodeForm(forms.ModelForm):
 
 class ValidateCodeForm(forms.Form):
     code = forms.CharField(max_length=50)
+
+
+
+
+
+class TransferFundsForm(forms.Form):
+    amount = forms.DecimalField(max_digits=10, decimal_places=2, min_value=0.01)
