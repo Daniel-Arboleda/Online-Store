@@ -31,6 +31,11 @@ urlpatterns = [
     path('delivery/', views.delivery, name='delivery'),
     path('wallet/', views.wallet, name='wallet'),
     path('transactions/', views.transactions, name='transactions'),
+    path('procesar_transaccion/', views.procesar_transaccion, name='procesar_transaccion'),
+    path('initiate_transfer/', views.initiate_transfer, name='initiate_transfer'),
+
+
+
     path('record/', views.record, name='record'),
 
 
@@ -39,7 +44,7 @@ urlpatterns = [
     # path('validate_discount_code/', views.validate_discount_code, name='validate_discount_code'),
 
 
-    path('transfer_funds/', views.transfer_funds, name='transfer_funds'),
+    # path('transfer_funds/', views.transfer_funds, name='transfer_funds'),
     path('transfer_form/', views.transfer_form, name='transfer_form'),
     path('transfer/', views.transfer, name='transfer'),
 

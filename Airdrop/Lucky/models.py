@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission, User
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -70,22 +71,46 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 
+# User = get_user_model()
+
+
 class Wallet(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='wallet')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='wallet')
     user_email = models.EmailField(unique=True)
     currency = models.CharField(max_length=3, default='USD')
     last_update_date = models.DateTimeField(auto_now=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
-        return f"Wallet for {self.user.email}"
+        return f"Wallet for {self.user.email} - ${self.amount}"
 
     class Meta:
         db_table = 'Wallet'
 
 
+class TransactionsWallet(models.Model):
+    transaction_id = models.AutoField(primary_key=True, blank=True)
+    user_id = models.IntegerField(blank=True)
+    wallet_id = models.TextField(blank=True)
+    date_hour = models.IntegerField(blank=True)
+    type = models.TextField(blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField(blank=True)
+    address_ip = models.TextField(blank=True)
+    state = models.TextField(blank=True)
+    transfer_method = models.TextField(null=True, blank=True)
+    bank = models.TextField(blank=True)
+    company_name = models.TextField(blank=True)
+    tax_id = models.TextField(blank=True)
+    order_reference = models.TextField(blank=True)
+    transaction_reference = models.TextField(blank=True)
+    transaction_number_CUS = models.TextField(blank=True)
 
+    def __str__(self):
+        return f"Transaction {self.order_reference} by {self.user.email}"
 
+    class Meta:
+        db_table = 'TransactionsWallet'
 
 
 # OneToOneField establece una relación de uno a uno entre dos modelos. Esto significa que cada instancia de UserInfo está vinculada a una única instancia de User y viceversa. Es similar a ForeignKey, pero asegura que no haya múltiples registros en UserInfo asociados con un solo User.
@@ -116,8 +141,6 @@ class UserInfo(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.type_document}: {self.document}"
-
-
 
 
 class Product(models.Model):
@@ -201,8 +224,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-
-
 class DiscountCode(models.Model):
     code = models.CharField(max_length=50, unique=True)
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
@@ -222,13 +243,6 @@ class DiscountCode(models.Model):
 
     class Meta:
         db_table = 'DiscountCode'
-
-
-
-
-
-
-
 
 
     

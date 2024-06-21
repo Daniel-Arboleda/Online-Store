@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils.translation import gettext_lazy as _
-from .models import Product, UserInfo, CustomUser,UserInfo, DiscountCode
+from .models import Product, UserInfo, CustomUser,UserInfo, DiscountCode, TransactionsWallet
 
 class CreateSuperuserForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -158,6 +158,24 @@ class ValidateCodeForm(forms.Form):
 
 
 
-
-class TransferFundsForm(forms.Form):
+class TransferFundsForm(forms.ModelForm):
+    company_name = forms.CharField(max_length=100, required=False)
+    tax_id = forms.CharField(max_length=20, required=False)
+    current_date = forms.DateField(required=False)
+    state = forms.CharField(max_length=20, required=False)
+    order_reference = forms.CharField(max_length=50, required=False)
+    transaction_reference = forms.CharField(max_length=50, required=False)
+    transaction_number_CUS = forms.CharField(max_length=50, required=False)
+    bank = forms.CharField(max_length=50, required=False)
+    value = forms.DecimalField(max_digits=10, decimal_places=2, required=False)
+    current_balance = forms.DecimalField(max_digits=10, decimal_places=2, required=False)
+    origin_ip = forms.CharField(max_length=15, required=False)
     amount = forms.DecimalField(max_digits=10, decimal_places=2, min_value=0.01)
+
+    class Meta:
+        model = TransactionsWallet
+        fields = [
+            'company_name', 'tax_id', 'current_date', 'state', 'order_reference', 
+            'transaction_reference', 'transaction_number_CUS', 'bank', 'value', 
+            'current_balance', 'origin_ip', 'amount'
+        ]

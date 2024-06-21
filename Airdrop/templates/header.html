@@ -62,7 +62,7 @@
             <!-- Moved saldo-container and logout outside the ul -->
             <div class="user-actions">
                 <div class="saldo-box">
-                    <p>$ {{ saldo }}</p>
+                    <p>$ {{ user.wallet.amount }}</p>
                 </div>                
                 <button id="openModalButton" data-url="{% url 'transfer' %}"><i class="fas fa-plus"></i></button>
             </div>

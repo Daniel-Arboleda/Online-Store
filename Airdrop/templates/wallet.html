@@ -37,13 +37,21 @@
             </section> {% endcomment %}
 
 
+            <!-- Mostrar mensajes de error y éxito -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+
             <!-- Información del usuario -->
             <section class="user-info">
                 <h2>Información del Usuario</h2>
                 <div class="perfil">
                     <img src="perfil.jpg" alt="Foto de Perfil" class="foto-perfil">
                     <div class="info-perfil">
-                        <h3>{{ user.username }}</h3> <!-- Nombre de usuario -->
+                        <h3>{{ user }}</h3> <!-- Nombre de usuario -->
                         <p>{{ user.email }}</p> <!-- Correo electrónico del usuario -->
                         <div class="barra-experiencia">
                             <span style="width: 70%;">Nivel 3</span> <!-- Nivel de experiencia -->
@@ -56,13 +64,13 @@
             <section class="amount-section" id="saldo">
                 <h2>Saldo Actual</h2>
                 <p>{{ user.email }}</p> <!-- Muestra el correo electrónico del usuario -->
-                <p class="saldo-amount">Moneda: {{ wallet.currency }}</p>
+                <p class="saldo-amount">Moneda: {{ user.wallet.currency }}</p>
                 <!-- Mostrar el saldo actual desde el contexto -->
                 <p class="saldo-amount">${{ saldo_actual }}</p>
                 <!-- Mostrar el saldo actual desde el contexto -->
                 <p class="saldo-amount">${{ wallet.amount }}</p>
                 <p class="saldo-amount">$1,000</p>
-                <button class="recargarSaldoBtn" id="recargarSaldoBtn" onclick="recargarSaldo()" data-url="{% url 'transfer_funds' %}">Recargar Saldo</button>
+                <button class="recargarSaldoBtn" id="recargarSaldoBtn" onclick="recargarSaldo()" data-url="{% url 'transfer' %}">Recargar Saldo</button>
             </section>
             <section class="amount-transfer" id="transacciones-wallet">
                 <h2>Historial de Transacciones</h2>

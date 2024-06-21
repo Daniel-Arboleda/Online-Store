@@ -118,6 +118,48 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 });
 
+// ScRIPT para el botoón aceptar de la vantana modal del la acción del botón Finalizar Transacción en el formulario de transfer_form.html el cual debe enviar la información del formulario en el POST para actualizar los fondos de la Wallet en la DB
+
+
+document.getElementById('confirmTransaction').addEventListener('click', function () {
+    const form = document.querySelector('form');
+    const url = this.getAttribute('data-url');
+    
+    // Crear un formulario temporal para enviar los datos
+    const tempForm = document.createElement('form');
+    tempForm.method = 'POST';
+    tempForm.action = url;
+
+    // Añadir el token CSRF
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrfToken;
+    tempForm.appendChild(csrfInput);
+
+    // Copiar todos los campos del formulario original al formulario temporal
+    new FormData(form).forEach((value, name) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        tempForm.appendChild(input);
+    });
+
+    document.body.appendChild(tempForm);
+    tempForm.submit();
+});
+
+document.getElementById('denyTransaction').addEventListener('click', function () {
+    document.getElementById('confirmationModal').style.display = 'none';
+});
+
+
+
+
+
+
 // Script para que redirija a la página transfer.html cuando el usuario necesite cargar saldo a la página hacciendo click en el botón del menu superior principal marcado con un icono de +
 document.addEventListener('DOMContentLoaded', function() {
     var openModalButton = document.getElementById('openModalButton');
