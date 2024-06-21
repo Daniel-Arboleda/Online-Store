@@ -460,15 +460,13 @@ def validate_code(request):
 
 @login_required
 def wallet(request):
+    user = request.user
     try:
-        # Obtener el objeto Wallet del usuario actual basado en su email
-        user_email = request.user.email
-        user_wallet = Wallet.objects.get(user_email=user_email)
+        # Intenta obtener la Wallet del usuario actual
         wallet = Wallet.objects.get(user=user)
-        # Obtener el saldo actual
-        saldo_actual = user_wallet.amount
+        saldo_actual = wallet.amount
     except Wallet.DoesNotExist:
-        saldo_actual = 0  # Manejar caso donde no existe Wallet para el usuario
+        saldo_actual = 0
         wallet = None
 
     context = {
@@ -477,6 +475,7 @@ def wallet(request):
         'saldo_actual': saldo_actual,
     }
     return render(request, 'wallet.html', context)
+
 
 
 

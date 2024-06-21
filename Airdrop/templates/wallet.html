@@ -82,6 +82,14 @@
                 </ul>
             </section>
 
+
+            <p>Usuario: {{ user }}</p>
+            <p>Moneda: {{ user.wallet.currency }}</p>
+            <p>Billetera actual: {{ user.wallet }}</p>
+            <p>Saldo actual: {{ user.wallet.amount }}</p>
+            <p>Self email: {{ self.user.email }}</p>
+            <p>Self actual: {{ self.amount }}</p>
+
             <!-- Footer -->
             {% include 'footer.html' %}
         </div>
