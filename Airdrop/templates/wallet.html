@@ -64,12 +64,16 @@
             <section class="amount-section" id="saldo">
                 <h2>Saldo Actual</h2>
                 <p>{{ user.email }}</p> <!-- Muestra el correo electrónico del usuario -->
-                <p class="saldo-amount">Moneda: {{ user.wallet.currency }}</p>
-                <!-- Mostrar el saldo actual desde el contexto -->
+                
+
+                <p>Usuario: {{ user }}</p>
+                <p>Moneda: {{ user.wallet.currency }}</p>
+                <p>Billetera actual: {{ user.wallet }}</p>
+                <p>Saldo actual: ${{ user.wallet.amount }}</p>
                 <p class="saldo-amount">${{ saldo_actual }}</p>
-                <!-- Mostrar el saldo actual desde el contexto -->
-                <p class="saldo-amount">${{ wallet.amount }}</p>
-                <p class="saldo-amount">$1,000</p>
+                <p>Self email: {{ self.user.email }}</p>
+                <p>Self actual: {{ self.amount }}</p>
+
                 <button class="recargarSaldoBtn" id="recargarSaldoBtn" onclick="recargarSaldo()" data-url="{% url 'transfer' %}">Recargar Saldo</button>
             </section>
             <section class="amount-transfer" id="transacciones-wallet">
@@ -83,13 +87,7 @@
             </section>
 
 
-            <p>Usuario: {{ user }}</p>
-            <p>Moneda: {{ user.wallet.currency }}</p>
-            <p>Billetera actual: {{ user.wallet }}</p>
-            <p>Saldo actual: {{ user.wallet.amount }}</p>
-            <p>Self email: {{ self.user.email }}</p>
-            <p>Self actual: {{ self.amount }}</p>
-
+            
             <!-- Footer -->
             {% include 'footer.html' %}
         </div>
