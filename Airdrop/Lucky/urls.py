@@ -25,9 +25,15 @@ urlpatterns = [
     path('home_orm/', views.home_orm, name='home_orm'),
     path('user/', views.user, name='user'),
     path('user_info/', views.user_info, name='user_info'),
+
     path('cart/', views.cart, name='cart'),
+    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('update-cart/<int:item_id>/', views.update_cart, name='update_cart'),
     path('products/', views.products, name='products'),
     path('shop/', views.shop, name='shop'),
+
+
     path('delivery/', views.delivery, name='delivery'),
     path('wallet/', views.wallet, name='wallet'),
     path('transactions/', views.transactions, name='transactions'),

@@ -27,6 +27,7 @@ class CreateAccountForm(UserCreationForm):
         model = CustomUser
         fields = ['email', 'password1', 'password2']
 
+    @transaction.atomic
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_staff = False
@@ -35,6 +36,7 @@ class CreateAccountForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         if commit:
             user.save()
+            Cart.objects.create(user=user)
             Wallet.objects.create(user=user, user_email=user.email)
         return user
 
@@ -97,8 +99,7 @@ class CreateManagerForm(UserCreationForm):
 
 
 
-
-
+# Esta clase se crea para manejar los campos del formulario user_info.html que es la información personal del susuario dueño de la cuenta.
 class UserInfoForm(forms.ModelForm):
     class Meta:
         model = UserInfo
@@ -134,7 +135,7 @@ class UserInfoForm(forms.ModelForm):
 
 
 
-
+# Clase que maneja los campos del formulario para el formulario de productcs.html donde se crea los productos neuos o se actualizan
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -156,7 +157,7 @@ class ValidateCodeForm(forms.Form):
     code = forms.CharField(max_length=50)
 
 
-
+# Clase que maneja los campos del formulario de transfer_funds el cual es un fomrulario de los campos de infomación de formulario e transacción para cargar saldo el primero que e configura pero maneja la logica mediante los TANG's de Django para la creación de campos de formularios HTML, por lo que en uso actuak puede no estar en uso, sin embargo puede usarse como variablke conectorea o de consulta ----------- Se debe tener cuidado porque esto puede generar un FONEL y SCRATCH de projecct, lo que seria en programación en funcionamiento una ruta crítica
 
 class TransferFundsForm(forms.ModelForm):
     company_name = forms.CharField(max_length=100, required=False)

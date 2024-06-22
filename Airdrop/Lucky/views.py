@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.utils.dateformat import DateFormat
 from datetime import date
 from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm, CreateManagerForm, DiscountCodeForm, ValidateCodeForm, TransferFundsForm  
-from .models import Product, UserInfo, CustomUser, DiscountCode, Wallet, Transfer, TransactionsWallet
+from .models import Product, UserInfo, CustomUser, DiscountCode, Wallet, Transfer, TransactionsWallet, Store, Cart, CartItem
 from django.conf import settings
 import stripe
 from django.db import transaction
@@ -99,35 +99,6 @@ def login_form(request):
 
 
 
-# def login_form(request):
-#     if request.method == 'POST':
-#         print("Formulario enviado")
-#         form = CustomAuthenticationForm(request, data=request.POST)
-#         print("Datos del formulario:", form.data)
-#         if form.is_valid():
-#             print("Formulario válido")
-#             email = form.cleaned_data.get('email')
-#             password = form.cleaned_data.get('password')
-#             print("Datos limpios del formulario - Email:", email, "Password:", password)
-#             user = authenticate(request, username=email, password=password)
-#             if user is not None:
-#                 print("Usuario autenticado:", user)
-#                 login(request, user)
-#                 logger.info(f"User {user.email} logged in successfully.")
-#                 return redirect('home')
-#             else:
-#                 print("Usuario no encontrado")
-#                 logger.warning(f"Login attempt failed for email: {email}")
-#                 messages.error(request, 'Usuario o contraseña incorrectos.')
-#         else:
-#             print("Formulario inválido. Errores:", form.errors)
-#             logger.warning(f"Invalid login form submitted: {form.errors}")
-#             messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
-#     else:
-#         form = CustomAuthenticationForm()
-#     return render(request, 'login_form.html', {'form': form})
-
-
 def open_account(request):
     if request.method == 'POST':
         form = CreateAccountForm(request.POST)
@@ -152,9 +123,20 @@ def open_account(request):
 def create_wallet_for_user(email):
     try:
         user = CustomUser.objects.get(email=email)
-        wallet = Wallet.objects.create(user=user, currency=1, amount=0)  # Ajusta según tus necesidades
+        # Ajusta según tus necesidades
+        wallet = Wallet.objects.create(user=user, currency=1, amount=0)  
         wallet.save()
         print(f"Billetera creada para {user.email}")
+    except CustomUser.DoesNotExist:
+        print(f"No se encontró ningún usuario con el correo electrónico {email}")
+
+def create_cart_for_user(email):
+    try:
+        user = CustomUser.objects.get(email=email)
+        # Ajusta según tus necesidades
+        cart = Cart.objects.create(user=user)  
+        cart.save()
+        print(f"Carrito creado para {user.email}")
     except CustomUser.DoesNotExist:
         print(f"No se encontró ningún usuario con el correo electrónico {email}")
 
@@ -273,12 +255,56 @@ def user_info(request):
 
 
 
-
+@login_required
+def cart(request):
+    try:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        if created:
+            cart.save()  # Guarda el carrito si fue creado
+            messages.success(request, 'Your cart was created successfully.')
+        cart_items = cart.items.all()
+        total_price = sum(item.get_total_price() for item in cart_items)
+        context = {
+            'cart': cart,
+            'cart_items': cart_items,
+            'total_price': total_price,
+        }
+        return render(request, 'cart.html', context)
+    except Exception as e:
+        messages.error(request, f'An error occurred while creating your cart: {e}')
+        return redirect('shop')  # Redirige a la tienda en caso de error
 
 
 @login_required
-def cart(request):
-    return render(request, 'cart.html')
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+    messages.success(request, f'Added {product.name} to your cart.')
+    return redirect('cart')
+
+@login_required
+def remove_from_cart(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id)
+    cart_item.delete()
+    messages.success(request, 'Item removed from your cart.')
+    return redirect('cart')
+
+@login_required
+def update_cart(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id)
+    quantity = request.POST.get('quantity')
+    if quantity:
+        cart_item.quantity = int(quantity)
+        cart_item.save()
+    messages.success(request, 'Cart updated.')
+    return redirect('cart')
+
+
+
 
 @login_required
 def products(request):
@@ -508,6 +534,18 @@ def charge(request):
             return render(request, 'payments/charge_fail.html', {'error': str(e)})
 
     return render(request, 'payments/charge_form.html')
+
+
+def assign_store(request, user_id, store_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    store = get_object_or_404(Store, id=store_id)
+
+    # Asignar la tienda al usuario
+    user.stores.add(store)
+
+    return HttpResponse(f'Store {store.name} assigned to user {user.email}')
+
+
 
 
 @login_required

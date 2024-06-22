@@ -35,6 +35,19 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have role="superuser"')
         return self.create_user(email, password, **extra_fields)
 
+    def create_admin_user(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('role', 'superuser')
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+        if extra_fields.get('role') != 'superuser':
+            raise ValueError('Superuser must have role="superuser"')
+        return self.create_user(email, password, **extra_fields)
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
         ('superuser', 'Superuser'),
@@ -143,6 +156,7 @@ class UserInfo(models.Model):
         return f"{self.user.email} - {self.type_document}: {self.document}"
 
 
+
 class Product(models.Model):
     DISPONIBILITY_CHOICES = [
         ('available', 'Disponible'),
@@ -223,6 +237,43 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+class Store(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='owned_stores')
+    # Otros campos necesarios para la tienda
+
+    def __str__(self):
+        return self.name
+
+
+class Cart(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='cart')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'Cart'
+        verbose_name = _('cart')
+        verbose_name_plural = _('carts')
+
+    def __str__(self):
+        return f"Cart of {self.user.email}"
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantity} of {self.product.name} in {self.cart.user.email}'s cart"
+
+    def get_total_price(self):
+        return self.product.price * self.quantity
+
 
 class DiscountCode(models.Model):
     code = models.CharField(max_length=50, unique=True)
