@@ -2,7 +2,8 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils.translation import gettext_lazy as _
-from .models import Product, UserInfo, CustomUser,UserInfo, DiscountCode, TransactionsWallet
+from django.db import transaction
+from .models import Product, UserInfo, CustomUser, UserInfo, DiscountCode, TransactionsWallet, Cart, Wallet
 
 class CreateSuperuserForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -37,7 +38,7 @@ class CreateAccountForm(UserCreationForm):
         if commit:
             user.save()
             Cart.objects.create(user=user)
-            Wallet.objects.create(user=user, user_email=user.email)
+            Wallet.objects.create(user=user, user_email=user.email, currency='USD', amount=0)
         return user
 
 
