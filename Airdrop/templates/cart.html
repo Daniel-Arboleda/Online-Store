@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Breve descripción de lo que trata tu página, idealmente entre 150-160 caracteres.">
-    <link rel="shortcut icon" href="{% static '../static/img/Logo-LuckyCart.png' %}"> 
+    <link rel="shortcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Carrito de Compras</title>
@@ -34,6 +34,15 @@
             </div>
             {% endif %}
 
+            <!-- Carrito de Compras -->
+            <div id="cart-container">
+                <h1>Your Cart</h1>
+                <div class="cart-items"></div>
+                <p>Total items: <span id="cart-item-count"></span></p>
+                <p>Total price: <span class="total-price"></span></p>
+            </div>
+
+            <!-- Carrito de Compras en tabla -->
             <h1>Your Cart</h1>
             <table>
                 <thead>
@@ -83,8 +92,8 @@
     {% include 'modal_lugares.html' %}
 
     <script src="{% static 'js/toggleVisibility.js' %}"></script>
-    <script src="{% static '../static/js/shop-shoppingcart.js' %}"></script>
-    <script src="{% static '../static/js/cookies.js' %}"></script>
+    <script src="{% static 'js/shop-shoppingcart.js' %}"></script>
+    <script src="{% static 'js/cookies.js' %}"></script>
 
 </body>
 </html>

@@ -280,6 +280,11 @@ def cart(request):
         messages.error(request, f'An error occurred while creating your cart: {e}')
         return redirect('shop')  # Redirige a la tienda en caso de error
 
+@login_required
+def cart_view(request):
+    # Lógica para manejar el carrito
+    return render(request, 'cart.html')
+
 
 @login_required
 def add_to_cart(request, product_id):
