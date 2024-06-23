@@ -283,6 +283,7 @@ def cart(request):
 @login_required
 def cart_view(request):
     # Lógica para manejar el carrito
+    cart = Cart.objects.get_or_create(user=request.user)
     return render(request, 'cart.html')
 
 
