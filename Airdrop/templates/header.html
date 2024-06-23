@@ -68,11 +68,10 @@
             </div>
             <div class="user-actions">
                 <p class="username">{{ user.email }}</p>
-                <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+                <a href="{% url 'index' %}" class="logout-button">Cerrar sesión</a>
             </div>
         </nav>
     </header>
-    <script src="{% static 'js/modal-transfer.js' %}"></script>
     <script src="{% static 'js/hamburger-menu.js' %}"></script>
 </body>
 </html>

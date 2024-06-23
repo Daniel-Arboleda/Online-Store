@@ -84,6 +84,17 @@ LOGGING = {
 }
 
 
+# settings.py
+
+# Asegúrate de tener estas configuraciones
+SESSION_COOKIE_AGE = 0  # La sesión se expira inmediatamente cuando el navegador se cierra
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # La sesión se expira cuando el navegador se cierra
+
+# Si quieres que la sesión expire después de un tiempo de inactividad, puedes configurar esto:
+SESSION_COOKIE_AGE = 300  # Expira en 5 minutos (300 segundos) de inactividad
+
+
+
 # Configuración de archivos estáticos y de medios
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'staticfiles']

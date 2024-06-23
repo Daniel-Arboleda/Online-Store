@@ -97,6 +97,12 @@ def login_form(request):
 #     return render(request, 'login_form.html', {'form': form})
 
 
+def logout_view(request):
+    logout(request)
+    return redirect('index.html')  # Redirige a la página de inicio después de cerrar sesión
+
+
+
 
 
 def open_account(request):
