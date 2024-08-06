@@ -1,22 +1,4 @@
-
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxdrop</title>
-    <link rel="shorcut icon" href="{% static 'img/Logo-LuckyCart.png' %}"> 
-    <!-- Enlace a la librería de iconos Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Enlace al archivo CSS externo -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">  
-    <!-- Define la variable JavaScript loginURL con la URL de la vista de inicio de sesión -->
-    <script>
-        const loginURL = "{% url 'login_form' %}";
-        const openURL = "{% url 'open_account' %}";
-    </script>
-</head>
 
 <body>
     <!-- Ventana emergente listado de paises compatibles -->
