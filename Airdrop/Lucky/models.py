@@ -1,3 +1,6 @@
+# models.py
+
+
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission, User
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -228,7 +231,7 @@ class Product(models.Model):
     brand = models.CharField(max_length=100)
     disponibility = models.CharField(max_length=50, choices=DISPONIBILITY_CHOICES, blank=True, null=True, default='coming_soon')
     state = models.CharField(max_length=20, choices=STATE_CHOICES, blank=True, null=True, default='NEW')
-    image = models.ImageField(upload_to="images/")
+    image = models.ImageField(upload_to="images/", null=True, blank=True)
 
     class Meta:
         db_table = 'Products'
@@ -237,6 +240,17 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    
+    def reduce_stock(self, quantity):
+        if self.stock >= quantity:
+            self.stock -= quantity
+            self.save()
+            return True
+        return False
+
+
+    
 
 
 
@@ -267,11 +281,19 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    # cart = models.OneToOneField(Cart, on_delete=models.CASCADE, related_name='item')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cart_items')
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=13, decimal_places=2)
-    stock = models.IntegerField()
+    price = models.DecimalField(max_digits=13, decimal_places=2, null=True, blank=True)
+    stock = models.IntegerField(null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+
+
+    class Meta:
+        db_table = 'CartItem'
+        verbose_name = _('cart item')
+        verbose_name_plural = _('cart items')
 
 
     def __str__(self):
@@ -279,6 +301,12 @@ class CartItem(models.Model):
 
     def get_total_price(self):
         return self.product.price * self.quantity
+
+    def save(self, *args, **kwargs):
+        self.amount = self.get_total_price()
+        super().save(*args, **kwargs)
+
+
 
 
 class DiscountCode(models.Model):

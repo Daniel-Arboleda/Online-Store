@@ -1,8 +1,11 @@
 import logging
+import json
+
 from decimal import Decimal
 
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, authenticate
@@ -11,11 +14,14 @@ from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.utils.dateformat import DateFormat
 from datetime import date
-from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm, CreateManagerForm, DiscountCodeForm, ValidateCodeForm, TransferFundsForm  
-from .models import Product, UserInfo, CustomUser, DiscountCode, Wallet, Transfer, TransactionsWallet, Store, Cart, CartItem
+from .forms import CreateAccountForm, ProductForm, UserInfoForm, CustomAuthenticationForm, CreateAdminForm, CreateManagerForm, DiscountCodeForm, ValidateCodeForm, TransferFundsForm, AudioUploadForm  
+from .models import Product, UserInfo, CustomUser, DiscountCode, Wallet, Transfer, TransactionsWallet, Store, Cart, CartItem, Product
+from .speech_recognition import recognize_speech_from_audio
 from django.conf import settings
 import stripe
 from django.db import transaction
+from .signals import *
+
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -260,60 +266,335 @@ def user_info(request):
 
 
 
-
 @login_required
 def cart(request):
     try:
         cart, created = Cart.objects.get_or_create(user=request.user)
         if created:
-            cart.save()  # Guarda el carrito si fue creado
+            cart.save()
             messages.success(request, 'Your cart was created successfully.')
+
+            # Crear un CartItem asociado al Cart recién creado si es necesario
+            default_product = Product.objects.first()  # Obtén el producto predeterminado (modifícalo según tu lógica)
+            if default_product:
+                cart_item = CartItem.objects.create(
+                    cart=cart,
+                    product=default_product,
+                    quantity=1,  # Ajusta la cantidad según tu necesidad
+                    price=default_product.price
+                )
+                cart_item.save()
+            else:
+                messages.warning(request, 'No se encontró un producto predeterminado para añadir al carrito.')
+
+        # Usar la relación inversa `items` para obtener los `CartItem`
         cart_items = cart.items.all()
         total_price = sum(item.get_total_price() for item in cart_items)
+
+        # Obtener la billetera vinculada al usuario autenticado
+        wallet = Wallet.objects.get(user=request.user)
+
         context = {
             'cart': cart,
             'cart_items': cart_items,
             'total_price': total_price,
+            'wallet': wallet,
         }
+        logger.info(f"Cart rendered successfully for user {request.user.email}")
         return render(request, 'cart.html', context)
+
+    except Wallet.DoesNotExist:
+        messages.error(request, "No se encontró una billetera para este usuario.")
+        return redirect('shop')
     except Exception as e:
+        logger.error(f"An error occurred while creating the cart for user {request.user.email}: {e}")
         messages.error(request, f'An error occurred while creating your cart: {e}')
         return redirect('shop')  # Redirige a la tienda en caso de error
 
-@login_required
-def cart_view(request):
-    # Lógica para manejar el carrito
-    cart = Cart.objects.get_or_create(user=request.user)
-    return render(request, 'cart.html')
 
 
+
+
+# @login_required
+# def cart(request):
+#     try:
+#         cart, created = Cart.objects.get_or_create(user=request.user)
+#         if created:
+#             cart.save()  # Guarda el carrito si fue creado
+#             messages.success(request, 'Your cart was created successfully.')
+
+#             # Crear un CartItem asociado al Cart recién creado
+#             default_product = Product.objects.first()  # Obtén el producto predeterminado (modifícalo según tu lógica)
+#             if default_product:
+#                 cart_item = CartItem.objects.create(
+#                     cart=cart,
+#                     product=default_product,
+#                     quantity=1,  # Ajusta la cantidad según tu necesidad
+#                     price=default_product.price
+#                 )
+#                 cart_item.save()
+#             else:
+#                 messages.warning(request, 'No se encontró un producto predeterminado para añadir al carrito.')
+
+#         cart_items = cart.items.all()
+#         total_price = sum(item.get_total_price() for item in cart_items)
+
+#         # Obtener la billetera vinculada al usuario autenticado
+#         wallet = Wallet.objects.get(user=request.user)
+
+#         context = {
+#             'cart': cart,
+#             'cart_items': cart_items,
+#             'total_price': total_price,
+#             'wallet': wallet,
+#         }
+#         logger.info(f"Cart rendered successfully for user {request.user.email}")
+#         return render(request, 'cart.html', context)
+
+#     except Wallet.DoesNotExist:
+#         messages.error(request, "No se encontró una billetera para este usuario.")
+#         return redirect('shop')
+#     except Exception as e:
+#         logger.error(f"An error occurred while creating the cart for user {request.user.email}: {e}")
+#         messages.error(request, f'An error occurred while creating your cart: {e}')
+#         return redirect('shop')  # Redirige a la tienda en caso de error
+
+
+# @login_required
+# def cart(request):
+#     try:
+#         cart, created = Cart.objects.get_or_create(user=request.user)
+#         if created:
+#             cart.save()  # Guarda el carrito si fue creado
+#             messages.success(request, 'Your cart was created successfully.')
+#         cart_items = cart.items.all()
+#         total_price = sum(item.get_total_price() for item in cart_items)
+
+#         # Obtener la billetera vinculada al usuario autenticado
+#         wallet = Wallet.objects.get(user=request.user)
+
+#         context = {
+#             'cart': cart,
+#             'cart_items': cart_items,
+#             'total_price': total_price,
+#             'wallet': wallet,
+#         }
+#         logger.info(f"Cart rendered successfully for user {request.user.email}")
+#         return render(request, 'cart.html', context)
+
+#     except Wallet.DoesNotExist:
+#         messages.error(request, "No se encontró una billetera para este usuario.")
+#         return redirect('shop')
+#     except Exception as e:
+#         logger.error(f"An error occurred while creating the cart for user {request.user.email}: {e}")
+#         messages.error(request, f'An error occurred while creating your cart: {e}')
+#         return redirect('shop')  # Redirige a la tienda en caso de error
+
+
+
+
+
+logger = logging.getLogger(__name__)
+
+@require_POST
 @login_required
-def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-    if not created:
-        cart_item.quantity += 1
+def add_to_cart(request):
+    try:
+        data = json.loads(request.body)
+        product_id = data.get('product_id')
+        quantity = data.get('quantity')
+        
+        if not product_id or not quantity:
+            return JsonResponse({'success': False, 'error': 'Invalid data'})
+
+        product = Product.objects.get(id=product_id)
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        
+        # Verificar si el CartItem ya existe para el producto y carrito dados
+        cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+        if item_created:
+            cart_item.quantity = quantity
+        else:
+            cart_item.quantity += quantity
+        
+        cart_item.price = product.price  # Ajusta según sea necesario
         cart_item.save()
-    messages.success(request, f'Added {product.name} to your cart.')
-    return redirect('cart')
+        
+        return JsonResponse({'success': True})
+
+    except Product.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Product not found'})
+    except Exception as e:
+        logger.error(f"An error occurred while adding to cart: {e}")
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+
+
+
+
+
+# @require_POST
+# @login_required
+# def add_to_cart(request):
+#     try:
+#         data = json.loads(request.body)
+#         product_id = data['product_id']
+#         quantity = int(data['quantity'])
+
+#         logger.debug(f"Datos recibidos del cliente: product_id={product_id}, quantity={quantity}")
+
+#         print("Datos recibidos del cliente:")
+#         print("product_id:", product_id)
+#         print("quantity:", quantity)
+
+#         product = get_object_or_404(Product, id=product_id)
+#         user = request.user
+
+#         if product.stock < quantity:
+#             logger.error(f"No hay suficiente stock disponible: product_id={product_id}, requested_quantity={quantity}, available_stock={product.stock}")
+#             return JsonResponse({'error': 'No hay suficiente stock disponible.'}, status=400)
+
+#         cart, created = Cart.objects.get_or_create(user=user)
+#         cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+
+#         if item_created:
+#             cart_item.quantity = quantity
+#         else:
+#             new_quantity = cart_item.quantity + quantity
+#             if new_quantity > product.stock:
+#                 logger.error(f"No hay suficiente stock disponible al actualizar: product_id={product_id}, new_quantity={new_quantity}, available_stock={product.stock}")
+#                 return JsonResponse({'error': 'No hay suficiente stock disponible.'}, status=400)
+#             cart_item.quantity = new_quantity
+
+#         cart_item.price = product.price
+#         cart_item.amount = cart_item.quantity * cart_item.price  # Actualizamos el monto total
+#         cart_item.save()
+
+
+#         logger.info(f"Producto añadido al carrito: product_id={product_id}, quantity={cart_item.quantity}, cart_id={cart.id}")
+#         return JsonResponse({'success': True, 'quantity': cart_item.quantity, 'cart_id': cart.id})
+#     except Exception as e:
+#         logger.exception("Error al añadir el producto al carrito.")
+#         return JsonResponse({'error': str(e)}, status=400)
+
+
+
+
+
+
+
+# @require_POST
+# @login_required
+# def add_to_cart(request, product_id):
+#     try:
+#         cart, created = Cart.objects.get_or_create(user=request.user)
+#         cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
+#         product = get_object_or_404(Product, id=product_id)
+        
+#         if created:
+#             cart_item.save()
+#             messages.success(request, 'Your cart was created successfully.')
+        
+#             # Depuración: Verificar carrito
+#             print(f"Cart ID: {cart.id}, User: {cart.user.email}")
+#             # Depuración: Verificar cart_item
+#             print(f"CartItem ID: {cart_item.id}, Product: {cart_item.product.name}, Quantity: {cart_item.quantity}")
+            
+#         # Si el CartItem fue creado, inicializar la cantidad a 1, sino incrementar la cantidad
+#         if item_created:
+#             cart_item.quantity = 1
+#             messages.info(request, f'Created new cart item for {product.name}.')
+#         else:
+#             cart_item.quantity += 1
+#             messages.info(request, f'Updated quantity for {product.name} in cart.')
+
+#         # Actualizar el precio y el monto del CartItem
+#         cart_item.price = product.price
+#         cart_item.amount = cart_item.get_total_price()
+        
+#         # Guardar el CartItem
+#         cart_item.save()
+        
+#         # Mensaje de éxito
+#         messages.success(request, f'Added {product.name} to your cart.')
+#     except Exception as e:
+#         # Manejar cualquier excepción y mostrar un mensaje de error
+#         messages.error(request, f'An error occurred while adding the product to your cart: {e}')
+#         return redirect('shop')  # Redirigir a la tienda en caso de error
+    
+#     return redirect('cart')
+
+# vista que devuelva los artículos del carrito en formato JSON
+
 
 @login_required
-def remove_from_cart(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id)
-    cart_item.delete()
-    messages.success(request, 'Item removed from your cart.')
-    return redirect('cart')
+def get_cart_items(request):
+    try:
+        cart = Cart.objects.get(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
 
+        items = []
+        for item in cart_items:
+            items.append({
+                'product': {
+                    'id': item.product.id,
+                    'name': item.product.name,
+                    'imageUrl': item.product.imageUrl,
+                },
+                'quantity': item.quantity,
+                'price': item.price,
+                'amount': item.amount
+            })
+
+        return JsonResponse({'cart_items': items})
+    except Cart.DoesNotExist:
+        return JsonResponse({'cart_items': []})
+
+
+
+logger = logging.getLogger(__name__)
+
+@require_POST
 @login_required
 def update_cart(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id)
-    quantity = request.POST.get('quantity')
-    if quantity:
-        cart_item.quantity = int(quantity)
-        cart_item.save()
-    messages.success(request, 'Cart updated.')
+    try:
+        # Obtener el CartItem correspondiente al item_id y al usuario actual
+        item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+        # Obtener la nueva cantidad desde los datos POST
+        new_quantity = int(request.POST.get('quantity', 1))
+        
+        # Verificar si la nueva cantidad es mayor que cero
+        if new_quantity > 0:
+            # Actualizar la cantidad y el monto del CartItem
+            item.quantity = new_quantity
+            item.amount = item.get_total_price()
+            item.save()
+            messages.success(request, 'Cart updated successfully.')
+        else:
+            messages.error(request, 'Quantity must be greater than zero.')
+            logger.warning(f"User {request.user.email} tried to set quantity to zero or less for CartItem {item_id}.")
+    except Exception as e:
+        messages.error(request, f'An error occurred while updating the cart: {e}')
+        logger.error(f"Error updating cart for user {request.user.email} and CartItem {item_id}: {e}")
+    
     return redirect('cart')
+
+
+
+
+@require_POST
+@login_required
+def remove_from_cart(request, item_id):
+    try:
+        item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+        item.delete()
+        messages.success(request, 'Item removed from cart successfully.')
+    except Exception as e:
+        messages.error(request, f'An error occurred while removing the item from your cart: {e}')
+    
+    return redirect('cart')
+
 
 
 
@@ -390,17 +671,38 @@ def get_product_details(request):
 
     return JsonResponse(response_data)
 
+
+
+
+@login_required
 def shop(request):
     categories = Product.CATEGORY_CHOICES
     products_by_category = {category_name: Product.objects.filter(categories=category_code) 
                             for category_code, category_name in categories}
+
+    # Obtener o crear el carrito del usuario
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    
+    # Intentar obtener o crear un CartItem asociado al carrito del usuario
+    if created:
+
+        # Si el carrito fue recién creado, crear un CartItem predeterminado
+        default_product = Product.objects.first()  # Ajusta esto según tus necesidades
+        if default_product:
+            CartItem.objects.get_or_create(cart=cart, product=default_product, defaults={'quantity': 1, 'price': default_product.price})
     
     context = {
         'products_by_category': products_by_category,
         'total_products': Product.objects.count(),
+        'cart': cart,
     }
-    
+
     return render(request, 'shop.html', context)
+
+
+
+
+
 
 @login_required
 def delivery(request):
@@ -556,6 +858,19 @@ def assign_store(request, user_id, store_id):
     user.stores.add(store)
 
     return HttpResponse(f'Store {store.name} assigned to user {user.email}')
+
+
+
+def upload_audio(request):
+    if request.method == 'POST':
+        form = AudioUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            audio_file = request.FILES['audio']
+            text = recognize_speech_from_audio(audio_file)
+            return JsonResponse({'text': text})
+    else:
+        form = AudioUploadForm()
+    return render(request, 'upload_audio.html', {'form': form})
 
 
 

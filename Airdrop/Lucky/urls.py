@@ -1,3 +1,6 @@
+# urls.py
+
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -5,6 +8,8 @@ from django.urls import path, include
 from django.contrib.auth.views import LogoutView
 from . import views
 from Lucky import views
+from .views import add_to_cart, cart, update_cart, remove_from_cart, products, delete_product, check_product_existence, get_product_details, shop
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,13 +33,20 @@ urlpatterns = [
     path('user/', views.user, name='user'),
     path('user_info/', views.user_info, name='user_info'),
 
-    path('cart/', views.cart_view, name='cart'),
-    path('cart/', views.cart, name='cart'),
-    path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
-    path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
-    path('update-cart/<int:item_id>/', views.update_cart, name='update_cart'),
-    path('products/', views.products, name='products'),
+
     path('shop/', views.shop, name='shop'),
+    # path('cart/', views.cart_view, name='cart'),
+    path('cart/', views.cart, name='cart'),
+    path('api/cart/add', views.add_to_cart, name='add_to_cart'),
+    path('api/cart/update/<int:item_id>/', views.update_cart, name='update_cart'),
+    path('api/cart/remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    # path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
+    # path('remove-from-cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    # path('update_cart/<int:item_id>/', views.update_cart, name='update_cart'),
+    path('products/', views.products, name='products'),
+    path('api/cart/items/', views.get_cart_items, name='get_cart_items'),
+
+    
 
     # path('cart/', views.cart, name='cart'),
     # path('add-to-cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
@@ -78,6 +90,10 @@ urlpatterns = [
     # Pasarelas de pago Stripe
     path('charge/', views.charge, name='charge'),
 
+   
+   
+   
+    path('upload_audio/', views.upload_audio, name='upload_audio'),
 
     # Pasarelas de pago Paypal
     # path('payment/process/', views.payment_process, name='payment_process'),

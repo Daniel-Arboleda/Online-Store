@@ -158,6 +158,11 @@ class ValidateCodeForm(forms.Form):
     code = forms.CharField(max_length=50)
 
 
+
+
+
+
+
 # Clase que maneja los campos del formulario de transfer_funds el cual es un fomrulario de los campos de infomación de formulario e transacción para cargar saldo el primero que e configura pero maneja la logica mediante los TANG's de Django para la creación de campos de formularios HTML, por lo que en uso actuak puede no estar en uso, sin embargo puede usarse como variablke conectorea o de consulta ----------- Se debe tener cuidado porque esto puede generar un FONEL y SCRATCH de projecct, lo que seria en programación en funcionamiento una ruta crítica
 
 class TransferFundsForm(forms.ModelForm):
@@ -181,3 +186,12 @@ class TransferFundsForm(forms.ModelForm):
             'transaction_reference', 'transaction_number_CUS', 'bank', 'value', 
             'current_balance', 'origin_ip', 'amount'
         ]
+
+
+
+
+
+# Clase para manejar la subida de archivos de audio
+
+class AudioUploadForm(forms.Form):
+    audio = forms.FileField()
