@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <title>Header</title>
-    <script>
+    {% comment %} <script>
         const loginURL = "{% url 'login_form' %}";
         const openURL = "{% url 'open_account' %}";
-    </script>
+    </script> {% endcomment %}
 </head>
 <body>
     <header>
