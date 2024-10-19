@@ -86,21 +86,7 @@ def login_form(request):
 
     return render(request, 'login_form.html', {'form': form})
 
-# def login_view(request):
-#     if request.method == 'POST':
-#         form = EmailAuthenticationForm(request, data=request.POST)
-#         if form.is_valid():
-#             email = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-#             user = authenticate(request, username=email, password=password)
-#             if user is not None:
-#                 login(request, user)
-#                 return redirect('home')
-#             else:
-#                 form.add_error(None, 'Invalid email or password')
-#     else:
-#         form = EmailAuthenticationForm()
-#     return render(request, 'login_form.html', {'form': form})
+
 
 
 def logout_view(request):
@@ -111,16 +97,27 @@ def logout_view(request):
 
 
 
+logger = logging.getLogger(__name__)
 def open_account(request):
     if request.method == 'POST':
         form = CreateAccountForm(request.POST)
         if form.is_valid():
             try:
-                user = form.save()
-                login(request, user)
-                messages.success(request, 'Cuenta creada exitosamente.')
-                logger.debug("Cuenta creada con éxito para el usuario: %s", user.email)
-                return redirect('home')
+                # Comienza una transacción atómica
+                with transaction.atomic():
+                    user = form.save()
+                    login(request, user)
+
+                    # Elimina la creación del carrito aquí ya que la señal se encarga de ello
+
+                    # Crea la billetera solo si no existe
+                    Wallet.objects.get_or_create(user=user, defaults={'currency': 'USD', 'amount': 0})
+
+
+                    messages.success(request, 'Cuenta creada exitosamente.')
+                    logger.debug("Cuenta creada con éxito para el usuario: %s", user.email)
+                    return redirect('home')
+
             except Exception as e:
                 logger.error("Error al crear la cuenta: %s", e)
                 messages.error(request, 'Error al crear la cuenta. Por favor revise los datos ingresados.')
@@ -130,31 +127,6 @@ def open_account(request):
     else:
         form = CreateAccountForm()
     return render(request, 'open_account.html', {'form': form})
-
-
-def create_wallet_for_user(email):
-    try:
-        user = CustomUser.objects.get(email=email)
-        # Ajusta según tus necesidades
-        wallet = Wallet.objects.create(user=user, currency=1, amount=0)  
-        wallet.save()
-        print(f"Billetera creada para {user.email}")
-    except CustomUser.DoesNotExist:
-        print(f"No se encontró ningún usuario con el correo electrónico {email}")
-
-def create_cart_for_user(email):
-    try:
-        user = CustomUser.objects.get(email=email)
-        # Ajusta según tus necesidades
-        cart = Cart.objects.create(user=user)  
-        cart.save()
-        print(f"Carrito creado para {user.email}")
-    except CustomUser.DoesNotExist:
-        print(f"No se encontró ningún usuario con el correo electrónico {email}")
-
-# Uso de la función
-create_wallet_for_user('correo@example.com')
-
 
 
 
@@ -266,26 +238,33 @@ def user_info(request):
 
 
 
+
+@login_required
+def wallet(request):
+    user = request.user
+    try:
+        # Intenta obtener la Wallet del usuario actual
+        wallet = Wallet.objects.get(user=user)
+        saldo_actual = wallet.amount
+    except Wallet.DoesNotExist:
+        saldo_actual = 0
+        wallet = None
+
+    context = {
+        'user': user,
+        'wallet': wallet,
+        'saldo_actual': saldo_actual,
+    }
+    return render(request, 'wallet.html', context)
+
+
+
+
 @login_required
 def cart(request):
     try:
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        if created:
-            cart.save()
-            messages.success(request, 'Your cart was created successfully.')
-
-            # Crear un CartItem asociado al Cart recién creado si es necesario
-            default_product = Product.objects.first()  # Obtén el producto predeterminado (modifícalo según tu lógica)
-            if default_product:
-                cart_item = CartItem.objects.create(
-                    cart=cart,
-                    product=default_product,
-                    quantity=1,  # Ajusta la cantidad según tu necesidad
-                    price=default_product.price
-                )
-                cart_item.save()
-            else:
-                messages.warning(request, 'No se encontró un producto predeterminado para añadir al carrito.')
+        # Solo obtenemos el carrito existente vinculado al usuario
+        cart = Cart.objects.get(user=request.user)
 
         # Usar la relación inversa `items` para obtener los `CartItem`
         cart_items = cart.items.all()
@@ -303,94 +282,21 @@ def cart(request):
         logger.info(f"Cart rendered successfully for user {request.user.email}")
         return render(request, 'cart.html', context)
 
+    except Cart.DoesNotExist:
+        # En caso de que el carrito no exista (por alguna razón), redirigimos con un mensaje de error
+        messages.error(request, "No se encontró un carrito para este usuario.")
+        return redirect('shop')
+    
     except Wallet.DoesNotExist:
+        # En caso de que no se encuentre una billetera vinculada
         messages.error(request, "No se encontró una billetera para este usuario.")
         return redirect('shop')
+
     except Exception as e:
-        logger.error(f"An error occurred while creating the cart for user {request.user.email}: {e}")
-        messages.error(request, f'An error occurred while creating your cart: {e}')
+        # En caso de cualquier otro error
+        logger.error(f"An error occurred while rendering the cart for user {request.user.email}: {e}")
+        messages.error(request, f'An error occurred while rendering your cart: {e}')
         return redirect('shop')  # Redirige a la tienda en caso de error
-
-
-
-
-
-# @login_required
-# def cart(request):
-#     try:
-#         cart, created = Cart.objects.get_or_create(user=request.user)
-#         if created:
-#             cart.save()  # Guarda el carrito si fue creado
-#             messages.success(request, 'Your cart was created successfully.')
-
-#             # Crear un CartItem asociado al Cart recién creado
-#             default_product = Product.objects.first()  # Obtén el producto predeterminado (modifícalo según tu lógica)
-#             if default_product:
-#                 cart_item = CartItem.objects.create(
-#                     cart=cart,
-#                     product=default_product,
-#                     quantity=1,  # Ajusta la cantidad según tu necesidad
-#                     price=default_product.price
-#                 )
-#                 cart_item.save()
-#             else:
-#                 messages.warning(request, 'No se encontró un producto predeterminado para añadir al carrito.')
-
-#         cart_items = cart.items.all()
-#         total_price = sum(item.get_total_price() for item in cart_items)
-
-#         # Obtener la billetera vinculada al usuario autenticado
-#         wallet = Wallet.objects.get(user=request.user)
-
-#         context = {
-#             'cart': cart,
-#             'cart_items': cart_items,
-#             'total_price': total_price,
-#             'wallet': wallet,
-#         }
-#         logger.info(f"Cart rendered successfully for user {request.user.email}")
-#         return render(request, 'cart.html', context)
-
-#     except Wallet.DoesNotExist:
-#         messages.error(request, "No se encontró una billetera para este usuario.")
-#         return redirect('shop')
-#     except Exception as e:
-#         logger.error(f"An error occurred while creating the cart for user {request.user.email}: {e}")
-#         messages.error(request, f'An error occurred while creating your cart: {e}')
-#         return redirect('shop')  # Redirige a la tienda en caso de error
-
-
-# @login_required
-# def cart(request):
-#     try:
-#         cart, created = Cart.objects.get_or_create(user=request.user)
-#         if created:
-#             cart.save()  # Guarda el carrito si fue creado
-#             messages.success(request, 'Your cart was created successfully.')
-#         cart_items = cart.items.all()
-#         total_price = sum(item.get_total_price() for item in cart_items)
-
-#         # Obtener la billetera vinculada al usuario autenticado
-#         wallet = Wallet.objects.get(user=request.user)
-
-#         context = {
-#             'cart': cart,
-#             'cart_items': cart_items,
-#             'total_price': total_price,
-#             'wallet': wallet,
-#         }
-#         logger.info(f"Cart rendered successfully for user {request.user.email}")
-#         return render(request, 'cart.html', context)
-
-#     except Wallet.DoesNotExist:
-#         messages.error(request, "No se encontró una billetera para este usuario.")
-#         return redirect('shop')
-#     except Exception as e:
-#         logger.error(f"An error occurred while creating the cart for user {request.user.email}: {e}")
-#         messages.error(request, f'An error occurred while creating your cart: {e}')
-#         return redirect('shop')  # Redirige a la tienda en caso de error
-
-
 
 
 
@@ -403,6 +309,9 @@ def add_to_cart(request):
         data = json.loads(request.body)
         product_id = data.get('product_id')
         quantity = data.get('quantity')
+
+        # Log para depurar los datos recibidos
+        logger.info(f"Adding to cart - Product ID: {product_id}, Quantity: {quantity}")
         
         if not product_id or not quantity:
             return JsonResponse({'success': False, 'error': 'Invalid data'})
@@ -431,101 +340,6 @@ def add_to_cart(request):
 
 
 
-
-
-
-# @require_POST
-# @login_required
-# def add_to_cart(request):
-#     try:
-#         data = json.loads(request.body)
-#         product_id = data['product_id']
-#         quantity = int(data['quantity'])
-
-#         logger.debug(f"Datos recibidos del cliente: product_id={product_id}, quantity={quantity}")
-
-#         print("Datos recibidos del cliente:")
-#         print("product_id:", product_id)
-#         print("quantity:", quantity)
-
-#         product = get_object_or_404(Product, id=product_id)
-#         user = request.user
-
-#         if product.stock < quantity:
-#             logger.error(f"No hay suficiente stock disponible: product_id={product_id}, requested_quantity={quantity}, available_stock={product.stock}")
-#             return JsonResponse({'error': 'No hay suficiente stock disponible.'}, status=400)
-
-#         cart, created = Cart.objects.get_or_create(user=user)
-#         cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
-
-#         if item_created:
-#             cart_item.quantity = quantity
-#         else:
-#             new_quantity = cart_item.quantity + quantity
-#             if new_quantity > product.stock:
-#                 logger.error(f"No hay suficiente stock disponible al actualizar: product_id={product_id}, new_quantity={new_quantity}, available_stock={product.stock}")
-#                 return JsonResponse({'error': 'No hay suficiente stock disponible.'}, status=400)
-#             cart_item.quantity = new_quantity
-
-#         cart_item.price = product.price
-#         cart_item.amount = cart_item.quantity * cart_item.price  # Actualizamos el monto total
-#         cart_item.save()
-
-
-#         logger.info(f"Producto añadido al carrito: product_id={product_id}, quantity={cart_item.quantity}, cart_id={cart.id}")
-#         return JsonResponse({'success': True, 'quantity': cart_item.quantity, 'cart_id': cart.id})
-#     except Exception as e:
-#         logger.exception("Error al añadir el producto al carrito.")
-#         return JsonResponse({'error': str(e)}, status=400)
-
-
-
-
-
-
-
-# @require_POST
-# @login_required
-# def add_to_cart(request, product_id):
-#     try:
-#         cart, created = Cart.objects.get_or_create(user=request.user)
-#         cart_item, item_created = CartItem.objects.get_or_create(cart=cart, product=product)
-#         product = get_object_or_404(Product, id=product_id)
-        
-#         if created:
-#             cart_item.save()
-#             messages.success(request, 'Your cart was created successfully.')
-        
-#             # Depuración: Verificar carrito
-#             print(f"Cart ID: {cart.id}, User: {cart.user.email}")
-#             # Depuración: Verificar cart_item
-#             print(f"CartItem ID: {cart_item.id}, Product: {cart_item.product.name}, Quantity: {cart_item.quantity}")
-            
-#         # Si el CartItem fue creado, inicializar la cantidad a 1, sino incrementar la cantidad
-#         if item_created:
-#             cart_item.quantity = 1
-#             messages.info(request, f'Created new cart item for {product.name}.')
-#         else:
-#             cart_item.quantity += 1
-#             messages.info(request, f'Updated quantity for {product.name} in cart.')
-
-#         # Actualizar el precio y el monto del CartItem
-#         cart_item.price = product.price
-#         cart_item.amount = cart_item.get_total_price()
-        
-#         # Guardar el CartItem
-#         cart_item.save()
-        
-#         # Mensaje de éxito
-#         messages.success(request, f'Added {product.name} to your cart.')
-#     except Exception as e:
-#         # Manejar cualquier excepción y mostrar un mensaje de error
-#         messages.error(request, f'An error occurred while adding the product to your cart: {e}')
-#         return redirect('shop')  # Redirigir a la tienda en caso de error
-    
-#     return redirect('cart')
-
-# vista que devuelva los artículos del carrito en formato JSON
 
 
 @login_required
@@ -780,41 +594,6 @@ def validate_code(request):
     return render(request, 'validate_code.html', {'form': form})
 
 
-# @login_required
-# def validate_discount_code(request):
-#     if request.method == 'POST':
-#         code = request.POST.get('discount_code')
-#         try:
-#             discount_code = DiscountCode.objects.get(code=code)
-#             if discount_code.is_valid():
-#                 discount_code.used_count += 1
-#                 discount_code.save()
-#                 messages.success(request, f'Código válido! Descuento: {discount_code.discount_percentage}%')
-#             else:
-#                 messages.error(request, 'Código no válido o expirado.')
-#         except DiscountCode.DoesNotExist:
-#             messages.error(request, 'Código no encontrado.')
-#         return redirect('codes')  # Redirige a la misma página después de procesar el formulario
-#     return render(request, 'codes.html')
-
-
-@login_required
-def wallet(request):
-    user = request.user
-    try:
-        # Intenta obtener la Wallet del usuario actual
-        wallet = Wallet.objects.get(user=user)
-        saldo_actual = wallet.amount
-    except Wallet.DoesNotExist:
-        saldo_actual = 0
-        wallet = None
-
-    context = {
-        'user': user,
-        'wallet': wallet,
-        'saldo_actual': saldo_actual,
-    }
-    return render(request, 'wallet.html', context)
 
 
 
@@ -902,29 +681,7 @@ def transfer(request):
 
 
 
-# Este odigo lo comento por si daño en la implementación de los cambios el nuevo
 
-# @login_required
-# def transfer_form(request):
-#     user = request.user
-#     wallet, created = Wallet.objects.get_or_create(user=user)  # Obtener o crear la billetera del usuario
-#     bank = request.GET.get('bank', 'Nequi')
-#     amount = request.GET.get('amount', '50.000')
-#     saldo = wallet.amount  # Obtiene el saldo actual de la billetera
-#     context = {
-#         'empresa_nombre': 'LuckyCart S.A.',
-#         'nit': '900123456-7',
-#         'fecha_actual': DateFormat(date.today()).format('Y-m-d'),
-#         'estado': 'Completado',
-#         'referencia_de_pedido': '199dan-01arbo-06tan-2024med-05col',
-#         'referencia_de_transacion': '19920106',
-#         'numero_de_transaccion_CUS': '6060928',
-#         'banco': bank,
-#         'valor': amount,
-#         'saldo_actual': saldo,
-#         'IP_de_origen': '128.255.255.24'
-#     }
-#     return render(request, 'transfer_form.html', context)
 
 
 @login_required
@@ -966,50 +723,6 @@ def transfer_form(request):
             return render(request, 'transfer_form.html', {'form': form})
 
     return render(request, 'transfer_form.html')
-
-
-# @login_required
-# def transfer_form_accion(request):
-#     user = request.user
-#     try:
-#         wallet = Wallet.objects.get(user=user)
-#         saldo_actual = wallet.amount
-#     except Wallet.DoesNotExist:
-#         saldo_actual = 0
-#         wallet = None
-
-#     if request.method == 'POST':
-#         form = TransferFundsForm(request.POST)
-#         if form.is_valid():
-#             try:
-#                 amount = form.cleaned_data['amount']
-
-#                 if amount <= 0:
-#                     raise ValueError("El monto debe ser mayor que cero.")
-
-#                 if wallet and saldo_actual >= amount:
-#                     with transaction.atomic():
-#                         # Create Transfer instance
-#                         transferencia = form.save(commit=False)
-#                         transferencia.user = user
-#                         transferencia.save()
-
-#                         # Update wallet balance
-#                         wallet.amount -= amount
-#                         wallet.save()
-
-#                     messages.success(request, 'Transferencia realizada exitosamente.')
-#                     return redirect('home')
-#                 else:
-#                     messages.error(request, 'Saldo insuficiente.')
-#             except Exception as e:
-#                 messages.error(request, f'Error al procesar la transacción: {str(e)}')
-#         else:
-#             messages.error(request, 'Formulario no válido. Por favor revise los datos ingresados.')
-#     else:
-#         form = TransferFundsForm()
-
-#     return render(request, 'transfer_form.html', {'form': form, 'saldo_actual': saldo_actual})
 
 
 logger = logging.getLogger(__name__)
@@ -1067,40 +780,6 @@ def procesar_transaccion(request):
         return redirect('transfer_form')
 
 
-
-# @login_required
-# def transfer_form(request):
-#     amount = request.GET.get('amount')
-#     bankName = request.GET.get('bankName')
-#     accountNumber = request.GET.get('accountNumber')
-#     # Agrega la lógica de tu vista aquí
-#     return render(request, 'transfer_form.html', {
-#         'amount': amount,
-#         'bankName': bankName,
-#         'accountNumber': accountNumber,
-#     })
-
-# @login_required
-# def transfer_funds(request):
-#     try:
-#         user_wallet = Wallet.objects.get(id_user=request.user.id)
-#     except Wallet.DoesNotExist:
-#         messages.error(request, "Wallet not found for the user.")
-#         print("Redirigiendo a la vista 'transfer' porque no se encontró la wallet.")
-#         # return redirect('transfer')  # Asegúrate de que esta vista no redirija de nuevo a 'transfer_funds'
-
-#     if request.method == 'POST':
-#         form = TransferFundsForm(request.POST)
-#         if form.is_valid():
-#             amount = form.cleaned_data['amount']
-#             user_wallet.amount += amount
-#             user_wallet.save()
-#             messages.success(request, 'Funds transferred successfully!')
-#             return redirect('home')  # Asegúrate de que 'home' no redirija de nuevo a 'transfer_funds'
-#     else:
-#         form = TransferFundsForm()
-
-#     return render(request, 'transfer_funds.html', {'form': form, 'saldo': user_wallet.amount})
 
 
 

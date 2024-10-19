@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+# from .models import Product  # Si permito esta línea de código genra una importació´n circular dentro del mismo documento models.py por tanto el documento llama lafunción y la fución al docuemnto y esto genrra que el servidor colapse.
 
 
 
@@ -22,7 +23,7 @@ class CustomUserManager(BaseUserManager):
         # Guardar el usuario primero
         user.save(using=self._db)
         # Crear la billetera asociada al usuario
-        Wallet.objects.create(user=user, user_email=email)
+        # Wallet.objects.create(user=user, user_email=email)
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
@@ -50,6 +51,7 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('role') != 'superuser':
             raise ValueError('Superuser must have role="superuser"')
         return self.create_user(email, password, **extra_fields)
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
@@ -92,7 +94,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class Wallet(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='wallet')
-    user_email = models.EmailField(unique=True)
+    # user_email = models.EmailField(unique=True)
     currency = models.CharField(max_length=3, default='USD')
     last_update_date = models.DateTimeField(auto_now=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -105,9 +107,13 @@ class Wallet(models.Model):
 
 
 class TransactionsWallet(models.Model):
+    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     transaction_id = models.AutoField(primary_key=True, blank=True)
-    user_id = models.IntegerField(blank=True)
-    wallet_id = models.TextField(blank=True)
+    # user_id = models.IntegerField(blank=True)
+    # wallet_id = models.TextField(blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE)
+
     date_hour = models.IntegerField(blank=True)
     type = models.TextField(blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -157,6 +163,10 @@ class UserInfo(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.type_document}: {self.document}"
+
+
+
+
 
 
 
@@ -265,7 +275,7 @@ class Store(models.Model):
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='cart')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, unique=True, related_name='cart')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -280,9 +290,10 @@ class Cart(models.Model):
         return f"Cart of {self.user.email}"
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
+    cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     # cart = models.OneToOneField(Cart, on_delete=models.CASCADE, related_name='item')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cart_items')
+    # product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cart_items')
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='cart_items')
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=13, decimal_places=2, null=True, blank=True)
     stock = models.IntegerField(null=True, blank=True)
@@ -302,9 +313,17 @@ class CartItem(models.Model):
     def get_total_price(self):
         return self.product.price * self.quantity
 
+    # def save(self, *args, **kwargs):
+    #     self.amount = self.get_total_price()
+    #     super().save(*args, **kwargs)
+
     def save(self, *args, **kwargs):
-        self.amount = self.get_total_price()
-        super().save(*args, **kwargs)
+        if self.product.reduce_stock(self.quantity):
+            self.amount = self.get_total_price()
+            super().save(*args, **kwargs)
+        else:
+            raise ValueError("Not enough stock available")
+
 
 
 

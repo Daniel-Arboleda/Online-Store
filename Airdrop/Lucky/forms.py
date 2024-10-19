@@ -37,8 +37,12 @@ class CreateAccountForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         if commit:
             user.save()
-            Cart.objects.create(user=user)
-            Wallet.objects.create(user=user, user_email=user.email, currency='USD', amount=0)
+            # Crear o obtener carrito y billetera existentes
+            Cart.objects.get_or_create(user=user)
+            Wallet.objects.get_or_create(user=user, defaults={'currency': 'USD', 'amount': 0})
+            # Cart.objects.create(user=user)
+            # Wallet.objects.create(user=user, user_email=user.email, currency='USD', amount=0)
+
         return user
 
 

@@ -12,6 +12,9 @@ from .views import add_to_cart, cart, update_cart, remove_from_cart, products, d
 
 
 urlpatterns = [
+
+
+
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('drop/', views.drop, name='drop'),
@@ -26,6 +29,9 @@ urlpatterns = [
     path('open_manager_account/', views.open_manager_account, name='open_manager_account'),
     path('open_admin_account/', views.open_admin_account, name='open_admin_account'),
 
+
+
+
     # path('logout/', LogoutView.as_view(), name='logout'),
 
     path('home/', views.home, name='home'),
@@ -34,6 +40,7 @@ urlpatterns = [
     path('user_info/', views.user_info, name='user_info'),
 
 
+    # URLS para el manejo de la Tienda y el Carrito:
     path('shop/', views.shop, name='shop'),
     # path('cart/', views.cart_view, name='cart'),
     path('cart/', views.cart, name='cart'),
