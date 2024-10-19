@@ -27,8 +27,8 @@ async function addToCart(productId, productPrice, productImage, quantity, stock,
     // Depuración de los valores de quantity y stock making the request
     console.log('Request quantity:');
     console.log("product_id:", productId);
-    console.log("Cantidad solicitada:", quantity);
-    console.log("Stock disponible:", stock);
+    console.log("Stock disponible:", quantity);
+    console.log("Cantidad solicitada:", stock);
 
     if (quantity <= stock) {
         // const csrfElement = document.querySelector('[name=csrfmiddlewaretoken]');

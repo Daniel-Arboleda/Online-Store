@@ -105,6 +105,10 @@
 
     {% include 'modal_lugares.html' %}
 
+    <!-- Elemento para almacenar la URL del carrito -->
+    {% comment %} <div id="cart-url" data-url="{% url 'get_cart_items' %}"></div> {% endcomment %}
+
+
     <script src="{% static 'js/toggleVisibility.js' %}"></script>
     <script src="{% static 'js/shop-shoppingcart-localstorage.js' %}"></script>
     {% comment %} <script src="{% static 'js/cookies.js' %}"></script> {% endcomment %}
