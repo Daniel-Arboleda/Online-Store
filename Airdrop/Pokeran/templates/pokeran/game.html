@@ -1,0 +1,14 @@
+<!-- pokeran/templates/pokeran/game.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Juego de Póker</title>
+</head>
+<body>
+    <h1>Partida en curso para {{ game.player_name }}</h1>
+    <p>Status: {{ game.status }}</p>
+    <a href="{% url 'show_hand' game.id %}">Ver Mano</a>
+</body>
+</html>
