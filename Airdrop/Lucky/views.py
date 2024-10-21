@@ -24,6 +24,7 @@ from .signals import *
 
 
 
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
 logger = logging.getLogger(__name__)
 

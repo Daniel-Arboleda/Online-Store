@@ -22,7 +22,7 @@ body:not(.dark_theme) {
     background-color: transparent;
 }
 
-/* Contenedor principal que incluye el sidebar y el contenido principal */
+/* Estilo para Contenedor principal de formularios que incluye el sidebar y el contenido principal y datos de usuario*/
 .page-container {
     display: flex;
     flex-direction: row-reverse; /* Cambia la dirección si es necesario para colocar sidebar a la derecha */
@@ -650,7 +650,6 @@ body:not(.dark_theme) {
 
 /* style-login.css */
 
-
 /* Reset de estilos */
 * {
     margin: 0;
@@ -682,7 +681,6 @@ body:not(.dark_theme) {
     overflow-y: auto; /* Permitir desplazamiento vertical si el contenido excede la altura máxima */
 }
 
-
   .close {
     color: #aaa;
     float: right;
@@ -697,10 +695,9 @@ body:not(.dark_theme) {
     cursor: pointer;
   }
 
-
 /* --------------------------------------------------------------- */
 
-/* Estilos para el formulario de inicio de sesión */
+/* Estilos para el formulario de crear cuenta e inicio de sesión */
 
 .formulario{
     display: block;
@@ -715,8 +712,6 @@ body:not(.dark_theme) {
     padding: 20px;
     border-radius: 8px;
     
-    
-
 }
 
 .formulario h2{
@@ -1945,13 +1940,10 @@ select {
 
 .orm-prod-formulario{
     
-    
 }
 
 .orm-prod-formulario h1{
-    text-align: center;
-    ;
-    
+    text-align: center;    
 }
 
 .orm-prod-formulario, .orm-prod-table {
@@ -2000,11 +1992,11 @@ select {
     background-color: #666;
 }
 
+/* ---------------------------------------------------------------------------------- */
 /* Estilos para la sección extensible del formulario crear productos */
 .hidden {
     display: none;
 }
-
 
 /* Estilos para la tabla */
 .orm-prod-table {
@@ -2047,11 +2039,7 @@ select {
     background-color: #f1f1f1;
 }
 
-
-
-
 /* --------------------------------------------------------- */
-
 /* Tienda creada con la DB consultando la tabla Products */
 .category-section {
     display: flex;

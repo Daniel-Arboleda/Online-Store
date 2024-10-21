@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="{% static '../static/css/style.css' %}">
     <title>Products</title>
 </head>
-
 <body>
            <!-- Header con menú basado en iconos -->
            {% include 'header.html' %}
@@ -27,8 +26,6 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-
-
         <div class="container">
             <button id="toggleFormBtn">Crear Nuevo Producto</button>
             <div id="productForm" class="hidden">
@@ -36,9 +33,6 @@
                 <div class="orm-prod-formulario">
                     <h1>ORM Productos</h1>
                     {% comment %} <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'create_product' %}"> {% endcomment %}
-                    
-                    
-
                     <form method="post" id="orm-prod-form" class="orm-prod-form" enctype="multipart/form-data" action="{% url 'products' %}">
                         {% csrf_token %}
                         <!-- Campos ocultos para manejar dinamicamente si es el formulario de creación o el de actualización de los productos --- form_action
@@ -152,15 +146,12 @@
 
             </div>
         </div>
-
         {% comment %} <div class="container">
             <button id="toggleFormBtn">Actualizar Producto</button>
             <div id="productForm" class="hidden">
 
-
             </div>
         </div>     {% endcomment %}
-
             <!-- Tabla de productos -->
             <main class="user-data-table">
                 <h1>Stock Productos</h1>
@@ -213,8 +204,6 @@
                     </tbody>
                 </table>
             </main>
-
-
     <!-- Botón flotante para cambiar el color del tema -->
     <div class="floating-button" id="theme-toggle">
         <i class="fas fa-adjust"></i>
@@ -222,6 +211,7 @@
     <!-- Ventana emergente listado de paises compatibles -->
     {% include 'modal_lugares.html' %}
     <!-- Scripts -->
+    <script src="{% static '../static/js/dark-theme-btn.js' %}"></script>
     <script src="{% static 'js/toggleVisibility.js' %}"></script>
     <script src="{% static 'js/toggle_form_button.js' %}"></script>
     {% comment %} <script src="{% static 'js/modal-transfer.js' %}"></script> {% endcomment %}

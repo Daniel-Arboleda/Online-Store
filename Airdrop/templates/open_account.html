@@ -11,14 +11,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Crear Cuenta</title>
 </head>
-
 <body>
     <div id="login-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
         </div>
     </div>
-
     <!-- Esto manejara el uso de mensajes predeterminados de Django ´para la comunicación con el usuario, para esta oportunidad manejaremos tanto errores de exito como errores reales en el formulario de crear cuenta -->    
     {% if messages %}
         {% for message in messages %}

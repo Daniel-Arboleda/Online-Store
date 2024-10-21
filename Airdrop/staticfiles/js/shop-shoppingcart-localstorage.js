@@ -79,7 +79,6 @@ async function addToCart(productId, productPrice, productImage, quantity, stock,
     }
 }
 
-
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -94,8 +93,6 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-
 
 document.querySelectorAll('.addtocart').forEach(button => {
     button.addEventListener('click', function() {
@@ -118,7 +115,6 @@ document.querySelectorAll('.addtocart').forEach(button => {
     });
 });
 
-
 function getQuantity(productId) {
     const quantityInput = document.getElementById(`quantity-${productId}`);
     if (quantityInput) {
@@ -137,9 +133,6 @@ function getQuantity(productId) {
 
 // addToCart(exampleProductId, exampleProductPrice, exampleProductImage, exampleQuantity, exampleStock);
 
-
-
-
 // Función para manejar la cantidad de productos
 function changeQuantity(action, productId, stock) {
     console.log("changeQuantity called with action:", action, "productId:", productId, "stock:", stock);
@@ -155,8 +148,6 @@ function changeQuantity(action, productId, stock) {
     }
     quantityInput.value = currentQuantity;
 }
-
-
 
 document.addEventListener('DOMContentLoaded', function() {
     const cartContainer = document.getElementById('cart-container');
@@ -193,9 +184,6 @@ function loadCart() {
     });
 }
 
-
-
-
 function removeFromCart(productId) {
     console.log(`removeFromCart called with productId: ${productId}`);
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -212,9 +200,6 @@ function removeFromCart(productId) {
 
     loadCart(); // Actualizar la visualización del carrito
 }
-
-
-
 
 // Call loadCart when the page is loaded ---- JavaScript para Cargar el Carrito. Aseguramos que el carrito se cargue correctamente cuando el usuario visite la vista del carrito
 document.addEventListener('DOMContentLoaded', function() {

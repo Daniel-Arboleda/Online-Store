@@ -11,6 +11,8 @@ from Lucky import views
 from .views import add_to_cart, cart, update_cart, remove_from_cart, products, delete_product, check_product_existence, get_product_details, shop
 
 
+
+
 urlpatterns = [
 
 
@@ -106,6 +108,9 @@ urlpatterns = [
     # path('payment/process/', views.payment_process, name='payment_process'),
     # path('payment/execute/', views.payment_execute, name='payment_execute'),
     # path('payment/cancelled/', views.payment_cancelled, name='payment_cancelled'),
+
+
+    
 ] 
 
 

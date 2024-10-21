@@ -12,6 +12,13 @@ from django.dispatch import receiver
 # from .models import Product  # Si permito esta línea de código genra una importació´n circular dentro del mismo documento models.py por tanto el documento llama lafunción y la fución al docuemnto y esto genrra que el servidor colapse.
 
 
+# Lineas de codigo para la configuración del modelo para el POKERAN
+from django.db import models
+from django.db import connections
+from django.conf import settings
+import sqlite3
+
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -357,3 +364,107 @@ class Transfer(models.Model):
 
     def __str__(self):
         return f"Transfer of {self.amount} to {self.wallet.user.username}'s Wallet"
+
+
+
+# ---------------------------------------------------------------
+
+# MODELO DEL POKERAN
+
+# ---------------------------------------------------------------
+
+
+class Player(models.Model):
+    auth_user_id = models.IntegerField(unique=True)
+    player_name = models.CharField(max_length=100)
+    total_funds = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+
+def create_or_update_player(auth_user_id, username):
+    # Conexión a la base de datos PostgreSQL
+    cursor = connections['default'].cursor()
+
+    # Verificar si el jugador ya existe
+    cursor.execute("SELECT * FROM players WHERE auth_user_id = %s", [auth_user_id])
+    player = cursor.fetchone()
+
+    if player:
+        # El jugador ya existe, actualizarlo
+        cursor.execute("UPDATE players SET player_name = %s WHERE auth_user_id = %s", [username, auth_user_id])
+    else:
+        # El jugador no existe, crear uno nuevo
+        cursor.execute("INSERT INTO players (auth_user_id, player_name) VALUES (%s, %s)", [auth_user_id, username])
+    
+    # Commit de la transacción
+    connections['default'].commit()
+
+# Función para autenticar y sincronizar datos
+def authenticate_and_sync(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    
+    # Conectar a la base de datos SQLite3 y autenticar
+    conn = sqlite3.connect(settings.DATABASES['luckycart']['NAME'])
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, username FROM Auth WHERE username = ? AND password = ?", (username, password))
+    user = cursor.fetchone()
+
+    if user:
+        auth_user_id, username = user
+        create_or_update_player(auth_user_id, username)  # Sincroniza los datos del jugador en PostgreSQL
+
+        request.user_authenticated = True  # Marcar que el usuario está autenticado
+        conn.close()
+    else:
+        return JsonResponse({"error": "Usuario o contraseña incorrectos"}, status=401)
+
+
+
+
+# Opción 2: Crear un archivo de servicios
+# Si ya tienes un archivo models.py y prefieres mantener la lógica de creación y actualización de jugadores separada, puedes crear un archivo nuevo, por ejemplo, services.py dentro de tu aplicación. Esto es útil para organizar tu código y mantener la separación de preocupaciones.
+
+# Estructura del archivo services.py:
+
+
+from django.db import connections
+from django.conf import settings
+import sqlite3
+from .models import Player  # Asegúrate de importar el modelo si lo tienes en models.py
+
+def create_or_update_player(auth_user_id, username):
+    # Conexión a la base de datos PostgreSQL
+    cursor = connections['default'].cursor()
+
+    # Verificar si el jugador ya existe
+    cursor.execute("SELECT * FROM players WHERE auth_user_id = %s", [auth_user_id])
+    player = cursor.fetchone()
+
+    if player:
+        # El jugador ya existe, actualizarlo
+        cursor.execute("UPDATE players SET player_name = %s WHERE auth_user_id = %s", [username, auth_user_id])
+    else:
+        # El jugador no existe, crear uno nuevo
+        cursor.execute("INSERT INTO players (auth_user_id, player_name) VALUES (%s, %s)", [auth_user_id, username])
+    
+    # Commit de la transacción
+    connections['default'].commit()
+
+# Función para autenticar y sincronizar datos
+def authenticate_and_sync(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    
+    # Conectar a la base de datos SQLite3 y autenticar
+    conn = sqlite3.connect(settings.DATABASES['luckycart']['NAME'])
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, username FROM Auth WHERE username = ? AND password = ?", (username, password))
+    user = cursor.fetchone()
+
+    if user:
+        auth_user_id, username = user
+        create_or_update_player(auth_user_id, username)  # Sincroniza los datos del jugador en PostgreSQL
+
+        request.user_authenticated = True  # Marcar que el usuario está autenticado
+        conn.close()
+    else:
+        return JsonResponse({"error": "Usuario o contraseña incorrectos"}, status=401)

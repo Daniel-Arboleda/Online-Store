@@ -113,6 +113,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Lucky',
+    # 'Pokeran',
 ]
 
 # Configuración de middlewares
@@ -127,6 +128,7 @@ MIDDLEWARE = [
     'Lucky.middleware.AdminAccessMiddleware',  # Middleware personalizado si lo tienes
     'django.middleware.common.BrokenLinkEmailsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    #'tu_app.middleware.SQLiteAuthMiddleware', # Middleware personalizado para conexión y sincronización de las DB SQLite3 y PostgreSQL
 ]
 
 # Configuración de URLs
@@ -159,6 +161,21 @@ DATABASES = {
         'NAME': BASE_DIR / 'LuckyCart.db',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'pokeran_game',
+#         'USER': 'tu_usuario',
+#         'PASSWORD': 'tu_contraseña',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     },
+#     'luckycart': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'LuckyCart.db',  # Ruta al archivo LuckyCart.db
+#     }
+# }
 
 # Validadores de contraseñas
 AUTH_PASSWORD_VALIDATORS = [

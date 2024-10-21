@@ -122,7 +122,6 @@
 
 // Método optimizado de velocidad vara evitar la alerta de rendimiento en la consola del navegador
 
-
 document.addEventListener('DOMContentLoaded', function() {
     var deleteButtons = document.querySelectorAll('.delete-btn');
 
