@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Pokeran - Jacks or Better</title>
+    <link rel="stylesheet" href="{% static 'css/styles-Pokeran.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles--home-poke.css' %}">
+    <script src="{% static 'js/game.js' %}"></script>
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <div class="game-container">
+        <h1>Pokeran: Jacks or Better</h1>
+        
+        <h2>Bienvenido, {{ user.email }}!</h2>
+
+        <!-- Cuadro de premios -->
+        {% include 'pokeran/prizes.html' %}
+
+        <h2>Tu Mano</h2>
+        
+        <div class="hand" id="card-container">
+            {% for card in player_hand %}
+                <div class="card-container" onclick="toggleCardSelection(this)">
+                    <label class="card-label">Card</label>
+                    <div class="card" id="card-{{ forloop.counter0 }}" data-visible="false">
+                        <img data-rank="{{ card.rank }}" data-suit="{{ card.suit }}"
+                             src="{% static 'img/cards/back_of_card.png' %}" alt="Card Back">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="table">
+            <div class="bet">Bet: <span id="bet">0</span> Chips</div>
+            {% comment %} <div>
+                <p>Balance: {{ balance }}</p>
+            </div> {% endcomment %}
+            <div class="balance">Balance: <span id="balance">{{ user.wallet.amount }}</span> Chips</div>
+            <div class="controls">
+                <button id="deal-button">Deal</button>
+                {% comment %} <button id="hold-button">Hold</button> {% endcomment %}
+                <button id="bet-button">Bet</button>
+            </div>
+            <div class="jackpot">
+                <span>Jackpot: </span><span id="jackpot">5000</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const playerHand = {{ player_hand|safe }};
+        const cardImageBasePath = "{% static 'img/cards/' %}";  // Base path para las imágenes de cartas
+    </script>
+</body>
+</html>
