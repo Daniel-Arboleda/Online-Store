@@ -14,12 +14,12 @@
     {% include 'header.html' %}
 
     <div class="game-container">
+        <!-- Cuadro de premios -->
+        {% include 'pokeran/prizes.html' %}
+
         <h1>Pokeran: Jacks or Better</h1>
         
         <h2>Bienvenido, {{ user.email }}!</h2>
-
-        <!-- Cuadro de premios -->
-        {% include 'pokeran/prizes.html' %}
 
         <h2>Tu Mano</h2>
         
