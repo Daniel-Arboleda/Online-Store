@@ -15,6 +15,8 @@ from .models import Wallet
 from .deck import Deck
 from .models import Game
 import logging
+import json
+
 
 # Configuración de logger
 logger = logging.getLogger('django')
@@ -30,8 +32,9 @@ def play_view(request):
     )
 
     try:
-        wallet = Wallet.objects.using('lucky').get(user=request.user)
+        wallet = Wallet.objects.using('default').get(user=request.user)
         balance = wallet.amount
+        logger.info(f"Billetera encontrada para el usuario {request.user.email}: Balance {balance}")
     except Wallet.DoesNotExist:
         logger.error(f"No se encontró billetera para el usuario: {request.user.email}")
         balance = 0
@@ -45,22 +48,42 @@ def play_view(request):
     else:
         player_hand = game.player_hand
 
+    logger.debug(f"Datos enviados a la plantilla play.html: game={game}, player_hand={player_hand}, balance={balance}")
     return render(request, 'pokeran/play.html', {'game': game, 'player_hand': player_hand, 'balance': balance})
+
+# @csrf_exempt
+# @require_POST
+# def update_balance(request):
+#     if request.method == 'POST':
+#         try:
+#             data = json.loads(request.body)
+#             new_balance = data.get('balance')
+#             request.user.wallet.amount = new_balance
+#             request.user.wallet.save()
+#             return JsonResponse({'status': 'success'})
+#         except Exception as e:
+#             logger.error(f"Error al actualizar el balance: {e}")
+#             return JsonResponse({'status': 'error', 'message': str(e)})
+#     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=403)
 
 @csrf_exempt
 @require_POST
 def update_balance(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            new_balance = data.get('balance')
-            request.user.wallet.amount = new_balance
-            request.user.wallet.save()
-            return JsonResponse({'status': 'success'})
-        except Exception as e:
-            logger.error(f"Error al actualizar el balance: {e}")
-            return JsonResponse({'status': 'error', 'message': str(e)})
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=403)
+    try:
+        data = json.loads(request.body)
+        new_balance = data.get('balance')
+        logger.debug(f"Datos recibidos en update_balance: {data}")
+
+        request.user.wallet.amount = new_balance
+        request.user.wallet.save()
+        logger.info(f"Balance actualizado para {request.user.email}: {new_balance}")
+
+
+        return JsonResponse({'status': 'success'})
+    except Exception as e:
+        logger.error(f"Error al actualizar el balance: {e}")
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
 
 @login_required
 def show_hand(request, game_id):
@@ -85,22 +108,52 @@ def get_player_hand(request):
             "balance": int(balance),
             "jackpot": int(jackpot)
         }
+        logger.debug(f"Datos de la mano del jugador enviados: {data}")
         logger.debug("Datos enviados como respuesta: %s", data)
         return JsonResponse(data)
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+# @login_required
+# @csrf_exempt
+# def deal_new_hand(request):
+#     if request.method == 'GET':
+#         try:
+#             deck = Deck()
+#             new_hand = deck.deal(5)
+#             return JsonResponse({'hand': new_hand})
+#         except Exception as e:
+#             logger.error(f"Error al repartir cartas: {str(e)}")
+#             return JsonResponse({'error': str(e)}, status=400)
+#     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+# @login_required
+# @csrf_exempt
+# @require_POST
+# def deal_new_hand(request):
+#     if request.method == 'POST':  # Cambia a POST para mayor consistencia en modificar datos
+#         try:
+#             deck = Deck()  # Inicializa una baraja de cartas
+#             new_hand = deck.deal(5)  # Genera una nueva mano de 5 cartas
+#             return JsonResponse({'hand': new_hand})
+#         except Exception as e:
+#             logger.error(f"Error al repartir cartas: {str(e)}")
+#             return JsonResponse({'error': str(e)}, status=400)
+#     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 @login_required
+@csrf_exempt
+@require_POST
 def deal_new_hand(request):
-    if request.method == 'GET':
-        try:
-            deck = Deck()
-            new_hand = deck.deal(5)
-            return JsonResponse({'hand': new_hand})
-        except Exception as e:
-            logger.error(f"Error al repartir cartas: {str(e)}")
-            return JsonResponse({'error': str(e)}, status=400)
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
+    try:
+        deck = Deck()
+        new_hand = deck.deal(5)
+        return JsonResponse({'hand': new_hand})
+    except Exception as e:
+        logger.error(f"Error al repartir cartas: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=400)
+
+
 
 def deal_cards(request, num_cards):
     deck = Deck()  # Crea una baraja y la baraja automáticamente
